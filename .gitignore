@@ -1,0 +1,21 @@
+# intelliJ IDEA (ugous pc)
+# Carpeta generada automaticamente por intellij
+.idea/
+
+# Archivos redundantes y especificos de cada maquina
+*.iml
+
+# Maven
+# Directorio de salida donde Maven almacena los archivos binarios compilados
+**/target/
+
+# MacOS
+# Archivo oculto creado por finder de macOS
+.DS_Store
+
+# Archivos locales de la app
+# Archivo de uso local de cada pc
+sesion.dat
+
+# Archivo con llaves, no versionarse
+clave.key
