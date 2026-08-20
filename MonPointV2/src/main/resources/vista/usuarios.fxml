@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controladores.UsuariosController"
+            prefWidth="1000" prefHeight="650"
+            styleClass="fondo">
+
+    <!-- HEADER SUPERIOR -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="10" styleClass="barra-superior">
+            <Label text="👥 Gestión de Usuarios" styleClass="titulo-principal"/>
+        </HBox>
+    </top>
+
+    <!-- FORMULARIO LATERAL -->
+    <left>
+        <VBox spacing="20"
+              styleClass="barra-lateral"
+              prefWidth="420"
+              style="-fx-padding: 20;">
+            <Label text="Datos del Usuario" styleClass="subtitulo"/>
+
+            <GridPane hgap="10" vgap="6" style="-fx-padding: 10;">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="30"/>
+                    <ColumnConstraints percentWidth="70"/>
+                </columnConstraints>
+
+                <!-- Nombre -->
+                <Label text="Nombre:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtNombre" promptText="Nombre completo" styleClass="campo" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                <Label fx:id="lblErrorNombre" text="" styleClass="error-label" wrapText="true" minHeight="20" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                <!-- Correo -->
+                <Label text="Correo:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtCorreo" promptText="Correo electrónico" styleClass="campo" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                <Label fx:id="lblErrorCorreo" text="" styleClass="error-label" wrapText="true" minHeight="20" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                <!-- Contraseña -->
+                <Label text="Contraseña:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                <PasswordField fx:id="txtContrasena" promptText="Contraseña" styleClass="campo" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+                <Label fx:id="lblErrorContrasena" text="" styleClass="error-label" wrapText="true" minHeight="20" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+                <!-- Rol -->
+                <Label text="Rol:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtRol" promptText="ADMIN o VENDEDOR" styleClass="campo" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+                <Label fx:id="lblErrorRol" text="" styleClass="error-label" wrapText="true" minHeight="20" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+            </GridPane>
+
+            <VBox spacing="10" alignment="CENTER">
+                <Button fx:id="btnGuardar" text="Guardar" onAction="#guardarUsuario" styleClass="boton-guardar" maxWidth="Infinity"/>
+                <Button fx:id="btnActualizar" text="Actualizar" onAction="#actualizarUsuario" styleClass="boton-actualizar" maxWidth="Infinity"/>
+                <Button fx:id="btnEliminar" text="Eliminar" onAction="#eliminarUsuario" styleClass="boton-eliminar" maxWidth="Infinity"/>
+                <Button fx:id="btnLimpiar" text="Limpiar" onAction="#limpiarCampos" styleClass="boton-limpiar" maxWidth="Infinity"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- TABLA CENTRAL -->
+    <center>
+        <VBox spacing="10" style="-fx-padding: 20;">
+            <Label text="Lista de Usuarios" styleClass="subtitulo"/>
+            <TableView fx:id="tablaUsuarios" styleClass="tabla" prefHeight="500">
+                <columns>
+                    <TableColumn fx:id="colId"     text="ID"     prefWidth="50"/>
+                    <TableColumn fx:id="colNombre" text="Nombre" prefWidth="200"/>
+                    <TableColumn fx:id="colCorreo" text="Correo" prefWidth="250"/>
+                    <TableColumn fx:id="colRol"    text="Rol"    prefWidth="150"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+    <!-- FOOTER -->
+    <HBox alignment="CENTER" styleClass="footer" style="-fx-padding: 10;">
+        <Label text="© MonPoint 2018"/>
+    </HBox>
+</BorderPane>

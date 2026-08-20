@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controladores.DashboardController"
+            prefWidth="1920.0" prefHeight="1080.0"
+            styleClass="fondo">
+
+    <!-- HEADER SUPERIOR -->
+    <top>
+        <HBox fx:id="header" alignment="CENTER_LEFT" spacing="15"
+              styleClass="barra-superior">
+            <Label text="MonPoint – Panel Principal"
+                   styleClass="titulo-principal" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="lblBienvenida" styleClass="subtitulo" />
+        </HBox>
+    </top>
+
+    <!-- BARRA LATERAL IZQUIERDA -->
+    <left>
+        <VBox fx:id="barraLateral" spacing="16" styleClass="barra-lateral" prefWidth="240" alignment="TOP_CENTER">
+            <Button fx:id="btnClientes" text="👥 Clientes" onAction="#cargarVistaClientes" styleClass="boton-menu" maxWidth="220" />
+            <Button fx:id="btnProductos" text="📦 Productos" onAction="#cargarVistaProductos" styleClass="boton-menu" maxWidth="220" />
+            <Button fx:id="btnProveedores" text="🚚 Proveedores" onAction="#cargarVistaProveedores" styleClass="boton-menu" maxWidth="220" />
+            <Button fx:id="btnVentas" text="🛒 Ventas" onAction="#cargarVistaVentas" styleClass="boton-menu" maxWidth="220" />
+            <Button fx:id="btnUsuarios" text="🧑‍💼 Usuarios" onAction="#cargarVistaUsuarios" styleClass="boton-menu" maxWidth="220" />
+            <Button fx:id="btnConfiguracion" text="⚙️ Configuración" onAction="#cargarVistaConfiguracion" styleClass="boton-menu" maxWidth="220" />
+
+            <Separator maxWidth="220" />
+
+            <Button fx:id="btnCambiarTema" text="🌙 Cambiar Tema" onAction="#alternarTema" styleClass="boton-menu" maxWidth="220" />
+            <Button fx:id="btnSalir" text="🚪 Cerrar Sesión" onAction="#cerrarSesion" styleClass="boton-menu" maxWidth="220" />
+        </VBox>
+    </left>
+
+    <!-- CONTENEDOR CENTRAL DE VISTAS -->
+    <center>
+        <StackPane fx:id="contenedorVistas" styleClass="fondo" style="-fx-padding: 32;">
+            <Label text="Bienvenido a MonPoint" styleClass="subtitulo" />
+        </StackPane>
+    </center>
+
+</BorderPane>

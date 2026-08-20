@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controladores.ConfiguracionController"
+            prefWidth="800" prefHeight="600"
+            fx:id="rootConfiguracion"
+            styleClass="fondo">
+
+    <!-- 🟩 HEADER SUPERIOR -->
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT" styleClass="barra-superior">
+            <Label text="Configuración de la Empresa"
+                   styleClass="titulo-principal"/>
+        </HBox>
+    </top>
+
+    <!-- 🟨 FORMULARIO -->
+    <center>
+        <VBox spacing="25" alignment="TOP_CENTER" style="-fx-padding: 40;">
+
+            <GridPane hgap="12" vgap="20">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="30"/>
+                    <ColumnConstraints percentWidth="70"/>
+                </columnConstraints>
+
+                <Label text="Nombre de la Empresa:"
+                       GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtNombreEmpresa"
+                           GridPane.rowIndex="0" GridPane.columnIndex="1"
+                           styleClass="campo"/>
+
+                <Label text="RFC:"
+                       GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtRfc"
+                           GridPane.rowIndex="1" GridPane.columnIndex="1"
+                           styleClass="campo"/>
+
+                <Label text="Dirección:"
+                       GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtDireccion"
+                           GridPane.rowIndex="2" GridPane.columnIndex="1"
+                           styleClass="campo"/>
+
+                <Label text="Teléfono:"
+                       GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtTelefono"
+                           GridPane.rowIndex="3" GridPane.columnIndex="1"
+                           styleClass="campo"/>
+            </GridPane>
+
+            <Button fx:id="btnGuardarConfiguracion"
+                    text="Guardar Configuración"
+                    onAction="#guardarConfiguracion"
+                    styleClass="boton-guardar"
+                    maxWidth="220"/>
+
+        </VBox>
+    </center>
+
+</BorderPane>

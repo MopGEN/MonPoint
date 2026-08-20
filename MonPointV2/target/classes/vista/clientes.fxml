@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controladores.ClientesController"
+            prefWidth="1000.0" prefHeight="650.0"
+            styleClass="fondo">
+
+    <!-- HEADER -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="10" styleClass="barra-superior">
+            <Label text="👥 Gestión de Clientes" styleClass="titulo-principal" />
+        </HBox>
+    </top>
+
+    <!-- PANEL IZQUIERDO -->
+    <left>
+        <VBox spacing="15" styleClass="barra-lateral" prefWidth="320">
+            <Label text="Datos del Cliente" styleClass="subtitulo" />
+
+            <Label text="Nombre:" />
+            <TextField fx:id="txtNombre" promptText="Nombre completo" styleClass="campo" />
+
+            <Label text="Correo:" />
+            <TextField fx:id="txtCorreo" promptText="Correo electrónico" styleClass="campo" />
+
+            <Label text="Teléfono:" />
+            <TextField fx:id="txtTelefono" promptText="Teléfono" styleClass="campo" />
+
+            <Label text="Dirección:" />
+            <TextField fx:id="txtDireccion" promptText="Dirección" styleClass="campo" />
+
+            <Button text="Guardar" onAction="#guardarCliente" styleClass="boton-guardar" />
+            <Button text="Actualizar" onAction="#actualizarCliente" styleClass="boton-actualizar" />
+            <Button text="Eliminar" onAction="#eliminarCliente" styleClass="boton-eliminar" />
+            <Button text="Limpiar" onAction="#limpiarCampos" styleClass="boton-limpiar" />
+        </VBox>
+    </left>
+
+    <!-- TABLA CENTRAL -->
+    <center>
+        <VBox spacing="10" style="-fx-padding: 20;">
+            <TableView fx:id="tablaClientes" styleClass="tabla">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="60" />
+                    <TableColumn fx:id="colNombre" text="Nombre" prefWidth="200" />
+                    <TableColumn fx:id="colCorreo" text="Correo" prefWidth="200" />
+                    <TableColumn fx:id="colTelefono" text="Teléfono" prefWidth="120" />
+                    <TableColumn fx:id="colDireccion" text="Dirección" prefWidth="200" />
+                </columns>
+            </TableView>
+
+            <HBox alignment="CENTER">
+                <Button fx:id="btnExportarClientes" text="Exportar Clientes a PDF"
+                        onAction="#exportarClientesPDF" styleClass="boton-limpiar" />
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

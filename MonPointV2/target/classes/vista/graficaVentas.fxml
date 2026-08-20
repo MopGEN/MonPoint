@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controladores.GraficaVentasController"
+            prefWidth="1000" prefHeight="650"
+            styleClass="fondo">
+
+    <fx:define>
+        <ToggleGroup fx:id="chartTypeGroup"/>
+    </fx:define>
+
+    <!-- ENCABEZADO -->
+    <top>
+        <HBox alignment="CENTER_LEFT"
+              spacing="12"
+              style="-fx-padding: 15 20;"
+              styleClass="barra-superior">
+            <Button fx:id="btnAtrasGrafica"
+                    text="← Atrás"
+                    onAction="#volverAVentas"
+                    styleClass="boton-limpiar"/>
+            <Label text="📊 Gráfica de Ventas"
+                   styleClass="titulo-principal"/>
+        </HBox>
+    </top>
+
+    <!-- CONTENIDO CENTRAL -->
+    <center>
+        <VBox spacing="15" style="-fx-padding: 20;">
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <Label text="Rango:"/>
+                <ComboBox fx:id="cmbRango" prefWidth="120"/>
+                <Label text="Tipo de gráfico:"/>
+                <RadioButton fx:id="rbBar"
+                             text="Barras"
+                             toggleGroup="$chartTypeGroup"
+                             selected="true"/>
+                <RadioButton fx:id="rbPie"
+                             text="Pastel"
+                             toggleGroup="$chartTypeGroup"/>
+            </HBox>
+
+            <StackPane>
+                <BarChart fx:id="chartVentas"
+                          title="Ventas"
+                          prefHeight="450">
+                    <xAxis>
+                        <CategoryAxis fx:id="xAxis" label="Periodo"/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis fx:id="yAxis" label="Total"/>
+                    </yAxis>
+                </BarChart>
+                <PieChart fx:id="pieChart"
+                          legendSide="RIGHT"
+                          visible="false"
+                          prefHeight="450"/>
+            </StackPane>
+        </VBox>
+    </center>
+</BorderPane>

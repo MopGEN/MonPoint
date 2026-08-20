@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controladores.ProveedoresController"
+            prefWidth="1000" prefHeight="650"
+            styleClass="fondo">
+
+    <!-- HEADER SUPERIOR -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="10" styleClass="barra-superior">
+            <Label text="🚚 Gestión de Proveedores" styleClass="titulo-principal"/>
+        </HBox>
+    </top>
+
+    <!-- FORMULARIO LATERAL -->
+    <left>
+        <VBox spacing="20"
+              styleClass="barra-lateral"
+              prefWidth="320"
+              style="-fx-padding: 10;">
+            <Label text="Datos del Proveedor" styleClass="subtitulo"/>
+
+            <GridPane hgap="10" vgap="12" style="-fx-padding: 10;">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="30"/>
+                    <ColumnConstraints percentWidth="70"/>
+                </columnConstraints>
+
+                <Label text="Nombre:"      GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtNombre"
+                           promptText="Nombre del proveedor"
+                           styleClass="campo"
+                           GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <Label text="RUC:"         GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtRuc"
+                           promptText="RUC"
+                           styleClass="campo"
+                           GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                <Label text="Teléfono:"    GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtTelefono"
+                           promptText="Teléfono"
+                           styleClass="campo"
+                           GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                <Label text="Dirección:"   GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtDireccion"
+                           promptText="Dirección"
+                           styleClass="campo"
+                           GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                <Label text="Razón Social:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtRazonSocial"
+                           promptText="Razón Social"
+                           styleClass="campo"
+                           GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            </GridPane>
+
+            <VBox spacing="10" alignment="CENTER">
+                <Button fx:id="btnGuardar"
+                        text="Guardar"
+                        onAction="#guardarProveedor"
+                        styleClass="boton-guardar"
+                        maxWidth="Infinity"/>
+                <Button fx:id="btnActualizar"
+                        text="Actualizar"
+                        onAction="#actualizarProveedor"
+                        styleClass="boton-actualizar"
+                        maxWidth="Infinity"/>
+                <Button fx:id="btnEliminar"
+                        text="Eliminar"
+                        onAction="#eliminarProveedor"
+                        styleClass="boton-eliminar"
+                        maxWidth="Infinity"/>
+                <Button fx:id="btnLimpiar"
+                        text="Limpiar"
+                        onAction="#limpiarCampos"
+                        styleClass="boton-limpiar"
+                        maxWidth="Infinity"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- TABLA CENTRAL -->
+    <center>
+        <VBox spacing="10" style="-fx-padding: 20;">
+            <Label text="Lista de Proveedores" styleClass="subtitulo"/>
+            <TableView fx:id="tablaProveedores"
+                       styleClass="tabla"
+                       VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colId"          text="ID"           prefWidth="60"/>
+                    <TableColumn fx:id="colNombre"      text="Nombre"       prefWidth="200"/>
+                    <TableColumn fx:id="colRuc"         text="RUC"          prefWidth="150"/>
+                    <TableColumn fx:id="colTelefono"    text="Teléfono"     prefWidth="120"/>
+                    <TableColumn fx:id="colDireccion"   text="Dirección"    prefWidth="200"/>
+                    <TableColumn fx:id="colRazonSocial" text="Razón Social" prefWidth="180"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+    <!-- FOOTER -->
+
+</BorderPane>

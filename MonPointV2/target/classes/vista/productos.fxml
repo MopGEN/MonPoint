@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controladores.ProductosController"
+            prefWidth="1120" prefHeight="680"
+            styleClass="fondo">
+
+    <!-- HEADER SUPERIOR -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="14"
+              styleClass="barra-superior">
+            <Label text="📦 Gestión de Productos"
+                   styleClass="titulo-principal"/>
+        </HBox>
+    </top>
+
+    <!-- FORMULARIO LATERAL -->
+    <left>
+        <VBox spacing="22"
+              styleClass="barra-lateral"
+              prefWidth="340">
+
+            <Label text="Datos del Producto"
+                   styleClass="subtitulo"/>
+
+            <GridPane hgap="10" vgap="14">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="30"/>
+                    <ColumnConstraints percentWidth="70"/>
+                </columnConstraints>
+
+                <Label text="Nombre:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtNombre"
+                           promptText="Nombre del producto"
+                           GridPane.rowIndex="0" GridPane.columnIndex="1"
+                           styleClass="campo"/>
+
+                <Label text="Precio:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtPrecio"
+                           promptText="Precio unitario"
+                           GridPane.rowIndex="1" GridPane.columnIndex="1"
+                           styleClass="campo"/>
+
+                <Label text="Stock:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtStock"
+                           promptText="Cantidad disponible"
+                           GridPane.rowIndex="2" GridPane.columnIndex="1"
+                           styleClass="campo"/>
+
+                <Label text="Descripción:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtDescripcion"
+                           promptText="Descripción breve"
+                           GridPane.rowIndex="3" GridPane.columnIndex="1"
+                           styleClass="campo"/>
+            </GridPane>
+
+            <VBox spacing="12" alignment="CENTER">
+                <Button fx:id="btnGuardar"
+                        text="Guardar"
+                        onAction="#guardarProducto"
+                        styleClass="boton-guardar" maxWidth="260"/>
+
+                <Button fx:id="btnActualizar"
+                        text="Actualizar"
+                        onAction="#actualizarProducto"
+                        styleClass="boton-actualizar" maxWidth="260"/>
+
+                <Button fx:id="btnEliminar"
+                        text="Eliminar"
+                        onAction="#eliminarProducto"
+                        styleClass="boton-eliminar" maxWidth="260"/>
+
+                <Button fx:id="btnLimpiar"
+                        text="Limpiar"
+                        onAction="#limpiarCampos"
+                        styleClass="boton-limpiar" maxWidth="260"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- TABLA PRINCIPAL + EXPORTACIÓN -->
+    <center>
+        <VBox spacing="14" style="-fx-padding: 24;">
+            <TableView fx:id="tablaProductos"
+                       styleClass="tabla">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
+                    <TableColumn fx:id="colNombre" text="Nombre" prefWidth="220"/>
+                    <TableColumn fx:id="colPrecio" text="Precio" prefWidth="140"/>
+                    <TableColumn fx:id="colStock" text="Stock" prefWidth="120"/>
+                    <TableColumn fx:id="colDescripcion" text="Descripción" prefWidth="260"/>
+                </columns>
+            </TableView>
+
+            <HBox alignment="CENTER">
+                <Button fx:id="btnExportarPDF"
+                        text="Exportar Productos a PDF"
+                        onAction="#exportarProductosPDF"
+                        styleClass="boton-limpiar"/>
+            </HBox>
+        </VBox>
+    </center>
+
+</BorderPane>

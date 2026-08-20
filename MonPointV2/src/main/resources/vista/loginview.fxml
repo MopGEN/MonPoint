@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="controladores.LoginController"
+           styleClass="fondo">
+
+    <VBox spacing="32"
+          alignment="CENTER"
+          style="-fx-padding: 64;"
+          maxWidth="480">
+
+        <Label text="MonPoint - Iniciar sesión"
+               styleClass="titulo-principal"/>
+
+        <VBox spacing="16" alignment="CENTER" maxWidth="360">
+
+            <TextField fx:id="txtCorreo"
+                       promptText="Correo electrónico"
+                       styleClass="campo"
+                       maxWidth="340"/>
+
+            <PasswordField fx:id="txtContrasena"
+                           promptText="Contraseña"
+                           styleClass="campo"
+                           maxWidth="340"/>
+
+        </VBox>
+
+        <Button fx:id="btnLogin"
+                text="Iniciar sesión"
+                styleClass="boton-guardar"
+                maxWidth="220"
+                onAction="#handleLogin"/>
+
+    </VBox>
+</StackPane>

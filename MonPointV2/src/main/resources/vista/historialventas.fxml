@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controladores.HistorialVentasController"
+            styleClass="fondo"
+            prefWidth="1000" prefHeight="650">
+
+    <!-- ENCABEZADO -->
+    <top>
+        <VBox spacing="10" styleClass="barra-superior" style="-fx-padding: 10;">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Button fx:id="btnAtras" text="← Atrás" onAction="#volverAVentas" styleClass="boton-limpiar"/>
+                <Label text="🧾 Historial de Ventas" styleClass="titulo-principal"/>
+            </HBox>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Rango de fechas:" styleClass="subtitulo"/>
+                <DatePicker fx:id="dpInicio" promptText="Inicio" styleClass="campo"/>
+                <DatePicker fx:id="dpFin" promptText="Fin" styleClass="campo"/>
+                <Button fx:id="btnBuscar" text="Buscar" onAction="#filtrarPorFechas" styleClass="boton-actualizar"/>
+                <Button fx:id="btnExportarPDF" text="Exportar a PDF" onAction="#exportarHistorial" styleClass="boton-guardar"/>
+                <Region HBox.hgrow="ALWAYS"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- TABLA -->
+    <center>
+        <TableView fx:id="tablaVentas"
+                   styleClass="tabla"
+                   VBox.vgrow="ALWAYS"
+                   style="-fx-padding: 15;">
+            <columns>
+                <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+                <TableColumn fx:id="colCliente" text="Cliente" prefWidth="200"/>
+                <TableColumn fx:id="colFecha" text="Fecha" prefWidth="200"/>
+                <TableColumn fx:id="colTotal" text="Total" prefWidth="150"/>
+            </columns>
+        </TableView>
+    </center>
+
+    <!-- FOOTER DE PAGINACIÓN -->
+    <bottom>
+        <HBox spacing="15" alignment="CENTER" style="-fx-padding: 10;">
+            <Button fx:id="btnAnterior" text="Anterior" onAction="#paginaAnterior"/>
+            <Label fx:id="lblPagina" text="Página 1" styleClass="campo"/>
+            <Button fx:id="btnSiguiente" text="Siguiente" onAction="#paginaSiguiente"/>
+        </HBox>
+    </bottom>
+</BorderPane>

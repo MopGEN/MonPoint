@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane fx:id="contenedorVentas"
+           xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="controladores.VentasController"
+           styleClass="fondo"
+           prefWidth="1000" prefHeight="650">
+
+    <BorderPane>
+
+        <!-- HEADER -->
+        <top>
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="barra-superior">
+                <Label text="🛒 Nueva Venta" styleClass="titulo-principal"/>
+            </HBox>
+        </top>
+
+        <!-- FORMULARIO LATERAL -->
+        <left>
+            <VBox spacing="20"
+                  styleClass="barra-lateral"
+                  prefWidth="320"
+                  style="-fx-padding: 10;">
+                
+                <!-- PRODUCTO -->
+                <Label text="Producto" styleClass="subtitulo"/>
+                <HBox spacing="10">
+                    <TextField fx:id="txtCodigoProducto"
+                               promptText="Código"
+                               styleClass="campo"
+                               HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="btnBuscarProducto"
+                            text="Buscar"
+                            onAction="#btnBuscarProductoAction"
+                            styleClass="boton-guardar"
+                            maxWidth="120"/>
+                </HBox>
+                <TextField fx:id="txtDescripcion"
+                           promptText="Descripción"
+                           styleClass="campo"
+                           editable="false"
+                           HBox.hgrow="ALWAYS"/>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <TextField fx:id="txtCantidad"
+                               promptText="Cantidad"
+                               styleClass="campo"
+                               maxWidth="100"/>
+                    <Label text="Stock:" styleClass="subtitulo"/>
+                    <Label fx:id="lblStock" text="0" styleClass="subtitulo"/>
+                </HBox>
+                <Button fx:id="btnAgregar"
+                        text="Agregar"
+                        onAction="#btnAgregarAction"
+                        styleClass="boton-guardar"
+                        maxWidth="Infinity"/>
+
+                <Separator/>
+
+                <!-- CLIENTE -->
+                <Label text="Cliente" styleClass="subtitulo"/>
+                <HBox spacing="10">
+                    <TextField fx:id="txtIdCliente"
+                               promptText="INE"
+                               styleClass="campo"
+                               HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="btnBuscarCliente"
+                            text="Buscar"
+                            onAction="#btnBuscarClienteAction"
+                            styleClass="boton-guardar"
+                            maxWidth="120"/>
+                </HBox>
+                <Label fx:id="lblClienteInfo"
+                       text="Cliente: "
+                       styleClass="campo"
+                       HBox.hgrow="ALWAYS"/>
+
+                <Separator/>
+
+                <!-- TOTAL Y GENERAR -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Total:" styleClass="subtitulo"/>
+                    <Label fx:id="lblTotal"
+                           text="0.00"
+                           styleClass="titulo-principal"/>
+                </HBox>
+                <Button fx:id="btnGenerarVenta"
+                        text="Generar Venta"
+                        onAction="#btnGenerarVentaAction"
+                        styleClass="boton-guardar"
+                        maxWidth="Infinity"/>
+            </VBox>
+        </left>
+
+        <!-- TABLA CENTRAL -->
+        <center>
+            <VBox spacing="10" style="-fx-padding: 20;">
+                <Label text="Productos en Venta" styleClass="subtitulo"/>
+                <TableView fx:id="tablaVentaItems"
+                           styleClass="tabla"
+                           VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colIdItem"     text="ID"              prefWidth="50"/>
+                        <TableColumn fx:id="colDescProd"   text="Producto"        prefWidth="200"/>
+                        <TableColumn fx:id="colCant"       text="Cantidad"        prefWidth="80"/>
+                        <TableColumn fx:id="colPrecioItem" text="Precio Unitario" prefWidth="100"/>
+                        <TableColumn fx:id="colSubtotal"   text="Subtotal"        prefWidth="100"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </center>
+
+        <!-- FOOTER ACCIONES -->
+        <bottom>
+            <HBox spacing="15" alignment="CENTER" style="-fx-padding: 15 25;">
+                <Button fx:id="btnVerHistorial"
+                        text="Historial"
+                        onAction="#btnVerHistorialAction"
+                        styleClass="boton-actualizar"
+                        maxWidth="120"/>
+                <Button fx:id="btnGenerarGrafica"
+                        text="Gráfica"
+                        onAction="#btnGenerarGraficaAction"
+                        styleClass="boton-actualizar"
+                        maxWidth="120"/>
+                <Button fx:id="btnExportarPDF"
+                        text="Exportar PDF"
+                        onAction="#btnExportarPDFAction"
+                        styleClass="boton-actualizar"
+                        maxWidth="120"/>
+            </HBox>
+        </bottom>
+
+    </BorderPane>
+</StackPane>
