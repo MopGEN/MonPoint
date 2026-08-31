@@ -19,3 +19,17 @@ sesion.dat
 
 # Archivo con llaves, no versionarse
 clave.key
+
+# Variables de entorno
+.env
+*.env
+*.env.local
+
+# IDEs extras (evitar problemas futuros)
+.vscode/
+.settings/
+.classpath
+.project
+
+# Logs de ejecucion de datos; evitar filtracion de datos
+*.log
