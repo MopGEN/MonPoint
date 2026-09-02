@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <!-- -->
+
+    <!--Maven. Identificador directo de springBoot 3.2.3-->
+    <!--Encargado de gestionar las versionas de libreias para que sean compatibles entre si -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.3</version>
+        <relativePath/>
+    </parent>
+
+    <!--  -->
+    <groupId>com.monpoint</groupId> <!-- groupID es el paquete base de la organizacion(com.monpoint) -->
+    <artifactId>ms-auth</artifactId> <!-- nombre UNICO del microservicios -->
+    <version>0.0.1-SNAPSHOT</version> <!--  -->
+    <name>ms-auth</name>
+    <description>Microservicio de Autenticacion y Usuarios para MonPoint</description>
+
+    <properties>
+        <java.version>21</java.version> <!-- Obliga al compilador a compular con las caracteristicas de java 21.  -->
+    </properties>
+
+    <!-- dependencies  -->
+    <dependencies>
+        <!-- Spring Boot Web (Para crear APIs REST) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId> <!-- Servidor y API rest. Trae un servidor web interno (Tomcat) y el motor para crear APIs REST. Recibe peticiones HTTP -->
+        </dependency>
+
+        <!-- Spring Data JPA (Para conectar a MariaDB) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId> <!-- Conector con la base de datos. Permite guardar y buscar usuarios en mariaDB -->
+        </dependency>
+
+        <!-- Driver de MariaDB -->
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId> <!-- Conector con mariaDB. Driver JDBC que enseña a java como comunicarse en el isioma nativo del servidor mariaDB -->
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Spring Security (Para encriptar con BCrypt) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId> <!-- Usado para BCrypt, algoritmo que encripta las contraseñas del usuario y que no sean visibles en texto plano -->
+        </dependency>
+
+        <!-- JJWT (Para generar y validar Tokens JWT) -->
+        <!-- librería líder de Java para crear JSON Web Tokens (JWT). -->
+        <!-- Cuando un usuario ingresa su correo y contraseña correctos, esta librería genera el token firmado (una cadena de texto encriptada) que el usuario llevará consigo para identificarse en los microservicios que se usaran  -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <plugins>
+            <!-- Permite ejecutar microservicios con el comando mvn spring-boot:run o que se empaquete en un solo archivo .jar independiente y ejecutable en cualquier servidor. -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
