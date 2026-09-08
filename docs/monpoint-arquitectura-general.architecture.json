@@ -1,0 +1,262 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "MonPoint MS — Arquitectura y Trafico de Microservicios",
+    "subtitle": "Migracion de MonPointV2 a Microservicios · 6 Servicios de Dominio + Infraestructura",
+    "output": "monpoint-arquitectura-general.html",
+    "quality_profile": "showcase",
+    "animation": "trace",
+    "views": [
+      {
+        "id": "edge-routing",
+        "label": "Entrada y Enrutamiento",
+        "focus": ["client", "gateway", "eureka", "auth"],
+        "note": "El cliente accede por API Gateway y valida identidad con ms-auth."
+      },
+      {
+        "id": "domain-services",
+        "label": "Servicios de Dominio",
+        "focus": ["auth", "reportes", "ventas", "clientes", "inventario", "notif"],
+        "note": "6 microservicios independientes con limites claros de responsabilidad."
+      },
+      {
+        "id": "persistence",
+        "label": "Database per Service",
+        "focus": ["db_auth", "db_reportes", "db_ventas", "db_clientes", "db_inventario", "db_notif"],
+        "note": "Aislamiento estricto de bases de datos MariaDB por microservicio."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "client",
+      "type": "external",
+      "label": "Cliente JavaFX",
+      "sublabel": "App de escritorio",
+      "pos": [40, 200],
+      "size": [130, 52]
+    },
+    {
+      "id": "gateway",
+      "type": "cloud",
+      "label": "API Gateway",
+      "sublabel": "Spring Cloud Gateway",
+      "tag": "Valida JWT",
+      "brand": "spring",
+      "pos": [230, 160],
+      "size": [140, 52]
+    },
+    {
+      "id": "eureka",
+      "type": "cloud",
+      "label": "Eureka Server",
+      "sublabel": "Service Discovery",
+      "tag": "Registry",
+      "brand": "spring",
+      "pos": [230, 270],
+      "size": [140, 52]
+    },
+    {
+      "id": "auth",
+      "type": "security",
+      "label": "ms-auth",
+      "sublabel": "Usuarios · Roles · JWT",
+      "brand": "spring",
+      "pos": [440, 50],
+      "size": [140, 48]
+    },
+    {
+      "id": "reportes",
+      "type": "backend",
+      "label": "ms-reportes",
+      "sublabel": "PDF · Agregaciones",
+      "brand": "spring",
+      "pos": [440, 116],
+      "size": [140, 48]
+    },
+    {
+      "id": "ventas",
+      "type": "backend",
+      "label": "ms-ventas",
+      "sublabel": "Ventas · Lineas historicas",
+      "brand": "spring",
+      "pos": [440, 182],
+      "size": [140, 48]
+    },
+    {
+      "id": "clientes",
+      "type": "backend",
+      "label": "ms-clientes",
+      "sublabel": "Clientes · Directorio",
+      "brand": "spring",
+      "pos": [440, 248],
+      "size": [140, 48]
+    },
+    {
+      "id": "inventario",
+      "type": "backend",
+      "label": "ms-inventario",
+      "sublabel": "Productos · Existencias",
+      "brand": "spring",
+      "pos": [440, 314],
+      "size": [140, 48]
+    },
+    {
+      "id": "notif",
+      "type": "backend",
+      "label": "ms-notificaciones",
+      "sublabel": "Eventos · Alertas",
+      "brand": "spring",
+      "pos": [440, 380],
+      "size": [140, 48]
+    },
+    {
+      "id": "db_auth",
+      "type": "database",
+      "label": "db-auth",
+      "sublabel": "MariaDB",
+      "brand": "mariadb",
+      "pos": [650, 50],
+      "size": [145, 48]
+    },
+    {
+      "id": "db_reportes",
+      "type": "database",
+      "label": "db-reportes",
+      "sublabel": "MariaDB",
+      "brand": "mariadb",
+      "pos": [650, 116],
+      "size": [145, 48]
+    },
+    {
+      "id": "db_ventas",
+      "type": "database",
+      "label": "db-ventas",
+      "sublabel": "MariaDB",
+      "brand": "mariadb",
+      "pos": [650, 182],
+      "size": [145, 48]
+    },
+    {
+      "id": "db_clientes",
+      "type": "database",
+      "label": "db-clientes",
+      "sublabel": "MariaDB",
+      "brand": "mariadb",
+      "pos": [650, 248],
+      "size": [145, 48]
+    },
+    {
+      "id": "db_inventario",
+      "type": "database",
+      "label": "db-inventario",
+      "sublabel": "MariaDB",
+      "brand": "mariadb",
+      "pos": [650, 314],
+      "size": [145, 48]
+    },
+    {
+      "id": "db_notif",
+      "type": "database",
+      "label": "db-notificaciones",
+      "sublabel": "MariaDB",
+      "brand": "mariadb",
+      "pos": [650, 380],
+      "size": [145, 48]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "security-group",
+      "label": "Microservicios de Dominio",
+      "wraps": ["auth", "reportes", "ventas", "clientes", "inventario", "notif"]
+    },
+    {
+      "kind": "region",
+      "label": "Persistencia Aislada (MariaDB)",
+      "wraps": ["db_auth", "db_reportes", "db_ventas", "db_clientes", "db_inventario", "db_notif"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "client-to-gw",
+      "from": "client",
+      "to": "gateway",
+      "label": "REST + JWT",
+      "variant": "emphasis"
+    },
+    {
+      "id": "gw-to-eureka",
+      "from": "gateway",
+      "to": "eureka",
+      "label": "descubre",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 30
+    },
+    {
+      "id": "gw-to-auth",
+      "from": "gateway",
+      "to": "auth",
+      "variant": "security"
+    },
+    {
+      "id": "gw-to-reportes",
+      "from": "gateway",
+      "to": "reportes"
+    },
+    {
+      "id": "gw-to-ventas",
+      "from": "gateway",
+      "to": "ventas",
+      "variant": "emphasis"
+    },
+    {
+      "id": "gw-to-clientes",
+      "from": "gateway",
+      "to": "clientes"
+    },
+    {
+      "id": "gw-to-inventario",
+      "from": "gateway",
+      "to": "inventario"
+    },
+    {
+      "id": "gw-to-notif",
+      "from": "gateway",
+      "to": "notif"
+    },
+    {
+      "id": "auth-db",
+      "from": "auth",
+      "to": "db_auth"
+    },
+    {
+      "id": "reportes-db",
+      "from": "reportes",
+      "to": "db_reportes"
+    },
+    {
+      "id": "ventas-db",
+      "from": "ventas",
+      "to": "db_ventas"
+    },
+    {
+      "id": "clientes-db",
+      "from": "clientes",
+      "to": "db_clientes"
+    },
+    {
+      "id": "inventario-db",
+      "from": "inventario",
+      "to": "db_inventario"
+    },
+    {
+      "id": "notif-db",
+      "from": "notif",
+      "to": "db_notif"
+    }
+  ]
+}
