@@ -33,3 +33,8 @@ clave.key
 
 # Logs de ejecucion de datos; evitar filtracion de datos
 *.log
+
+# skills1 
+.agents/
+skills-lock.json
+*.visual-check.*
