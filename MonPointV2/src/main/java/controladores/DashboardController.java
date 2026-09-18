@@ -15,11 +15,17 @@ import utils.ThemeManager;
 
 public class DashboardController {
 
-    @FXML private Label lblBienvenida;
-    @FXML private StackPane contenedorVistas;
-    @FXML private Button btnClientes, btnProductos, btnProveedores, btnVentas, btnUsuarios, btnConfiguracion, btnSalir, btnCambiarTema;
-    @FXML private TabPane tabPane; // <- asegúrate de que esté en dashboard.fxml
-    @FXML private Tab tabVentas;
+    @FXML
+    private Label lblBienvenida;
+    @FXML
+    private StackPane contenedorVistas;
+    @FXML
+    private Button btnClientes, btnProductos, btnProveedores, btnVentas, btnUsuarios, btnConfiguracion, btnSalir,
+            btnCambiarTema;
+    @FXML
+    private TabPane tabPane; // <- asegúrate de que esté en dashboard.fxml
+    @FXML
+    private Tab tabVentas;
 
     @FXML
     private void initialize() {
@@ -42,9 +48,18 @@ public class DashboardController {
             try {
                 RolUsuario rol = RolUsuario.valueOf(rolStr.toUpperCase());
                 if (rol == RolUsuario.VENDEDOR) {
-                    if (btnUsuarios != null) btnUsuarios.setVisible(false);
-                    if (btnConfiguracion != null) btnConfiguracion.setVisible(false);
-                    if (btnProveedores != null) btnProveedores.setVisible(false);
+                    if (btnUsuarios != null) {
+                        btnUsuarios.setVisible(false);
+                        btnUsuarios.setManaged(false);
+                    }
+                    if (btnConfiguracion != null) {
+                        btnConfiguracion.setVisible(false);
+                        btnConfiguracion.setManaged(false);
+                    }
+                    if (btnProveedores != null) {
+                        btnProveedores.setVisible(false);
+                        btnProveedores.setManaged(false);
+                    }
                 }
             } catch (IllegalArgumentException e) {
                 System.err.println("⚠️ Rol desconocido: " + rolStr);
@@ -138,6 +153,6 @@ public class DashboardController {
             tabPane.getSelectionModel().select(tabVentas);
             cargarVista("/vista/ventas.fxml");
         }
-        
+
     }
 }
