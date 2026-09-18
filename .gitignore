@@ -14,11 +14,13 @@
 .DS_Store
 
 # Archivos locales de la app
-# Archivo de uso local de cada pc
-sesion.dat
+**/sesion.dat
+**/clave.key
 
-# Archivo con llaves, no versionarse
-clave.key
+# Contexto y configuracion de Claude Code
+CLAUDE.md
+CLAUDE.local.md
+.claude/
 
 # Variables de entorno
 .env
