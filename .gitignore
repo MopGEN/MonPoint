@@ -17,10 +17,11 @@
 **/sesion.dat
 **/clave.key
 
-# Contexto y configuracion de Claude Code
+# Contexto y configuracion de Claude Code / MCP
 CLAUDE.md
 CLAUDE.local.md
 .claude/
+.mcp.json
 
 # Variables de entorno
 .env
