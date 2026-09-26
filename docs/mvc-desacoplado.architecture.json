@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "MonPoint — Arquitectura MVC Desacoplado",
+    "subtitle": "Separación de Vista (Presentación), Controlador (Gateway + REST) y Modelo (Database-per-Service)",
+    "output": "mvc-desacoplado.html",
+    "quality_profile": "showcase",
+    "animation": "trace",
+    "views": [
+      {
+        "id": "vista-layer",
+        "label": "1. Capa de Vista (V)",
+        "focus": ["vista_client"],
+        "note": "La Vista es un cliente rico (JavaFX o Web) que solo dibuja UI y consume JSON."
+      },
+      {
+        "id": "controller-layer",
+        "label": "2. Capa de Controladores (C)",
+        "focus": ["gateway_macro", "ctrl_auth", "ctrl_inv", "ctrl_ventas"],
+        "note": "El Controlador se distribuye entre el API Gateway (enrutador central) y micro-controladores REST."
+      },
+      {
+        "id": "model-layer",
+        "label": "3. Capa de Modelo (M)",
+        "focus": ["db_auth", "db_inv", "db_ventas"],
+        "note": "El Modelo está descentralizado: cada microservicio es dueño de su base de datos MariaDB."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "vista_client",
+      "type": "frontend",
+      "label": "VISTA (V) — Capa Presentación",
+      "sublabel": "Cliente Desktop JavaFX · Futuro Frontend Web",
+      "tag": "Renderiza UI & JSON",
+      "pos": [320, 40],
+      "size": [260, 54]
+    },
+    {
+      "id": "gateway_macro",
+      "type": "cloud",
+      "label": "CONTROLADOR MACRO (C) — API Gateway",
+      "sublabel": "Spring Cloud Gateway · Eureka Discovery",
+      "tag": "Enrutador & Valida JWT",
+      "brand": "spring",
+      "pos": [270, 170],
+      "size": [360, 56]
+    },
+    {
+      "id": "ctrl_auth",
+      "type": "security",
+      "label": "ms-auth (Controller)",
+      "sublabel": "AuthController · UserService",
+      "brand": "spring",
+      "pos": [60, 310],
+      "size": [220, 52]
+    },
+    {
+      "id": "ctrl_inv",
+      "type": "backend",
+      "label": "ms-inventario (Controller)",
+      "sublabel": "ProductosController · Stock",
+      "brand": "spring",
+      "pos": [340, 310],
+      "size": [220, 52]
+    },
+    {
+      "id": "ctrl_ventas",
+      "type": "backend",
+      "label": "ms-ventas (Controller)",
+      "sublabel": "VentasController · Facturación",
+      "brand": "spring",
+      "pos": [620, 310],
+      "size": [220, 52]
+    },
+    {
+      "id": "db_auth",
+      "type": "database",
+      "label": "MODELO (M) — Usuarios",
+      "sublabel": "monpoint_auth_db",
+      "brand": "mariadb",
+      "pos": [60, 450],
+      "size": [220, 52]
+    },
+    {
+      "id": "db_inv",
+      "type": "database",
+      "label": "MODELO (M) — Inventario",
+      "sublabel": "monpoint_inv_db",
+      "brand": "mariadb",
+      "pos": [340, 450],
+      "size": [220, 52]
+    },
+    {
+      "id": "db_ventas",
+      "type": "database",
+      "label": "MODELO (M) — Ventas",
+      "sublabel": "monpoint_sales_db",
+      "brand": "mariadb",
+      "pos": [620, 450],
+      "size": [220, 52]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "security-group",
+      "label": "Micro-Controladores de Dominio (REST)",
+      "wraps": ["ctrl_auth", "ctrl_inv", "ctrl_ventas"]
+    },
+    {
+      "kind": "region",
+      "label": "Modelo Distribuido (Database-per-Service)",
+      "wraps": ["db_auth", "db_inv", "db_ventas"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "view-to-gw",
+      "from": "vista_client",
+      "to": "gateway_macro",
+      "label": "HTTPS (JSON + JWT)",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 24
+    },
+    {
+      "id": "gw-to-auth",
+      "from": "gateway_macro",
+      "to": "ctrl_auth",
+      "label": "/api/auth/**",
+      "variant": "security",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "gw-to-inv",
+      "from": "gateway_macro",
+      "to": "ctrl_inv",
+      "label": "/api/inventario/**",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [450, 285]
+    },
+    {
+      "id": "gw-to-ventas",
+      "from": "gateway_macro",
+      "to": "ctrl_ventas",
+      "label": "/api/ventas/**",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "auth-to-db",
+      "from": "ctrl_auth",
+      "to": "db_auth",
+      "label": "JPA / JDBC",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 24
+    },
+    {
+      "id": "inv-to-db",
+      "from": "ctrl_inv",
+      "to": "db_inv",
+      "label": "JPA / JDBC",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 24
+    },
+    {
+      "id": "ventas-to-db",
+      "from": "ctrl_ventas",
+      "to": "db_ventas",
+      "label": "JPA / JDBC",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 24
+    }
+  ]
+}

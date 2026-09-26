@@ -15,7 +15,7 @@ flowchart TD
     subgraph FASE2 [Fase 2 y 3: Catalogos. Idealmente trabajar en paralelo]
         direction LR
         INV["<b>ms-inventario</b><br>Responsable: Victor<br>- Catalogo de productos<br>- Existencias y precios"]:::victor
-        CLI["<b>ms-clientes</b><br>Responsable: Oscar<br>- Catalogo de clientes<br>- Directorio de contactos"]:::oscar
+        CLI["<b>ms-clientes</b><br>Responsable: Victor<br>- Catalogo de clientes<br>- Directorio de contactos"]:::victor
     end
 
     subgraph FASE3 [Fase 4: Transacciones]
@@ -24,7 +24,7 @@ flowchart TD
 
     subgraph FASE4 [Fase 5 y 6: Consumidores y Salidas. Idealmente trabajarlo en paralelo]
         direction LR
-        NOTIF["<b>ms-notificaciones</b><br>Responsable: Victor<br>- Bitacora de eventos<br>- Alerta stock bajo"]:::victor
+        NOTIF["<b>ms-notificaciones</b><br>Responsable: Oscar<br>- Bitacora de eventos<br>- Alerta stock bajo"]:::oscar
         REP["<b>ms-reportes</b><br>Responsable: Hugo<br>- Tickets y reportes PDF<br>- Agregaciones para graficas"]:::hugo
     end
 
