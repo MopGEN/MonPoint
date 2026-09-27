@@ -11,3 +11,4 @@ Como siguiente paso para el proyecto, estamos proponiendo dividir el sistema en 
 - MariaDB
 - Apache Maven
 - iText 9 (generación de tickets PDF)
+a
