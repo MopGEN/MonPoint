@@ -1,0 +1,278 @@
+# =============================================================================
+# MonPoint MS — Orquestacion del sistema completo
+# =============================================================================
+# Levanta todo con:   docker compose up -d
+# Detiene y limpia:   docker compose down -v
+#
+# Contiene la infraestructura compartida (MongoDB, RabbitMQ, Eureka, Gateway).
+# Los seis microservicios se van agregando conforme se construyen: al final
+# de este archivo hay un bloque comentado con la plantilla para cada uno.
+# =============================================================================
+
+services:
+
+  # ===========================================================================
+  # MongoDB — base de datos documental, configurada como REPLICA SET
+  # ===========================================================================
+  # POR QUE REPLICA SET SI SOLO HAY UN NODO
+  #
+  # Un replica set es normalmente un grupo de servidores que replican los
+  # mismos datos para tolerar fallos. Aqui usamos uno de UN SOLO nodo, lo que
+  # parece contradictorio: no hay replicacion ni tolerancia a fallos.
+  #
+  # La razon es otra: MongoDB SOLO permite transacciones multidocumento sobre
+  # un replica set. Una instancia independiente las RECHAZA con el error
+  # "Transaction numbers are only allowed on a replica set member or mongos".
+  #
+  # La tarea 4.3 (reserva atomica de existencias) necesita descontar varias
+  # lineas de producto en una sola operacion: o todas o ninguna. Eso es una
+  # transaccion multidocumento. Sin replica set, esa tarea es imposible.
+  #
+  # Si esto se descubre en la semana 4, cuesta un dia entero de trabajo.
+  # Por eso se configura desde el primer dia.
+  # ===========================================================================
+  mongodb:
+    image: mongo:7
+    container_name: monpoint-mongodb
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+    volumes:
+      - mongodb-datos:/data/db
+      # Los archivos .js de esta carpeta se ejecutan UNA VEZ, cuando el
+      # volumen esta vacio. Crean las seis bases y sus usuarios.
+      - ./mongo-init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - monpoint-red
+    healthcheck:
+      # ESTE HEALTHCHECK HACE DOS COSAS A LA VEZ
+      #
+      # 1. Inicializa el replica set en el primer arranque.
+      #    rs.initiate() no se puede poner en /docker-entrypoint-initdb.d
+      #    porque esos guiones corren ANTES de que el servidor acepte
+      #    conexiones de replica set. Ejecutarlo desde el healthcheck resuelve
+      #    el problema de orden: se reintenta hasta que funciona.
+      #
+      # 2. Reporta si MongoDB esta listo, que es lo que esperan los servicios
+      #    que dependen de el.
+      #
+      # try/catch: en los arranques siguientes el replica set YA existe y
+      # rs.initiate() lanza error. Lo capturamos y seguimos: lo que importa
+      # es la respuesta del ping final.
+      test: >
+        mongosh --quiet
+        -u ${MONGO_ROOT_USER} -p ${MONGO_ROOT_PASSWORD}
+        --authenticationDatabase admin
+        --eval "try { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongodb:27017'}]}) } catch(e) {} ; db.adminCommand('ping').ok"
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
+
+  # ===========================================================================
+  # RabbitMQ — broker de mensajeria
+  # ===========================================================================
+  # Toda la comunicacion ENTRE SERVICIOS pasa por aqui. Ningun servicio de
+  # dominio llama a otro por HTTP: publican eventos y reaccionan a ellos.
+  #
+  # La imagen con sufijo "-management" incluye una consola web en el puerto
+  # 15672 donde se ven los exchanges, las colas, los mensajes acumulados y
+  # los mensajes fallidos. Es la herramienta principal para depurar la
+  # mensajeria: cuando algo no llega, ahi se ve donde se quedo.
+  #
+  # La topologia (exchanges, colas, colas de fallidos) NO se crea aqui: la
+  # declaran los servicios desde Spring AMQP al arrancar (tarea 2.1). Asi
+  # queda versionada en el codigo y se recrea sola al levantar desde cero.
+  # ===========================================================================
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: monpoint-rabbitmq
+    ports:
+      - "5672:5672"    # Protocolo AMQP: por aqui hablan los servicios
+      - "15672:15672"  # Consola web: http://localhost:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    volumes:
+      - rabbitmq-datos:/var/lib/rabbitmq
+    networks:
+      - monpoint-red
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
+
+  # ===========================================================================
+  # Eureka Server — registro y descubrimiento de servicios
+  # ===========================================================================
+  # QUE PROBLEMA RESUELVE
+  #
+  # En un monolito, un modulo llama a otro con una llamada a funcion. En
+  # microservicios, cada uno corre en su propio contenedor con su propia
+  # direccion IP, y esas direcciones cambian: al reiniciar un contenedor,
+  # Docker puede asignarle otra.
+  #
+  # Eureka es una agenda: cada servicio se registra al arrancar diciendo
+  # "soy MS-INVENTARIO y estoy en tal direccion". Quien necesita hablar con
+  # el pregunta por NOMBRE, no por direccion.
+  #
+  # En este proyecto lo usa principalmente el Gateway, para saber a donde
+  # enrutar cada peticion. Los servicios de dominio no se buscan entre si
+  # porque no se llaman: se comunican por eventos.
+  #
+  # NOTA SOBRE LOS TIEMPOS
+  # Un servicio tarda hasta 30 segundos en aparecer en el panel y hasta 90
+  # en desaparecer tras apagarlo. Son los intervalos por omision de Eureka.
+  # No es un fallo: es el comportamiento normal. No perder tiempo depurando
+  # algo que solo requiere esperar.
+  # ===========================================================================
+  eureka-server:
+    build: ../eureka-server
+    container_name: monpoint-eureka
+    ports:
+      - "8761:8761"    # Panel de estado: http://localhost:8761
+    environment:
+      SERVER_PORT: 8761
+    networks:
+      - monpoint-red
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+
+  # ===========================================================================
+  # API Gateway — punto unico de entrada
+  # ===========================================================================
+  # ES EL UNICO COMPONENTE QUE PUBLICA UN PUERTO AL EXTERIOR.
+  #
+  # Los servicios de dominio no exponen puertos: solo son alcanzables desde
+  # dentro de la red monpoint-red. Quien quiera hablar con ellos pasa por el
+  # Gateway. Esto no es una convencion: esta impuesto por la configuracion.
+  #
+  # El Gateway hace tres cosas:
+  #   1. Enruta por prefijo (/auth/**, /inventario/**, ...) al servicio
+  #      correspondiente, resolviendo su direccion por Eureka.
+  #   2. Valida el token JWT localmente, sin consultar a ms-auth (tarea 2.3).
+  #   3. Responde las cabeceras CORS que el cliente web necesita (tarea 2.4).
+  # ===========================================================================
+  api-gateway:
+    build: ../api-gateway
+    container_name: monpoint-gateway
+    ports:
+      - "8080:8080"    # Unica puerta de entrada al sistema
+    environment:
+      SERVER_PORT: 8080
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      # Clave con la que se firman y verifican los tokens. Debe ser IDENTICA
+      # a la de ms-auth: uno firma, el otro verifica.
+      JWT_SECRET: ${JWT_SECRET}
+      # Origenes autorizados a llamar a la API desde un navegador.
+      CORS_ORIGENES: ${CORS_ORIGENES}
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    networks:
+      - monpoint-red
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+
+  # ===========================================================================
+  # PLANTILLA PARA LOS MICROSERVICIOS
+  # ===========================================================================
+  # Copiar este bloque para cada servicio conforme se construya, cambiando
+  # el nombre, el puerto y la base de datos.
+  #
+  # Puertos asignados, para que no choquen entre si:
+  #   ms-auth            8081      auth_db
+  #   ms-inventario      8082      inventario_db
+  #   ms-ventas          8083      ventas_db
+  #   ms-clientes        8084      clientes_db
+  #   ms-reportes        8085      reportes_db
+  #   ms-notificaciones  8086      notificaciones_db
+  #
+  # Notar que NO llevan seccion "ports": no se exponen al exterior. Solo el
+  # Gateway lo hace. Si se necesita depurar uno directamente, se agrega
+  # temporalmente y se quita despues.
+  #
+  # ms-auth:
+  #   build: ../ms-auth
+  #   container_name: monpoint-auth
+  #   environment:
+  #     SERVER_PORT: 8081
+  #     EUREKA_URL: http://eureka-server:8761/eureka/
+  #     # La cadena de conexion incluye el usuario propio del servicio y
+  #     # replicaSet=rs0, indispensable para las transacciones.
+  #     MONGO_URI: mongodb://auth_user:auth_pass@mongodb:27017/auth_db?replicaSet=rs0&authSource=auth_db
+  #     RABBITMQ_HOST: rabbitmq
+  #     RABBITMQ_USER: ${RABBITMQ_USER}
+  #     RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+  #     JWT_SECRET: ${JWT_SECRET}
+  #   depends_on:
+  #     mongodb:
+  #       condition: service_healthy
+  #     rabbitmq:
+  #       condition: service_healthy
+  #     eureka-server:
+  #       condition: service_healthy
+  #   networks:
+  #     - monpoint-red
+  # ===========================================================================
+
+  # ===========================================================================
+  # PLANTILLA PARA EL CLIENTE WEB (tarea 5.6, semana 5)
+  # ===========================================================================
+  # cliente-web:
+  #   build:
+  #     context: ../cliente-web
+  #     args:
+  #       # La direccion del Gateway se fija al COMPILAR, no al ejecutar:
+  #       # Vite sustituye las variables de entorno dentro del codigo
+  #       # generado. Cambiarla despues exige recompilar.
+  #       VITE_API_URL: http://localhost:8080
+  #   container_name: monpoint-cliente
+  #   ports:
+  #     - "5173:80"
+  #   depends_on:
+  #     - api-gateway
+  #   networks:
+  #     - monpoint-red
+  # ===========================================================================
+
+# =============================================================================
+# Red interna
+# =============================================================================
+# Todos los contenedores comparten esta red y se ven entre si por su NOMBRE
+# de servicio: "mongodb", "rabbitmq", "eureka-server". Docker resuelve esos
+# nombres automaticamente; por eso las cadenas de conexion nunca llevan
+# direcciones IP.
+#
+# Desde fuera de la red solo se alcanza lo que publica puertos: el Gateway,
+# y las consolas de MongoDB y RabbitMQ para inspeccion durante el desarrollo.
+# =============================================================================
+networks:
+  monpoint-red:
+    driver: bridge
+
+# =============================================================================
+# Volumenes
+# =============================================================================
+# Conservan los datos entre reinicios. Sin ellos, cada "docker compose down"
+# borraria la base de datos.
+#
+# "docker compose down -v" SI los borra: es la forma de empezar de cero,
+# util para verificar que el sistema arranca limpio.
+# =============================================================================
+volumes:
+  mongodb-datos:
+  rabbitmq-datos:

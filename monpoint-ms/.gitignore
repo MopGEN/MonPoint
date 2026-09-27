@@ -1,0 +1,64 @@
+# =============================================================================
+# MonPoint MS — Archivos excluidos del control de versiones
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Credenciales — lo mas importante de este archivo
+# -----------------------------------------------------------------------------
+# El .env real contiene claves; el .env.example no y por eso si se versiona.
+.env
+*.env
+!.env.example
+
+# Claves y certificados, por si alguno aparece durante el desarrollo
+*.key
+*.pem
+*.p12
+*.jks
+
+# -----------------------------------------------------------------------------
+# Compilacion de Java / Maven
+# -----------------------------------------------------------------------------
+# MonPointV2 tenia el directorio target/ versionado: duplicaba clases
+# compiladas, recursos y hojas de estilo dentro del repositorio. Es uno de
+# los hallazgos del analisis de codigo (Documento 02, seccion 3.3).
+target/
+*.class
+*.jar
+*.war
+!.mvn/wrapper/maven-wrapper.jar
+
+# -----------------------------------------------------------------------------
+# Node / Vue (cliente web, a partir de la semana 5)
+# -----------------------------------------------------------------------------
+node_modules/
+dist/
+dist-ssr/
+.vite/
+*.local
+
+# -----------------------------------------------------------------------------
+# Entornos de desarrollo
+# -----------------------------------------------------------------------------
+.idea/
+*.iml
+.vscode/
+!.vscode/extensions.json
+.settings/
+.project
+.classpath
+
+# -----------------------------------------------------------------------------
+# Sistema operativo
+# -----------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# -----------------------------------------------------------------------------
+# Registros y temporales
+# -----------------------------------------------------------------------------
+*.log
+logs/
+tmp/
+temp/
