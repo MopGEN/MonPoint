@@ -3,28 +3,28 @@
   "diagram_type": "architecture",
   "meta": {
     "title": "MonPoint MS — Arquitectura y Trafico de Microservicios",
-    "subtitle": "Migracion de MonPointV2 a Microservicios · 6 Servicios de Dominio + Infraestructura",
+    "subtitle": "HTTP Sincrono perimetral, Eventos Asincronos en RabbitMQ y MongoDB Replica Set",
     "output": "monpoint-arquitectura-general.html",
     "quality_profile": "showcase",
     "animation": "trace",
     "views": [
       {
-        "id": "edge-routing",
-        "label": "Entrada y Enrutamiento",
-        "focus": ["client", "gateway", "eureka", "auth"],
-        "note": "El cliente accede por API Gateway y valida identidad con ms-auth."
+        "id": "ingress",
+        "label": "Ingreso y Seguridad",
+        "focus": ["client", "gateway", "eureka", "auth", "mongo"],
+        "note": "El cliente web accede via Gateway, valida JWT localmente y autentica contra ms-auth."
       },
       {
-        "id": "domain-services",
-        "label": "Servicios de Dominio",
-        "focus": ["auth", "reportes", "ventas", "clientes", "inventario", "notif"],
-        "note": "6 microservicios independientes con limites claros de responsabilidad."
+        "id": "event-bus",
+        "label": "Trafico Asincrono (RabbitMQ)",
+        "focus": ["clientes", "inventario", "ventas", "broker", "reportes", "notif"],
+        "note": "Comunicacion no bloqueante: ningun microservicio llama a otro por HTTP."
       },
       {
-        "id": "persistence",
-        "label": "Database per Service",
-        "focus": ["db_auth", "db_reportes", "db_ventas", "db_clientes", "db_inventario", "db_notif"],
-        "note": "Aislamiento estricto de bases de datos MariaDB por microservicio."
+        "id": "database-per-service",
+        "label": "Persistencia Aislada",
+        "focus": ["auth", "mongo"],
+        "note": "MongoDB 7 Replica Set aloja 6 bases logicas independientes con usuarios dedicados."
       }
     ]
   },
@@ -32,150 +32,118 @@
     {
       "id": "client",
       "type": "external",
-      "label": "Cliente JavaFX",
-      "sublabel": "App de escritorio",
-      "pos": [40, 200],
-      "size": [130, 52]
+      "label": "Cliente Web",
+      "sublabel": "Vue 3 · Nginx :5173",
+      "brand": "vue",
+      "pos": [40, 50],
+      "size": [140, 56]
     },
     {
       "id": "gateway",
       "type": "cloud",
       "label": "API Gateway",
-      "sublabel": "Spring Cloud Gateway",
+      "sublabel": "Spring Cloud :8080",
       "tag": "Valida JWT",
       "brand": "spring",
-      "pos": [230, 160],
-      "size": [140, 52]
+      "pos": [360, 50],
+      "size": [150, 56]
     },
     {
       "id": "eureka",
       "type": "cloud",
       "label": "Eureka Server",
-      "sublabel": "Service Discovery",
+      "sublabel": "Discovery :8761",
       "tag": "Registry",
       "brand": "spring",
-      "pos": [230, 270],
-      "size": [140, 52]
+      "pos": [700, 50],
+      "size": [140, 56]
     },
     {
       "id": "auth",
       "type": "security",
       "label": "ms-auth",
       "sublabel": "Usuarios · Roles · JWT",
+      "tag": "Fuera del Bus",
       "brand": "spring",
-      "pos": [440, 50],
-      "size": [140, 48]
-    },
-    {
-      "id": "reportes",
-      "type": "backend",
-      "label": "ms-reportes",
-      "sublabel": "PDF · Agregaciones",
-      "brand": "spring",
-      "pos": [440, 116],
-      "size": [140, 48]
-    },
-    {
-      "id": "ventas",
-      "type": "backend",
-      "label": "ms-ventas",
-      "sublabel": "Ventas · Lineas historicas",
-      "brand": "spring",
-      "pos": [440, 182],
-      "size": [140, 48]
+      "pos": [40, 200],
+      "size": [140, 56]
     },
     {
       "id": "clientes",
       "type": "backend",
       "label": "ms-clientes",
-      "sublabel": "Clientes · Directorio",
+      "sublabel": "Clientes y Contactos",
+      "tag": "Publica",
       "brand": "spring",
-      "pos": [440, 248],
-      "size": [140, 48]
+      "pos": [230, 200],
+      "size": [140, 56]
     },
     {
       "id": "inventario",
       "type": "backend",
       "label": "ms-inventario",
-      "sublabel": "Productos · Existencias",
+      "sublabel": "Productos y Stock",
+      "tag": "Saga Part",
       "brand": "spring",
-      "pos": [440, 314],
-      "size": [140, 48]
+      "pos": [420, 200],
+      "size": [140, 56]
+    },
+    {
+      "id": "ventas",
+      "type": "backend",
+      "label": "ms-ventas",
+      "sublabel": "Ventas y Saga",
+      "tag": "Saga Coord",
+      "brand": "spring",
+      "pos": [610, 200],
+      "size": [140, 56]
+    },
+    {
+      "id": "reportes",
+      "type": "backend",
+      "label": "ms-reportes",
+      "sublabel": "Proyecciones y PDF",
+      "tag": "Consume",
+      "brand": "spring",
+      "pos": [800, 200],
+      "size": [140, 56]
     },
     {
       "id": "notif",
       "type": "backend",
       "label": "ms-notificaciones",
-      "sublabel": "Eventos · Alertas",
+      "sublabel": "Alertas de Existencia",
+      "tag": "Consume",
       "brand": "spring",
-      "pos": [440, 380],
-      "size": [140, 48]
+      "pos": [990, 200],
+      "size": [150, 56]
     },
     {
-      "id": "db_auth",
+      "id": "mongo",
       "type": "database",
-      "label": "db-auth",
-      "sublabel": "MariaDB",
-      "brand": "mariadb",
-      "pos": [650, 50],
-      "size": [145, 48]
+      "label": "MongoDB 7 Cluster",
+      "sublabel": "Replica Set (6 Bases Logicas)",
+      "tag": "Database-per-Service",
+      "brand": "mongodb",
+      "pos": [110, 360],
+      "size": [230, 56]
     },
     {
-      "id": "db_reportes",
-      "type": "database",
-      "label": "db-reportes",
-      "sublabel": "MariaDB",
-      "brand": "mariadb",
-      "pos": [650, 116],
-      "size": [145, 48]
-    },
-    {
-      "id": "db_ventas",
-      "type": "database",
-      "label": "db-ventas",
-      "sublabel": "MariaDB",
-      "brand": "mariadb",
-      "pos": [650, 182],
-      "size": [145, 48]
-    },
-    {
-      "id": "db_clientes",
-      "type": "database",
-      "label": "db-clientes",
-      "sublabel": "MariaDB",
-      "brand": "mariadb",
-      "pos": [650, 248],
-      "size": [145, 48]
-    },
-    {
-      "id": "db_inventario",
-      "type": "database",
-      "label": "db-inventario",
-      "sublabel": "MariaDB",
-      "brand": "mariadb",
-      "pos": [650, 314],
-      "size": [145, 48]
-    },
-    {
-      "id": "db_notif",
-      "type": "database",
-      "label": "db-notificaciones",
-      "sublabel": "MariaDB",
-      "brand": "mariadb",
-      "pos": [650, 380],
-      "size": [145, 48]
+      "id": "broker",
+      "type": "messagebus",
+      "label": "RabbitMQ Broker",
+      "sublabel": "Exchanges: inventario, clientes, ventas",
+      "tag": "Asincrono :5672",
+      "brand": "rabbitmq",
+      "pos": [570, 360],
+      "size": [280, 56]
     }
   ],
   "boundaries": [
     {
       "kind": "security-group",
-      "label": "Microservicios de Dominio",
-      "wraps": ["auth", "reportes", "ventas", "clientes", "inventario", "notif"]
-    },
-    {
-      "kind": "region",
-      "label": "Persistencia Aislada (MariaDB)",
-      "wraps": ["db_auth", "db_reportes", "db_ventas", "db_clientes", "db_inventario", "db_notif"]
+      "label": "Microservicios de Dominio (Spring Boot)",
+      "wraps": ["auth", "clientes", "inventario", "ventas", "reportes", "notif"]
     }
   ],
   "connections": [
@@ -183,80 +151,110 @@
       "id": "client-to-gw",
       "from": "client",
       "to": "gateway",
-      "label": "REST + JWT",
+      "label": "HTTP + JWT",
       "variant": "emphasis"
     },
     {
       "id": "gw-to-eureka",
       "from": "gateway",
       "to": "eureka",
-      "label": "descubre",
-      "variant": "dashed",
-      "fromSide": "bottom",
-      "toSide": "top",
-      "labelDy": 30
+      "label": "resuelve rutas",
+      "variant": "dashed"
     },
     {
       "id": "gw-to-auth",
       "from": "gateway",
       "to": "auth",
-      "variant": "security"
-    },
-    {
-      "id": "gw-to-reportes",
-      "from": "gateway",
-      "to": "reportes"
+      "label": "HTTP Sincrono",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "variant": "emphasis"
     },
     {
       "id": "gw-to-ventas",
       "from": "gateway",
       "to": "ventas",
+      "label": "HTTP Proxy",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "auth-to-mongo",
+      "from": "auth",
+      "to": "mongo",
+      "label": "auth_db",
+      "fromSide": "bottom",
+      "toSide": "top",
       "variant": "emphasis"
     },
     {
-      "id": "gw-to-clientes",
-      "from": "gateway",
-      "to": "clientes"
-    },
-    {
-      "id": "gw-to-inventario",
-      "from": "gateway",
-      "to": "inventario"
-    },
-    {
-      "id": "gw-to-notif",
-      "from": "gateway",
-      "to": "notif"
-    },
-    {
-      "id": "auth-db",
-      "from": "auth",
-      "to": "db_auth"
-    },
-    {
-      "id": "reportes-db",
-      "from": "reportes",
-      "to": "db_reportes"
-    },
-    {
-      "id": "ventas-db",
-      "from": "ventas",
-      "to": "db_ventas"
-    },
-    {
-      "id": "clientes-db",
+      "id": "clientes-to-broker",
       "from": "clientes",
-      "to": "db_clientes"
+      "to": "broker",
+      "label": "Cliente*",
+      "fromSide": "bottom",
+      "toSide": "left"
     },
     {
-      "id": "inventario-db",
+      "id": "inv-to-broker",
       "from": "inventario",
-      "to": "db_inventario"
+      "to": "broker",
+      "label": "Stock*",
+      "fromSide": "bottom",
+      "toSide": "top"
     },
     {
-      "id": "notif-db",
-      "from": "notif",
-      "to": "db_notif"
+      "id": "ventas-to-broker",
+      "from": "ventas",
+      "to": "broker",
+      "label": "Saga Venta",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "variant": "emphasis"
+    },
+    {
+      "id": "broker-to-reportes",
+      "from": "broker",
+      "to": "reportes",
+      "label": "Eventos Venta/Stock",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "variant": "dashed"
+    },
+    {
+      "id": "broker-to-notif",
+      "from": "broker",
+      "to": "notif",
+      "label": "Alertas Stock",
+      "fromSide": "right",
+      "toSide": "bottom",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Acceso y Puertas de Enlace",
+      "items": [
+        "API Gateway (Spring Cloud :8080) centraliza el trafico y valida JWT",
+        "Eureka Server (:8761) resuelve rutas dinamicamente por descubrimiento"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Aislamiento y Persistencia",
+      "items": [
+        "MongoDB 7 configurado en Replica Set para transacciones multidocumento",
+        "6 bases logicas independientes con un usuario propio por microservicio"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Regla de Oro: Ninguna Linea Une 2 Servicios",
+      "items": [
+        "Comunicacion inter-servicio 100% asincrona mediante RabbitMQ (:5672)",
+        "ms-auth permanece fuera del bus como unico servicio sincrono HTTP"
+      ]
     }
   ]
 }

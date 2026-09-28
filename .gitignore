@@ -41,3 +41,6 @@ CLAUDE.local.md
 .agents/
 skills-lock.json
 *.visual-check.*
+
+# Planes locales temporales
+plan_implementacion_ms_auth.md

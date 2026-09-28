@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="generator" content="archify 2.17.0-dev.1">
-  <title>MonPoint MS — Arquitectura y Trafico de Microservicios Diagram</title>
+  <title>Arquitectura del Microservicio ms-auth Diagram</title>
   <script>
     // Resolve the theme before first paint so light-preference users don't
     // see a dark flash. The toolbar script below re-applies with UI state.
@@ -5081,12 +5081,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
            data-preset-badge-blueprint="BLUEPRINT / REV 01"
            data-preset-badge-editorial="EDITORIAL / FIELD NOTE">
         <div class="pulse-dot"></div>
-        <h1>MonPoint MS — Arquitectura y Trafico de Microservicios</h1>
+        <h1>Arquitectura del Microservicio ms-auth</h1>
       </div>
-      <p class="subtitle">HTTP Sincrono perimetral, Eventos Asincronos en RabbitMQ y MongoDB Replica Set</p>
+      <p class="subtitle">Seguridad Stateless, MongoDB y Comunicacion Asincrona con RabbitMQ</p>
     </div>
 
-    <script id="archify-guided-views-data" type="application/json">[{"id":"ingress","label":"Ingreso y Seguridad","focus":["client","gateway","eureka","auth","mongo"],"note":"El cliente web accede via Gateway, valida JWT localmente y autentica contra ms-auth."},{"id":"event-bus","label":"Trafico Asincrono (RabbitMQ)","focus":["clientes","inventario","ventas","broker","reportes","notif"],"note":"Comunicacion no bloqueante: ningun microservicio llama a otro por HTTP."},{"id":"database-per-service","label":"Persistencia Aislada","focus":["auth","mongo"],"note":"MongoDB 7 Replica Set aloja 6 bases logicas independientes con usuarios dedicados."}]</script>
+    <script id="archify-guided-views-data" type="application/json">[{"id":"auth-flow","label":"Flujo Sincrono de Login","focus":["client","gateway","ctrl","svc","repo","db"],"note":"Ciclo síncrono de autenticación HTTP y emisión inmediata del Token JWT."},{"id":"async-events","label":"Emision Asincrona de Eventos","focus":["svc","bus","consumers"],"note":"Publicación no bloqueante de eventos hacia RabbitMQ para otros microservicios."},{"id":"fault-tolerance","label":"Tolerancia a Fallos","focus":["gateway","ctrl","svc","advice"],"note":"Aislamiento de errores mediante el estándar RFC 9457 ProblemDetail."}]</script>
 
     <script id="archify-i18n-data" type="application/json">{"locale":"en","messages":{"viewer.kind.frontend":"Frontend","viewer.kind.backend":"Backend","viewer.kind.database":"Database","viewer.kind.cloud":"Cloud","viewer.kind.security":"Security","viewer.kind.messagebus":"Message bus","viewer.kind.external":"External","viewer.kind.neutral":"Neutral","viewer.kind.node":"Node","viewer.kind.start":"Start","viewer.kind.active":"Active","viewer.kind.waiting":"Waiting","viewer.kind.decision":"Decision","viewer.kind.success":"Success","viewer.kind.failure":"Failure","viewer.toolbar.actions":"Diagram actions","viewer.theme.toggle.title":"Toggle theme (T)","viewer.theme.toggle":"Toggle color theme","viewer.theme.dark":"Dark","viewer.theme.light":"Light","viewer.preset.choose.title":"Choose visual style (S cycles)","viewer.preset.choose":"Choose visual style","viewer.preset.style":"Style","viewer.preset.menu":"Visual style","viewer.preset.identity":"Visual identity","viewer.preset.cycles":"S cycles","viewer.preset.classic":"Classic","viewer.preset.classic.short":"Classic","viewer.preset.classic.hint":"Stable technical default","viewer.preset.flow":"Signal Flow","viewer.preset.flow.short":"Flow","viewer.preset.flow.hint":"Motion-forward presentation","viewer.preset.blueprint":"Blueprint","viewer.preset.blueprint.hint":"Engineering review","viewer.preset.editorial":"Editorial","viewer.preset.editorial.hint":"Publication and launch notes","viewer.preset.badge.signalFlow":"SIGNAL FLOW","viewer.preset.badge.blueprint":"BLUEPRINT / REV 01","viewer.preset.badge.editorial":"EDITORIAL / FIELD NOTE","viewer.preset.badge.editorialPlate":"ARCHIFY / PLATE 04","viewer.preset.current":"Visual style: {style}. Choose visual style","viewer.motion.live":"Live","viewer.motion.still":"Still","viewer.motion.pause":"Pause motion","viewer.motion.resume":"Resume motion","viewer.motion.reduced":"Motion paused by reduced-motion preference","viewer.motion.hidden":"Motion paused while this page is hidden","viewer.motion.yielding":"Pause motion; currently yielding to {owner}","viewer.motion.yielding.title":"Live preview enabled · yielding to {owner}","viewer.owner.story":"the guided story","viewer.owner.chapter":"the active chapter","viewer.owner.chapterPreview":"the chapter delta preview","viewer.owner.handoff":"the chapter handoff","viewer.owner.route":"Route Probe","viewer.owner.lens":"Semantic Lens","viewer.owner.relationship":"Relationship Preview","viewer.owner.intent":"Intent Trace","viewer.owner.focus":"semantic focus","viewer.owner.legend":"legend preview","viewer.owner.reader":"reader interaction","viewer.present.enter":"Enter presentation stage","viewer.present.enter.title":"Presentation stage (F)","viewer.present.exit":"Exit presentation stage","viewer.present.exit.title":"Exit presentation stage (F or Escape)","viewer.present.present":"Present","viewer.present.exit.label":"Exit","viewer.export.button":"Export","viewer.export.button.title":"Export diagram (E)","viewer.export.diagram":"Export diagram","viewer.export.menu":"Export","viewer.export.subtitle":"Portable, clean outputs","viewer.export.share":"Share","viewer.export.shareCard":"Share Card","viewer.export.routeShareCard":"Route Share Card","viewer.export.reachShareCard":"Reach Share Card","viewer.export.copyShareCard":"Copy Share Card","viewer.export.copyDiagram":"Copy diagram","viewer.export.clipboardPng":"PNG to clipboard","viewer.export.raster":"Raster images","viewer.export.image":"Image","viewer.export.lossless":"Lossless image","viewer.export.compact":"Compact image","viewer.export.modern":"Modern image","viewer.export.vectorMotion":"Vector and motion","viewer.export.vectorMotion.heading":"Vector \u0026 motion","viewer.export.editable":"Editable vector","viewer.export.motion6s":"6s motion","viewer.export.unsupported":"Not supported by this browser","viewer.export.clipboardUnsupported":"Clipboard image write not supported by this browser","viewer.export.clipboardUnsupported.period":"Clipboard image write not supported by this browser.","viewer.export.clipboardUnsupported.short":"Clipboard image write not supported in this browser.","viewer.export.motionUnavailable":"Motion capture unavailable in this browser","viewer.export.webmUnavailable":"WebM unavailable in this browser","viewer.export.failed":"Export failed: {message}","viewer.export.unknownVariant":"Unknown Share Card variant: {variant}","viewer.export.routeRequired":"Trace a route before exporting a Route Share Card","viewer.export.reachRequired":"Trace authored reach before exporting a Reach Share Card","viewer.export.unknown":"unknown","viewer.export.routeFailed":"Route Share Card export failed: {message}","viewer.export.reachFailed":"Reach Share Card export failed: {message}","viewer.export.copyFailed":"Copy failed: {message}","viewer.export.copiedPng":"Copied PNG to clipboard","viewer.export.copiedShare":"Copied Share Card","viewer.export.downloadedShare":"Downloaded Share Card","viewer.export.downloadedRoute":"Downloaded Route Share Card","viewer.export.downloadedReach":"Downloaded Reach Share Card","viewer.export.downloadedWebm":"Downloaded WebM","viewer.export.recording":"Recording 6 seconds of motion…","viewer.export.card.routeSummary.one":"Route: {source} → {target} · {count} directed hop","viewer.export.card.routeSummary.other":"Route: {source} → {target} · {count} directed hops","viewer.export.card.reachSummary":"Authored {direction} from {origin} · {nodes} · {links} · max {hops}","viewer.export.card.node.one":"{count} node","viewer.export.card.node.other":"{count} nodes","viewer.export.card.link.one":"{count} link","viewer.export.card.link.other":"{count} links","viewer.export.card.hop.one":"{count} hop","viewer.export.card.hop.other":"{count} hops","viewer.export.card.routeBadge":"ARCHIFY · ROUTE · {hops}","viewer.export.card.reachBadge":"ARCHIFY · {direction} REACH","viewer.export.card.defaultBadge":"ARCHIFY · {preset} · {theme}","viewer.export.direction.upstream":"Upstream","viewer.export.direction.downstream":"Downstream","viewer.export.error.canvasUnavailable":"Canvas unavailable for {label}","viewer.export.error.contextUnavailable":"2D canvas context unavailable for {label}","viewer.export.error.toBlobUnavailable":"canvas.toBlob unavailable for {label}","viewer.export.error.toBlobNull":"canvas.toBlob returned no data for {label}","viewer.export.error.variantsCombined":"Share Card variants cannot be combined","viewer.export.error.viewerState":"Share Card export could not remove temporary viewer state","viewer.export.error.routeState":"Route Card export could not preserve the resolved route safely","viewer.export.error.reachState":"Reach Card export could not preserve authored reach safely","viewer.export.error.webmRequirements":"WebM motion export requires a trace animation and browser MediaRecorder support","viewer.export.error.mediaRecorder":"MediaRecorder failed","viewer.export.error.emptyWebm":"MediaRecorder produced an empty WebM","viewer.export.error.webmBackground":"SVG background could not be loaded for WebM export","viewer.guided.region":"Guided diagram views","viewer.guided.previous":"Previous guided view","viewer.guided.previous.title":"Previous guided view ([)","viewer.guided.next":"Next guided view","viewer.guided.next.title":"Next guided view (])","viewer.guided.views":"Guided views","viewer.guided.explore":"Explore this system","viewer.guided.intro":"Step through curated paths without changing the source diagram.","viewer.guided.trail":"Story trail","viewer.guided.beat":"Beat","viewer.guided.nextBeat":"Next","viewer.guided.play":"Play guided story","viewer.guided.play.title":"Play guided story (P)","viewer.guided.pause":"Pause guided story","viewer.guided.pause.title":"Pause guided story (P)","viewer.guided.replay":"Replay guided story","viewer.guided.replay.title":"Replay guided story (P)","viewer.guided.playStory":"Play story","viewer.guided.pauseStory":"Pause","viewer.guided.replayStory":"Replay story","viewer.guided.motionUnavailable":"Story playback unavailable while motion is Still","viewer.guided.enableMotion":"Switch motion to Live to play the guided story","viewer.guided.selectBeatLink":"Select a Story Beat to copy its exact link","viewer.guided.copyMoment":"Copy moment","viewer.guided.momentCopied":"Moment link copied","viewer.guided.momentCopyFailed":"Could not copy story moment link","viewer.guided.copied":"Copied","viewer.guided.copyFailed":"Copy failed","viewer.guided.showAll":"Show all","viewer.guided.showAll.aria":"Show entire diagram","viewer.guided.chapters":"Story chapters","viewer.guided.storyTrail":"Story trail for {label}: {count} beats","viewer.guided.chapter.open":"Open chapter {index} of {total}: {label}, {count} stops","viewer.guided.chapter.current":"Current chapter {index} of {total}: {label}, {count} stops","viewer.guided.chapter.selectedNodes":"{count} selected nodes","viewer.guided.chapter.stops":"{count} stops","viewer.guided.chapter.stop.one":"{count} stop","viewer.guided.chapter.stop.other":"{count} stops","viewer.guided.chapter.current.title":"{label} — current chapter, {count} stops","viewer.guided.chapter.delta.expanded":"{stay} stay, {enter} enter, {leave} leave","viewer.guided.chapter.delta.aria":"Open chapter {index} of {total}: {label}. Chapter focus delta: {delta}","viewer.guided.chapter.delta.title":"{label} — {delta} chapter focus","viewer.guided.handoff":"{from} → {to} · via {label}","viewer.guided.share.chapter":"Chapter {index} / {total}","viewer.guided.share.initial":"Chapter 01 / 01","viewer.guided.share.default":"Guided chapter","viewer.guided.state.ready":"Ready","viewer.guided.state.playing":"Playing","viewer.guided.state.settled":"Settled","viewer.guided.state.paused":"Paused","viewer.guided.state.pinned":"Pinned","viewer.guided.state.still":"Still","viewer.guided.share.step":"Step {index} / {total} · {label}","viewer.guided.share.staticMoment":"{step} · Static moment","viewer.guided.share.complete":"{count} steps complete · {note}","viewer.guided.share.settled":"Path settled for reading.","viewer.guided.share.staticPath":"{count} steps · Static path","viewer.guided.share.ready":"{count} steps · Ready","viewer.guided.share.aria":"{state} chapter {index} of {total}: {label}. {beat}. {route}","viewer.guided.beat.start":"Beat {index} / {total} · {label} · starting point","viewer.guided.beat.forward":"Beat {index} / {total} · {from} → {to}","viewer.guided.beat.reverse":"Beat {index} / {total} · {from} → {to} · reverse authored link","viewer.guided.beat.multiple":"Beat {index} / {total} · {from} ⇄ {to} · {count} authored links","viewer.guided.beat.group":"Beat {index} / {total} · {from} · {to} · grouped · no direct link","viewer.guided.beat.aria.prefix":"Story beat {index} of {total}: {label}. ","viewer.guided.beat.aria.start":"Starting point.","viewer.guided.beat.aria.forward":"From {from} through one authored forward relationship.","viewer.guided.beat.aria.reverse":"From {from}; the authored relationship points from {to} to {from}.","viewer.guided.beat.aria.multiple":"From {from} through {count} authored relationships; shown without arbitrary motion.","viewer.guided.beat.aria.group":"Grouped from {from} with no direct authored relationship.","viewer.guided.caption.start":"Starting point","viewer.guided.caption.grouped":"Grouped transition · no direct authored link","viewer.guided.caption.more":" +{count} more","viewer.guided.caption.reverse":"Reverse authored relationship","viewer.guided.caption.relationships":"{count} authored relationships","viewer.guided.caption.relationship":"Authored relationship","viewer.guided.caption.direction":"authored direction: {from} → {to}","viewer.guided.caption.starting":"Authored starting point","viewer.guided.beatLink":"Copy link to current story moment: Beat {index} of {total}: {label}","viewer.guided.noStory":"This diagram has no authored guided story.","viewer.guide.eyebrow":"Diagram guide","viewer.guide.close":"Close diagram guide","viewer.guide.inspecting":"Inspecting compiled semantics","viewer.guide.actions":"Diagram exploration actions","viewer.guide.find":"Find any node","viewer.guide.find.hint":"Search labels, responsibilities, kinds, and stable IDs.","viewer.guide.route":"Trace a route","viewer.guide.route.aria":"Trace a directed route","viewer.guide.route.hint":"Ask how two semantic nodes connect in authored direction.","viewer.guide.map":"See the whole system","viewer.guide.map.hint":"Open Semantic Radar with a live viewport and stable nodes.","viewer.guide.lens":"Compare semantic kinds","viewer.guide.lens.hint":"Count roles, reveal their traffic, and compare direct authored links.","viewer.guide.story":"Play the guided story","viewer.guide.story.hint":"Walk the authored chapters and real relationships.","viewer.guide.present":"Enter Presentation Stage","viewer.guide.present.hint":"Give the live diagram the viewport without changing export.","viewer.guide.shortcuts":"Additional keyboard shortcuts","viewer.guide.shortcut.export":"Export","viewer.guide.shortcut.theme":"Theme","viewer.guide.shortcut.style":"Style","viewer.guide.shortcut.reset":"Reset","viewer.guide.shortcut.zoomIn":"Zoom in","viewer.guide.shortcut.zoomOut":"Zoom out","viewer.guide.shortcut.close":"Close","viewer.guide.facts":"{nodes} · {relationships} · {views}","viewer.guide.fact.node.one":"{count} semantic node","viewer.guide.fact.node.other":"{count} semantic nodes","viewer.guide.fact.relationship.one":"{count} relationship","viewer.guide.fact.relationship.other":"{count} relationships","viewer.guide.fact.view.one":"{count} guided view","viewer.guide.fact.view.other":"{count} guided views","viewer.guide.story.available.one":"Walk {count} authored chapter and its real relationships.","viewer.guide.story.available.other":"Walk {count} authored chapters and their real relationships.","viewer.guide.story.unavailable":"No authored guided story in this diagram.","viewer.guide.open":"Open diagram guide","viewer.guide.noStory":"This diagram has no authored guided story.","viewer.finder.title":"Find a node","viewer.finder.close":"Close node finder","viewer.finder.placeholder":"Search labels or IDs","viewer.finder.search":"Search diagram nodes","viewer.finder.results":"Diagram nodes","viewer.finder.empty":"No matching nodes","viewer.finder.result.focus":"Focus {label}","viewer.finder.result.routeStart":"Choose {label} as route start","viewer.finder.result.routeTarget":"Choose {label} as route destination, {links}","viewer.finder.status.empty":"No matching nodes","viewer.finder.status.count.one":"{count} matching node","viewer.finder.status.count.other":"{count} matching nodes","viewer.finder.noun.nodes":"nodes","viewer.finder.link.one":"{count} link","viewer.finder.link.other":"{count} links","viewer.finder.result.focus.one":"Focus {label}, {count} related connection","viewer.finder.result.focus.other":"Focus {label}, {count} related connections","viewer.finder.status.filtered":"{visible} of {available} {noun}","viewer.finder.status.all":"{available} {noun}","viewer.passport.eyebrow":"Semantic passport","viewer.passport.metadata":"Node metadata","viewer.passport.evidence":"Verified source evidence","viewer.passport.verified":"Verified source","viewer.passport.verificationScope":"Verified against local Git at the pinned revision. Remote access has not been checked.","viewer.passport.reach":"Authored reach","viewer.passport.reach.trace":"Trace authored reachability","viewer.passport.upstream":"Upstream","viewer.passport.downstream":"Downstream","viewer.passport.upstream.trace":"Trace upstream authored reachability","viewer.passport.downstream.trace":"Trace downstream authored reachability","viewer.passport.close":"Close semantic passport","viewer.passport.copy":"Copy link","viewer.passport.copy.focus":"Copy link to focused node","viewer.passport.relations":"Relations","viewer.passport.relations.show":"Show connected relationships","viewer.passport.relations.hide":"Hide connected relationships","viewer.passport.relations.list":"Connected relationships","viewer.passport.copyRelation":"Copy relation","viewer.passport.copyNode":"Copy node","viewer.passport.copyPinned":"Copy link to pinned relationship","viewer.passport.copySource":"Copy link to source node","viewer.passport.copy.focused.success":"Focused node link copied","viewer.passport.copy.pinned.success":"Pinned relationship link copied","viewer.passport.copy.focused.failed":"Could not copy focused node link","viewer.passport.copy.pinned.failed":"Could not copy pinned relationship link","viewer.passport.relationship.none":"No connected relationships","viewer.passport.relationship.count.one":"{count} relation","viewer.passport.relationship.count.other":"{count} relations","viewer.passport.relationship.show.one":"Show {count} connected relationship","viewer.passport.relationship.show.other":"Show {count} connected relationships","viewer.passport.relationship.summary":"{out} outgoing · {in} incoming{loops}","viewer.passport.relationship.loops":" · {count} loop","viewer.passport.relationship.explorer":"Direct relationship explorer","viewer.passport.relationship.help":"Use arrow keys to explore relationships. Press Enter or Space to pin details; Escape clears.","viewer.passport.relationship.loopsBack":"loops back","viewer.passport.relationship.connectsTo":"connects to","viewer.passport.relationship.connectsFrom":"connects from","viewer.passport.relationship.pinned":"Pinned relationship · {from} → {to} · {label}","viewer.passport.relationship.inspect":"Inspect relationship {index} of {total}: {from} to {to}, {label}. Press Enter for details.","viewer.passport.relationship.group.out":"Outgoing","viewer.passport.relationship.group.in":"Incoming","viewer.passport.relationship.group.loop":"Self loops","viewer.passport.relationship.row":"{group}: {relationship}, {neighbor}","viewer.passport.relationship.direction.out":"OUT →","viewer.passport.relationship.direction.in":"← IN","viewer.passport.relationship.direction.loop":"LOOP","viewer.passport.sourceCount.one":"{count} verified source reference","viewer.passport.sourceCount.other":"{count} verified source references","viewer.passport.sourceMarker":"SRC","viewer.passport.beacon.one":"{count} verified source; focus this node to inspect","viewer.passport.beacon.other":"{count} verified sources; focus this node to inspect","viewer.passport.repository.open":"Open verified repository revision {revision}","viewer.passport.source.open":"Open verified source {path} at revision {revision}","viewer.passport.source.openLink":"Open ↗","viewer.passport.reach.upstream.one":"Trace {count} upstream authored node","viewer.passport.reach.upstream.other":"Trace {count} upstream authored nodes","viewer.passport.reach.downstream.one":"Trace {count} downstream authored node","viewer.passport.reach.downstream.other":"Trace {count} downstream authored nodes","viewer.passport.reach.noUpstream":"No upstream authored nodes","viewer.passport.reach.noDownstream":"No downstream authored nodes","viewer.passport.reach.status":"{direction} · {nodes} nodes · {links} links · max {hops} hops","viewer.route.eyebrow":"Route probe","viewer.route.start":"Choose a start node","viewer.route.start.find":"Find start","viewer.route.start.find.aria":"Find a route start","viewer.route.copy":"Copy link","viewer.route.copy.aria":"Copy link to traced route","viewer.route.clear":"Clear","viewer.route.clear.aria":"Clear route probe","viewer.route.traced":"Traced route","viewer.route.pickTwo":"Pick two semantic nodes on the diagram","viewer.route.pickOne":"Pick a semantic node on the diagram","viewer.route.controls":"Route journey controls","viewer.route.previous":"Previous route position","viewer.route.play":"Play route journey","viewer.route.pause":"Pause route journey","viewer.route.replay":"Replay route journey","viewer.route.next":"Next route position","viewer.route.journey":"Journey","viewer.route.pause.label":"Pause","viewer.route.replay.label":"Replay","viewer.route.overview":"Overview","viewer.route.overview.aria":"Show complete route overview","viewer.route.instructions":"Choose the source, then the destination. Direction matters.","viewer.route.destination":"Choose a destination from {label}","viewer.route.destination.find":"Find target","viewer.route.destination.find.aria":"Find a reachable route destination","viewer.route.differentDestination":"Choose a different destination","viewer.route.distinct":"A route needs two distinct semantic nodes.","viewer.route.unreachable":"No directed route to {label}","viewer.route.unreachable.detail":"{target} is not reachable from {source}. Pick a highlighted destination.","viewer.route.start.instructions":"Select the source. The next step will reveal only directed destinations.","viewer.route.copy.success":"Traced route link copied","viewer.route.copy.failed":"Could not copy traced route link","viewer.route.position":"Route position {index} of {total}: {label}","viewer.route.step":"Step {index} of {total} · {phase} · {label}","viewer.route.motionRequired":"Automatic journey requires Live motion","viewer.route.trigger.clear":"Clear traced route","viewer.route.overview.status":"{nodes} · {hops} · shortest authored route","viewer.route.overview.node.one":"{count} node","viewer.route.overview.node.other":"{count} nodes","viewer.route.overview.hop.one":"{count} directed hop","viewer.route.overview.hop.other":"{count} directed hops","viewer.route.phase.playing":"Playing","viewer.route.phase.complete":"Complete","viewer.route.phase.inspecting":"Inspecting","viewer.route.destination.count.one":"{count} directed destination available. Pick a highlighted node.","viewer.route.destination.count.other":"{count} directed destinations available. Pick a highlighted node.","viewer.route.noOutgoing":"No outgoing route starts here. Clear and choose another source.","viewer.route.result.title":"{source} to {target}","viewer.route.finder.source.title":"Choose route start","viewer.route.finder.source.placeholder":"Search route sources","viewer.route.finder.source.empty":"No matching route sources","viewer.route.finder.source.results":"Nodes that can start a route","viewer.route.finder.source.noun":"route sources","viewer.route.finder.source.badge":"start","viewer.route.finder.target.title":"Destination from {label}","viewer.route.finder.target.placeholder":"Search reachable destinations","viewer.route.finder.target.empty":"No matching reachable destinations","viewer.route.finder.target.results":"Reachable route destinations","viewer.route.finder.target.noun":"reachable destinations","viewer.route.hop.one":"{count} hop","viewer.route.hop.other":"{count} hops","viewer.lens.eyebrow":"Semantic lens","viewer.lens.title":"Compare system roles","viewer.lens.close":"Close semantic lens","viewer.lens.instruction":"Choose up to two semantic kinds. One reveals its real traffic; two compare only direct authored relationships.","viewer.lens.kinds":"Semantic kinds","viewer.lens.choose":"Choose a kind to inspect its nodes and touching relationships.","viewer.lens.copy":"Copy link to semantic lens","viewer.lens.clear":"Clear semantic lens","viewer.lens.open":"Open semantic lens","viewer.lens.openActive":"Open active semantic lens","viewer.lens.legend":"Semantic legend","viewer.lens.legend.inspect.one":"Inspect {label}, {count} node","viewer.lens.legend.inspect.other":"Inspect {label}, {count} nodes","viewer.lens.kind.count.one":"{label}, {count} node","viewer.lens.kind.count.other":"{label}, {count} nodes","viewer.lens.compare.one":"{first} → {second}: {forward} · {second} → {first}: {reverse} · {count} direct relationship","viewer.lens.compare.other":"{first} → {second}: {forward} · {second} → {first}: {reverse} · {count} direct relationships","viewer.lens.single":"{nodes} · {relationships} · connected peers remain visible","viewer.lens.node.one":"{count} {label} node","viewer.lens.node.other":"{count} {label} nodes","viewer.lens.relationship.one":"{count} touching relationship","viewer.lens.relationship.other":"{count} touching relationships","viewer.radar.title":"Semantic radar","viewer.radar.building":"Building overview","viewer.radar.openFull":"Open full semantic radar","viewer.radar.open":"Open radar","viewer.radar.close":"Close semantic radar","viewer.radar.surface":"Diagram overview. Click a node to focus it, or use arrow keys to pan.","viewer.radar.click":"Click node","viewer.radar.drag":"Drag to pan","viewer.radar.space":"Semantic radar needs more MAP space.","viewer.radar.nodes":"Semantic diagram radar nodes","viewer.radar.focus":"Focus {label} from Semantic Radar","viewer.radar.status":"{count} nodes · {viewport}","viewer.radar.fullMap":"{count} nodes · full map","viewer.radar.compacted":"Radar compacted to avoid covering the Semantic Passport or MAP controls.","viewer.radar.cancelWaiting":"Cancel semantic radar waiting for more MAP space","viewer.radar.needsSpace":"Semantic radar needs more visible MAP space","viewer.radar.viewport.full":"full map","viewer.radar.viewport.width":"{percent}% width","viewer.radar.viewport.scale":"{percent}% viewport","viewer.nav.controls":"Diagram view controls","viewer.nav.route":"Trace a directed route","viewer.nav.route.title":"Trace route (R)","viewer.nav.route.short":"PATH","viewer.nav.radar":"Open semantic radar","viewer.nav.radar.title":"Semantic radar (M)","viewer.nav.radar.short":"MAP","viewer.nav.lens":"Open semantic lens","viewer.nav.lens.title":"Semantic lens (L)","viewer.nav.lens.short":"LENS","viewer.nav.find":"Find a node","viewer.nav.find.title":"Find a node (/)","viewer.nav.guide":"Open diagram guide","viewer.nav.guide.title":"Diagram guide (?)","viewer.nav.zoomOut":"Zoom out","viewer.nav.zoomOut.title":"Zoom out (-)","viewer.nav.reset":"Reset diagram view","viewer.nav.reset.title":"Reset view (0)","viewer.nav.read":"READ","viewer.nav.zoomIn":"Zoom in","viewer.nav.zoomIn.title":"Zoom in (+)","viewer.nav.camera":"{hint}. Reset diagram view","viewer.nav.camera.title":"{semantic}{hint} · reset view (0)","viewer.nav.camera.semantic":"Semantic camera active · ","viewer.nav.level.map":"MAP","viewer.nav.level.read":"READ","viewer.nav.level.full":"FULL","viewer.nav.level.auto":"AUTO","viewer.nav.detail.map":"Zoom in to reveal relationship labels and node context","viewer.nav.detail.read":"Zoom in again to reveal tags and annotations","viewer.nav.detail.full":"Full diagram detail","viewer.intent.summary":"{label}. {out} outgoing, {in} incoming{loops}. {total} connections. Press Enter for details.","viewer.intent.loops":", {count} self loop","viewer.common.copied":"Copied","viewer.common.copyFailed":"Copy failed","viewer.common.copyLink":"Copy link","viewer.common.clear":"Clear","viewer.common.close":"Close"}}</script>
     <div class="guided-views no-print" id="guided-views" hidden aria-label="Guided diagram views">
@@ -5131,9 +5131,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     <!-- Main Diagram -->
     <div class="diagram-container" data-detail-level="read"
          data-preset-badge-editorial-plate="ARCHIFY / PLATE 04">
-      <svg viewBox="0 0 1210 484" role="img" lang="en" aria-labelledby="archify-diagram-title archify-diagram-description" data-animation="trace" data-preset="classic" data-quality-profile="showcase">
-        <title id="archify-diagram-title">MonPoint MS — Arquitectura y Trafico de Microservicios</title>
-        <desc id="archify-diagram-description">HTTP Sincrono perimetral, Eventos Asincronos en RabbitMQ y MongoDB Replica Set</desc>
+      <svg viewBox="0 0 1280 582" role="img" lang="en" aria-labelledby="archify-diagram-title archify-diagram-description" data-animation="trace" data-preset="classic" data-quality-profile="showcase">
+        <title id="archify-diagram-title">Arquitectura del Microservicio ms-auth</title>
+        <desc id="archify-diagram-description">Seguridad Stateless, MongoDB y Comunicacion Asincrona con RabbitMQ</desc>
         <!-- Definitions -->
         <defs>
           <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
@@ -5157,287 +5157,252 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <rect width="100%" height="100%" fill="url(#grid)" />
 
         <!-- Boundaries (behind everything) -->
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="security-group" data-composition-frame-id="0" data-composition-frame-label="Microservicios de Dominio (Spring Boot)" x="10" y="170" width="1160" height="106" rx="8" class="c-security-group" stroke-width="1"/>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="security-group" data-composition-frame-id="0" data-composition-frame-label="Microservicio ms-auth :8081 (Hibrido Sincrono/Asincrono)" x="430" y="230" width="630" height="284" rx="8" class="c-security-group" stroke-width="1"/>
 
         <!-- Connection paths (before components for correct z-order) -->
-        <path data-edge-from="client" data-edge-to="gateway" data-edge-label="HTTP + JWT" data-edge-key="0" data-edge-id="client-to-gw" data-composition-points="180,78;360,78" d="M 180 78 L 360 78" class="a-emphasis" data-animate="edge" style="--step:0" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="gateway" data-edge-to="eureka" data-edge-label="resuelve rutas" data-edge-key="1" data-edge-id="gw-to-eureka" data-composition-points="510,78;700,78" d="M 510 78 L 700 78" class="a-dashed" data-animate="edge" style="--step:1" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
-        <path data-edge-from="gateway" data-edge-to="auth" data-edge-label="HTTP Sincrono" data-edge-key="2" data-edge-id="gw-to-auth" data-composition-points="428,106;428,153;110,153;110,200" d="M 428 106 L 428 145 Q 428 153 420 153 L 118 153 Q 110 153 110 161 L 110 200" class="a-emphasis" data-animate="edge" style="--step:2" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="gateway" data-edge-to="ventas" data-edge-label="HTTP Proxy" data-edge-key="3" data-edge-id="gw-to-ventas" data-composition-points="442,106;442,153;680,153;680,200" d="M 442 106 L 442 145 Q 442 153 450 153 L 672 153 Q 680 153 680 161 L 680 200" class="a-default" data-animate="edge" style="--step:3" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="auth" data-edge-to="mongo" data-edge-label="auth_db" data-edge-key="4" data-edge-id="auth-to-mongo" data-composition-points="110,256;110,308;225,308;225,360" d="M 110 256 L 110 300 Q 110 308 118 308 L 217 308 Q 225 308 225 316 L 225 360" class="a-emphasis" data-animate="edge" style="--step:4" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="clientes" data-edge-to="broker" data-edge-label="Cliente*" data-edge-key="5" data-edge-id="clientes-to-broker" data-composition-points="300,256;300,280;546,280;546,388;570,388" d="M 300 256 L 300 272 Q 300 280 308 280 L 538 280 Q 546 280 546 288 L 546 380 Q 546 388 554 388 L 570 388" class="a-default" data-animate="edge" style="--step:5" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="inventario" data-edge-to="broker" data-edge-label="Stock*" data-edge-key="6" data-edge-id="inv-to-broker" data-composition-points="490,256;490,308;696,308;696,360" d="M 490 256 L 490 300 Q 490 308 498 308 L 688 308 Q 696 308 696 316 L 696 360" class="a-default" data-animate="edge" style="--step:6" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="ventas" data-edge-to="broker" data-edge-label="Saga Venta" data-edge-key="7" data-edge-id="ventas-to-broker" data-composition-points="680,256;680,308;710,308;710,360" d="M 680 256 L 680 300 Q 680 308 688 308 L 702 308 Q 710 308 710 316 L 710 360" class="a-emphasis" data-animate="edge" style="--step:7" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="broker" data-edge-to="reportes" data-edge-label="Eventos Venta/Stock" data-edge-key="8" data-edge-id="broker-to-reportes" data-composition-points="724,360;724,308;870,308;870,256" d="M 724 360 L 724 316 Q 724 308 732 308 L 862 308 Q 870 308 870 300 L 870 256" class="a-dashed" data-animate="edge" style="--step:8" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
-        <path data-edge-from="broker" data-edge-to="notif" data-edge-label="Alertas Stock" data-edge-key="9" data-edge-id="broker-to-notif" data-composition-points="850,388;1065,388;1065,256" d="M 850 388 L 1057 388 Q 1065 388 1065 380 L 1065 256" class="a-dashed" data-animate="edge" style="--step:9" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="client" data-edge-to="gateway" data-edge-label="POST /login" data-edge-key="0" data-edge-id="client-to-gw" data-composition-points="190,292;260,292" d="M 190 292 L 260 292" class="a-emphasis" data-animate="edge" style="--step:0" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="gateway" data-edge-to="ctrl" data-edge-label="HTTP Sincrono" data-edge-key="1" data-edge-id="gw-to-ctrl" data-composition-points="400,292;460,292" d="M 400 292 L 460 292" class="a-default" data-animate="edge" style="--step:1" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="ctrl" data-edge-to="svc" data-edge-label="authenticate()" data-edge-key="2" data-edge-id="ctrl-to-svc" data-composition-points="590,292;660,292" d="M 590 292 L 660 292" class="a-default" data-animate="edge" style="--step:2" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="svc" data-edge-to="repo" data-edge-label="findByCorreo()" data-edge-key="3" data-edge-id="svc-to-repo" data-composition-points="800,292;870,292" d="M 800 292 L 870 292" class="a-default" data-animate="edge" style="--step:3" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="repo" data-edge-to="db" data-edge-label="BSON Document" data-edge-key="4" data-edge-id="repo-to-db" data-composition-points="1030,292;1100,292" d="M 1030 292 L 1100 292" class="a-emphasis" data-animate="edge" style="--step:4" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="gateway" data-edge-to="eureka" data-edge-label="lookup" data-edge-key="5" data-edge-id="gw-to-eureka" data-composition-points="330,324;330,430" d="M 330 324 L 330 430" class="a-dashed" data-animate="edge" style="--step:5" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="svc" data-edge-to="advice" data-edge-label="BadCredentials" data-edge-key="6" data-edge-id="svc-to-advice" data-composition-points="730,324;730,348;751,348;751,406;735,406;735,430" d="M 730 324 L 730 340 Q 730 348 738 348 L 743 348 Q 751 348 751 356 L 751 398 Q 751 406 743 406 L 743 406 Q 735 406 735 414 L 735 430" class="a-dashed" data-animate="edge" style="--step:6" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="repo" data-edge-to="advice" data-edge-label="MongoException" data-edge-key="7" data-edge-id="repo-to-advice" data-composition-points="950,324;950,348;834,348;834,462;810,462" d="M 950 324 L 950 340 Q 950 348 942 348 L 842 348 Q 834 348 834 356 L 834 454 Q 834 462 826 462 L 810 462" class="a-dashed" data-animate="edge" style="--step:7" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="svc" data-edge-to="bus" data-edge-label="Publica Eventos" data-edge-key="8" data-edge-id="svc-to-bus" data-composition-points="730,260;730,236;751,236;751,178;735,178;735,154" d="M 730 260 L 730 244 Q 730 236 738 236 L 743 236 Q 751 236 751 228 L 751 186 Q 751 178 743 178 L 743 178 Q 735 178 735 170 L 735 154" class="a-emphasis" data-animate="edge" style="--step:8" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="bus" data-edge-to="consumers" data-edge-label="Consume Asincrono" data-edge-key="9" data-edge-id="bus-to-consumers" data-composition-points="810,122;870,122" d="M 810 122 L 870 122" class="a-dashed" data-animate="edge" style="--step:9" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
 
         <!-- Components -->
-        <g id="node-client" data-node-id="client" data-node-label="Cliente Web" tabindex="0" role="button" aria-label="Focus Cliente Web, Vue 3 · Nginx :5173, Architecture component, Vue.js" aria-pressed="false" data-node-kind="external" data-node-sublabel="Vue 3 · Nginx :5173" data-node-context="Architecture component" data-node-brand="Vue.js" data-node-brand-id="vue" data-node-brand-status="preset" data-node-brand-source="https://github.com/vuejs/art/blob/a1c78b74569b70a25300925b4eacfefcc143b8f6/logo.svg">
-          <title>Cliente Web · Vue 3 · Nginx :5173 · Architecture component · Vue.js</title>
-          <rect x="40" y="50" width="140" height="56" rx="6" class="c-mask"/>
-          <rect x="40" y="50" width="140" height="56" rx="6" class="c-external" data-animate="node" style="--step:0" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(46 56) scale(0.6875)">
+        <g id="node-client" data-node-id="client" data-node-label="Cliente Web" tabindex="0" role="button" aria-label="Focus Cliente Web, Vue 3 :5173 / Postman, Architecture component, Vue.js" aria-pressed="false" data-node-kind="external" data-node-sublabel="Vue 3 :5173 / Postman" data-node-context="Architecture component" data-node-brand="Vue.js" data-node-brand-id="vue" data-node-brand-status="preset" data-node-brand-source="https://github.com/vuejs/art/blob/a1c78b74569b70a25300925b4eacfefcc143b8f6/logo.svg">
+          <title>Cliente Web · Vue 3 :5173 / Postman · Architecture component · Vue.js</title>
+          <rect x="30" y="260" width="160" height="64" rx="6" class="c-mask"/>
+          <rect x="30" y="260" width="160" height="64" rx="6" class="c-external" data-animate="node" style="--step:0" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(36 266) scale(0.6875)">
             <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
             <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
           </g>
-          <g aria-hidden="true" data-brand-mark="vue" data-brand-title="Vue.js" data-brand-status="preset" data-brand-source="https://github.com/vuejs/art/blob/a1c78b74569b70a25300925b4eacfefcc143b8f6/logo.svg" class="brand-mark" transform="translate(158 56)">
+          <g aria-hidden="true" data-brand-mark="vue" data-brand-title="Vue.js" data-brand-status="preset" data-brand-source="https://github.com/vuejs/art/blob/a1c78b74569b70a25300925b4eacfefcc143b8f6/logo.svg" class="brand-mark" transform="translate(168 266)">
             <rect width="16" height="16" rx="4" class="brand-mark-badge"/>
             <path d="M24,1.61H14.06L12,5.16,9.94,1.61H0L12,22.39ZM12,14.08,5.16,2.23H9.59L12,6.41l2.41-4.18h4.43Z" transform="translate(3 3) scale(0.4166666666666667)" fill="#4FC08D"/>
             <rect width="16" height="16" rx="4" class="brand-mark-frame"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="110" y="76" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Cliente Web</text>
-        <text data-detail="context" x="110" y="92" class="t-muted" font-size="9" text-anchor="middle">Vue 3 · Nginx :5173</text>
+          <text data-node-label="" data-detail-anchor="" x="110" y="290" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Cliente Web</text>
+        <text data-detail="context" x="110" y="306" class="t-muted" font-size="9" text-anchor="middle">Vue 3 :5173 / Postman</text>
         </g>
 
         <g id="node-gateway" data-node-id="gateway" data-node-label="API Gateway" tabindex="0" role="button" aria-label="Focus API Gateway, Spring Cloud :8080, Architecture component, Spring" aria-pressed="false" data-node-kind="cloud" data-node-sublabel="Spring Cloud :8080" data-node-tag="Valida JWT" data-node-context="Architecture component" data-node-brand="Spring" data-node-brand-id="spring" data-node-brand-status="preset" data-node-brand-source="https://spring.io/trademarks">
           <title>API Gateway · Spring Cloud :8080 · Architecture component · Valida JWT · Spring</title>
-          <rect x="360" y="50" width="150" height="56" rx="6" class="c-mask"/>
-          <rect x="360" y="50" width="150" height="56" rx="6" class="c-cloud" data-animate="node" style="--step:1" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="cloud" class="semantic-sigil s-cloud" transform="translate(366 56) scale(0.6875)">
+          <rect x="260" y="260" width="140" height="64" rx="6" class="c-mask"/>
+          <rect x="260" y="260" width="140" height="64" rx="6" class="c-cloud" data-animate="node" style="--step:1" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="cloud" class="semantic-sigil s-cloud" transform="translate(266 266) scale(0.6875)">
             <path d="M4.3 12.5h7.3a2.4 2.4 0 0 0 .2-4.8 4 4 0 0 0-7.5-1.3A3.1 3.1 0 0 0 4.3 12.5Z"/>
           </g>
-          <g aria-hidden="true" data-brand-mark="spring" data-brand-title="Spring" data-brand-status="preset" data-brand-source="https://spring.io/trademarks" class="brand-mark" transform="translate(488 56)">
+          <g aria-hidden="true" data-brand-mark="spring" data-brand-title="Spring" data-brand-status="preset" data-brand-source="https://spring.io/trademarks" class="brand-mark" transform="translate(378 266)">
             <rect width="16" height="16" rx="4" class="brand-mark-badge"/>
             <path d="M21.8537 1.4158a10.4504 10.4504 0 0 1-1.284 2.2471A11.9666 11.9666 0 1 0 3.8518 20.7757l.4445.3951a11.9543 11.9543 0 0 0 19.6316-8.2971c.3457-3.0126-.568-6.8649-2.0743-11.458zM5.5805 20.8745a1.0174 1.0174 0 1 1-.1482-1.4323 1.0396 1.0396 0 0 1 .1482 1.4323zm16.1991-3.5806c-2.9385 3.9263-9.2601 2.5928-13.2852 2.7904 0 0-.7161.0494-1.4323.1481 0 0 .2717-.1234.6174-.2469 2.8398-.9877 4.1732-1.1853 5.9018-2.0743 3.2349-1.6545 6.4698-5.2844 7.1118-9.0379-1.2347 3.6053-4.9881 6.7167-8.3959 7.9761-2.3459.8643-6.5685 1.7039-6.5685 1.7039l-.1729-.0988c-2.8645-1.4076-2.9632-7.6304 2.2718-9.6306 2.2966-.889 4.4696-.395 6.9637-.9877 2.6422-.6174 5.7043-2.5929 6.939-5.1857 1.3828 4.1732 3.062 10.643.0493 14.6434z" transform="translate(3 3) scale(0.4166666666666667)" fill="#6DB33F"/>
             <rect width="16" height="16" rx="4" class="brand-mark-frame"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="435" y="76" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">API Gateway</text>
-        <text data-detail="context" x="435" y="92" class="t-muted" font-size="9" text-anchor="middle">Spring Cloud :8080</text>
-        <text data-detail="fine" x="435" y="98" class="t-cloud" font-size="7" text-anchor="middle">Valida JWT</text>
+          <text data-node-label="" data-detail-anchor="" x="330" y="290" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">API Gateway</text>
+        <text data-detail="context" x="330" y="306" class="t-muted" font-size="9" text-anchor="middle">Spring Cloud :8080</text>
+        <text data-detail="fine" x="330" y="316" class="t-cloud" font-size="7" text-anchor="middle">Valida JWT</text>
         </g>
 
         <g id="node-eureka" data-node-id="eureka" data-node-label="Eureka Server" tabindex="0" role="button" aria-label="Focus Eureka Server, Discovery :8761, Architecture component, Spring" aria-pressed="false" data-node-kind="cloud" data-node-sublabel="Discovery :8761" data-node-tag="Registry" data-node-context="Architecture component" data-node-brand="Spring" data-node-brand-id="spring" data-node-brand-status="preset" data-node-brand-source="https://spring.io/trademarks">
           <title>Eureka Server · Discovery :8761 · Architecture component · Registry · Spring</title>
-          <rect x="700" y="50" width="140" height="56" rx="6" class="c-mask"/>
-          <rect x="700" y="50" width="140" height="56" rx="6" class="c-cloud" data-animate="node" style="--step:2" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="cloud" class="semantic-sigil s-cloud" transform="translate(706 56) scale(0.6875)">
+          <rect x="260" y="430" width="140" height="64" rx="6" class="c-mask"/>
+          <rect x="260" y="430" width="140" height="64" rx="6" class="c-cloud" data-animate="node" style="--step:6" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="cloud" class="semantic-sigil s-cloud" transform="translate(266 436) scale(0.6875)">
             <path d="M4.3 12.5h7.3a2.4 2.4 0 0 0 .2-4.8 4 4 0 0 0-7.5-1.3A3.1 3.1 0 0 0 4.3 12.5Z"/>
           </g>
-          <g aria-hidden="true" data-brand-mark="spring" data-brand-title="Spring" data-brand-status="preset" data-brand-source="https://spring.io/trademarks" class="brand-mark" transform="translate(818 56)">
+          <g aria-hidden="true" data-brand-mark="spring" data-brand-title="Spring" data-brand-status="preset" data-brand-source="https://spring.io/trademarks" class="brand-mark" transform="translate(378 436)">
             <rect width="16" height="16" rx="4" class="brand-mark-badge"/>
             <path d="M21.8537 1.4158a10.4504 10.4504 0 0 1-1.284 2.2471A11.9666 11.9666 0 1 0 3.8518 20.7757l.4445.3951a11.9543 11.9543 0 0 0 19.6316-8.2971c.3457-3.0126-.568-6.8649-2.0743-11.458zM5.5805 20.8745a1.0174 1.0174 0 1 1-.1482-1.4323 1.0396 1.0396 0 0 1 .1482 1.4323zm16.1991-3.5806c-2.9385 3.9263-9.2601 2.5928-13.2852 2.7904 0 0-.7161.0494-1.4323.1481 0 0 .2717-.1234.6174-.2469 2.8398-.9877 4.1732-1.1853 5.9018-2.0743 3.2349-1.6545 6.4698-5.2844 7.1118-9.0379-1.2347 3.6053-4.9881 6.7167-8.3959 7.9761-2.3459.8643-6.5685 1.7039-6.5685 1.7039l-.1729-.0988c-2.8645-1.4076-2.9632-7.6304 2.2718-9.6306 2.2966-.889 4.4696-.395 6.9637-.9877 2.6422-.6174 5.7043-2.5929 6.939-5.1857 1.3828 4.1732 3.062 10.643.0493 14.6434z" transform="translate(3 3) scale(0.4166666666666667)" fill="#6DB33F"/>
             <rect width="16" height="16" rx="4" class="brand-mark-frame"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="770" y="76" class="t-primary" font-size="10.7" font-weight="600" text-anchor="middle">Eureka Server</text>
-        <text data-detail="context" x="770" y="92" class="t-muted" font-size="9" text-anchor="middle">Discovery :8761</text>
-        <text data-detail="fine" x="770" y="98" class="t-cloud" font-size="7" text-anchor="middle">Registry</text>
+          <text data-node-label="" data-detail-anchor="" x="330" y="460" class="t-primary" font-size="10.7" font-weight="600" text-anchor="middle">Eureka Server</text>
+        <text data-detail="context" x="330" y="476" class="t-muted" font-size="9" text-anchor="middle">Discovery :8761</text>
+        <text data-detail="fine" x="330" y="486" class="t-cloud" font-size="7" text-anchor="middle">Registry</text>
         </g>
 
-        <g id="node-auth" data-node-id="auth" data-node-label="ms-auth" tabindex="0" role="button" aria-label="Focus ms-auth, Usuarios · Roles · JWT, Microservicios de Dominio (Spring Boot), Spring" aria-pressed="false" data-node-kind="security" data-node-sublabel="Usuarios · Roles · JWT" data-node-tag="Fuera del Bus" data-node-context="Microservicios de Dominio (Spring Boot)" data-node-brand="Spring" data-node-brand-id="spring" data-node-brand-status="preset" data-node-brand-source="https://spring.io/trademarks">
-          <title>ms-auth · Usuarios · Roles · JWT · Microservicios de Dominio (Spring Boot) · Fuera del Bus · Spring</title>
-          <rect x="40" y="200" width="140" height="56" rx="6" class="c-mask"/>
-          <rect x="40" y="200" width="140" height="56" rx="6" class="c-security" data-animate="node" style="--step:3" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(46 206) scale(0.6875)">
+        <g id="node-ctrl" data-node-id="ctrl" data-node-label="AuthController" tabindex="0" role="button" aria-label="Focus AuthController, REST :8081, Microservicio ms-auth :8081 (Hibrido Sincrono/Asincrono), Spring" aria-pressed="false" data-node-kind="backend" data-node-sublabel="REST :8081" data-node-context="Microservicio ms-auth :8081 (Hibrido Sincrono/Asincrono)" data-node-brand="Spring" data-node-brand-id="spring" data-node-brand-status="preset" data-node-brand-source="https://spring.io/trademarks">
+          <title>AuthController · REST :8081 · Microservicio ms-auth :8081 (Hibrido Sincrono/Asincrono) · Spring</title>
+          <rect x="460" y="260" width="130" height="64" rx="6" class="c-mask"/>
+          <rect x="460" y="260" width="130" height="64" rx="6" class="c-backend" data-animate="node" style="--step:2" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(466 266) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <g aria-hidden="true" data-brand-mark="spring" data-brand-title="Spring" data-brand-status="preset" data-brand-source="https://spring.io/trademarks" class="brand-mark" transform="translate(568 266)">
+            <rect width="16" height="16" rx="4" class="brand-mark-badge"/>
+            <path d="M21.8537 1.4158a10.4504 10.4504 0 0 1-1.284 2.2471A11.9666 11.9666 0 1 0 3.8518 20.7757l.4445.3951a11.9543 11.9543 0 0 0 19.6316-8.2971c.3457-3.0126-.568-6.8649-2.0743-11.458zM5.5805 20.8745a1.0174 1.0174 0 1 1-.1482-1.4323 1.0396 1.0396 0 0 1 .1482 1.4323zm16.1991-3.5806c-2.9385 3.9263-9.2601 2.5928-13.2852 2.7904 0 0-.7161.0494-1.4323.1481 0 0 .2717-.1234.6174-.2469 2.8398-.9877 4.1732-1.1853 5.9018-2.0743 3.2349-1.6545 6.4698-5.2844 7.1118-9.0379-1.2347 3.6053-4.9881 6.7167-8.3959 7.9761-2.3459.8643-6.5685 1.7039-6.5685 1.7039l-.1729-.0988c-2.8645-1.4076-2.9632-7.6304 2.2718-9.6306 2.2966-.889 4.4696-.395 6.9637-.9877 2.6422-.6174 5.7043-2.5929 6.939-5.1857 1.3828 4.1732 3.062 10.643.0493 14.6434z" transform="translate(3 3) scale(0.4166666666666667)" fill="#6DB33F"/>
+            <rect width="16" height="16" rx="4" class="brand-mark-frame"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="525" y="290" class="t-primary" font-size="8.8" font-weight="600" text-anchor="middle">AuthController</text>
+        <text data-detail="context" x="525" y="306" class="t-muted" font-size="9" text-anchor="middle">REST :8081</text>
+        </g>
+
+        <g id="node-svc" data-node-id="svc" data-node-label="AuthService" tabindex="0" role="button" aria-label="Focus AuthService, BCrypt + JJWT, Microservicio ms-auth :8081 (Hibrido Sincrono/Asincrono)" aria-pressed="false" data-node-kind="security" data-node-sublabel="BCrypt + JJWT" data-node-tag="Event Producer" data-node-context="Microservicio ms-auth :8081 (Hibrido Sincrono/Asincrono)">
+          <title>AuthService · BCrypt + JJWT · Microservicio ms-auth :8081 (Hibrido Sincrono/Asincrono) · Event Producer</title>
+          <rect x="660" y="260" width="140" height="64" rx="6" class="c-mask"/>
+          <rect x="660" y="260" width="140" height="64" rx="6" class="c-security" data-animate="node" style="--step:3" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(666 266) scale(0.6875)">
             <path d="M8 2.2 13 4v3.5c0 3.1-1.8 5.4-5 6.5-3.2-1.1-5-3.4-5-6.5V4Z"/>
             <path d="m5.8 8 1.5 1.5 3-3"/>
           </g>
-          <g aria-hidden="true" data-brand-mark="spring" data-brand-title="Spring" data-brand-status="preset" data-brand-source="https://spring.io/trademarks" class="brand-mark" transform="translate(158 206)">
-            <rect width="16" height="16" rx="4" class="brand-mark-badge"/>
-            <path d="M21.8537 1.4158a10.4504 10.4504 0 0 1-1.284 2.2471A11.9666 11.9666 0 1 0 3.8518 20.7757l.4445.3951a11.9543 11.9543 0 0 0 19.6316-8.2971c.3457-3.0126-.568-6.8649-2.0743-11.458zM5.5805 20.8745a1.0174 1.0174 0 1 1-.1482-1.4323 1.0396 1.0396 0 0 1 .1482 1.4323zm16.1991-3.5806c-2.9385 3.9263-9.2601 2.5928-13.2852 2.7904 0 0-.7161.0494-1.4323.1481 0 0 .2717-.1234.6174-.2469 2.8398-.9877 4.1732-1.1853 5.9018-2.0743 3.2349-1.6545 6.4698-5.2844 7.1118-9.0379-1.2347 3.6053-4.9881 6.7167-8.3959 7.9761-2.3459.8643-6.5685 1.7039-6.5685 1.7039l-.1729-.0988c-2.8645-1.4076-2.9632-7.6304 2.2718-9.6306 2.2966-.889 4.4696-.395 6.9637-.9877 2.6422-.6174 5.7043-2.5929 6.939-5.1857 1.3828 4.1732 3.062 10.643.0493 14.6434z" transform="translate(3 3) scale(0.4166666666666667)" fill="#6DB33F"/>
-            <rect width="16" height="16" rx="4" class="brand-mark-frame"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="110" y="226" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">ms-auth</text>
-        <text data-detail="context" x="110" y="242" class="t-muted" font-size="9" text-anchor="middle">Usuarios · Roles · JWT</text>
-        <text data-detail="fine" x="110" y="248" class="t-security" font-size="7" text-anchor="middle">Fuera del Bus</text>
+          <text data-node-label="" data-detail-anchor="" x="730" y="290" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">AuthService</text>
+        <text data-detail="context" x="730" y="306" class="t-muted" font-size="9" text-anchor="middle">BCrypt + JJWT</text>
+        <text data-detail="fine" x="730" y="316" class="t-security" font-size="7" text-anchor="middle">Event Producer</text>
         </g>
 
-        <g id="node-clientes" data-node-id="clientes" data-node-label="ms-clientes" tabindex="0" role="button" aria-label="Focus ms-clientes, Clientes y Contactos, Microservicios de Dominio (Spring Boot), Spring" aria-pressed="false" data-node-kind="backend" data-node-sublabel="Clientes y Contactos" data-node-tag="Publica" data-node-context="Microservicios de Dominio (Spring Boot)" data-node-brand="Spring" data-node-brand-id="spring" data-node-brand-status="preset" data-node-brand-source="https://spring.io/trademarks">
-          <title>ms-clientes · Clientes y Contactos · Microservicios de Dominio (Spring Boot) · Publica · Spring</title>
-          <rect x="230" y="200" width="140" height="56" rx="6" class="c-mask"/>
-          <rect x="230" y="200" width="140" height="56" rx="6" class="c-backend" data-animate="node" style="--step:5" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(236 206) scale(0.6875)">
+        <g id="node-repo" data-node-id="repo" data-node-label="UsuarioRepository" tabindex="0" role="button" aria-label="Focus UsuarioRepository, Spring Data Mongo, Microservicio ms-auth :8081 (Hibrido Sincrono/Asincrono), Spring" aria-pressed="false" data-node-kind="backend" data-node-sublabel="Spring Data Mongo" data-node-context="Microservicio ms-auth :8081 (Hibrido Sincrono/Asincrono)" data-node-brand="Spring" data-node-brand-id="spring" data-node-brand-status="preset" data-node-brand-source="https://spring.io/trademarks">
+          <title>UsuarioRepository · Spring Data Mongo · Microservicio ms-auth :8081 (Hibrido Sincrono/Asincrono) · Spring</title>
+          <rect x="870" y="260" width="160" height="64" rx="6" class="c-mask"/>
+          <rect x="870" y="260" width="160" height="64" rx="6" class="c-backend" data-animate="node" style="--step:4" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(876 266) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <g aria-hidden="true" data-brand-mark="spring" data-brand-title="Spring" data-brand-status="preset" data-brand-source="https://spring.io/trademarks" class="brand-mark" transform="translate(348 206)">
+          <g aria-hidden="true" data-brand-mark="spring" data-brand-title="Spring" data-brand-status="preset" data-brand-source="https://spring.io/trademarks" class="brand-mark" transform="translate(1008 266)">
             <rect width="16" height="16" rx="4" class="brand-mark-badge"/>
             <path d="M21.8537 1.4158a10.4504 10.4504 0 0 1-1.284 2.2471A11.9666 11.9666 0 1 0 3.8518 20.7757l.4445.3951a11.9543 11.9543 0 0 0 19.6316-8.2971c.3457-3.0126-.568-6.8649-2.0743-11.458zM5.5805 20.8745a1.0174 1.0174 0 1 1-.1482-1.4323 1.0396 1.0396 0 0 1 .1482 1.4323zm16.1991-3.5806c-2.9385 3.9263-9.2601 2.5928-13.2852 2.7904 0 0-.7161.0494-1.4323.1481 0 0 .2717-.1234.6174-.2469 2.8398-.9877 4.1732-1.1853 5.9018-2.0743 3.2349-1.6545 6.4698-5.2844 7.1118-9.0379-1.2347 3.6053-4.9881 6.7167-8.3959 7.9761-2.3459.8643-6.5685 1.7039-6.5685 1.7039l-.1729-.0988c-2.8645-1.4076-2.9632-7.6304 2.2718-9.6306 2.2966-.889 4.4696-.395 6.9637-.9877 2.6422-.6174 5.7043-2.5929 6.939-5.1857 1.3828 4.1732 3.062 10.643.0493 14.6434z" transform="translate(3 3) scale(0.4166666666666667)" fill="#6DB33F"/>
             <rect width="16" height="16" rx="4" class="brand-mark-frame"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="300" y="226" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">ms-clientes</text>
-        <text data-detail="context" x="300" y="242" class="t-muted" font-size="9" text-anchor="middle">Clientes y Contactos</text>
-        <text data-detail="fine" x="300" y="248" class="t-backend" font-size="7" text-anchor="middle">Publica</text>
+          <text data-node-label="" data-detail-anchor="" x="950" y="290" class="t-primary" font-size="10.1" font-weight="600" text-anchor="middle">UsuarioRepository</text>
+        <text data-detail="context" x="950" y="306" class="t-muted" font-size="9" text-anchor="middle">Spring Data Mongo</text>
         </g>
 
-        <g id="node-inventario" data-node-id="inventario" data-node-label="ms-inventario" tabindex="0" role="button" aria-label="Focus ms-inventario, Productos y Stock, Microservicios de Dominio (Spring Boot), Spring" aria-pressed="false" data-node-kind="backend" data-node-sublabel="Productos y Stock" data-node-tag="Saga Part" data-node-context="Microservicios de Dominio (Spring Boot)" data-node-brand="Spring" data-node-brand-id="spring" data-node-brand-status="preset" data-node-brand-source="https://spring.io/trademarks">
-          <title>ms-inventario · Productos y Stock · Microservicios de Dominio (Spring Boot) · Saga Part · Spring</title>
-          <rect x="420" y="200" width="140" height="56" rx="6" class="c-mask"/>
-          <rect x="420" y="200" width="140" height="56" rx="6" class="c-backend" data-animate="node" style="--step:6" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(426 206) scale(0.6875)">
+        <g id="node-advice" data-node-id="advice" data-node-label="GlobalExceptionHandler" tabindex="0" role="button" aria-label="Focus GlobalExceptionHandler, RFC 9457 ProblemDetail, Microservicio ms-auth :8081 (Hibrido Sincrono/Asincrono)" aria-pressed="false" data-node-kind="backend" data-node-sublabel="RFC 9457 ProblemDetail" data-node-tag="Error 401 / 409" data-node-context="Microservicio ms-auth :8081 (Hibrido Sincrono/Asincrono)">
+          <title>GlobalExceptionHandler · RFC 9457 ProblemDetail · Microservicio ms-auth :8081 (Hibrido Sincrono/Asincrono) · Error 401 / 409</title>
+          <rect x="660" y="430" width="150" height="64" rx="6" class="c-mask"/>
+          <rect x="660" y="430" width="150" height="64" rx="6" class="c-backend" data-animate="node" style="--step:7" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(666 436) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <g aria-hidden="true" data-brand-mark="spring" data-brand-title="Spring" data-brand-status="preset" data-brand-source="https://spring.io/trademarks" class="brand-mark" transform="translate(538 206)">
-            <rect width="16" height="16" rx="4" class="brand-mark-badge"/>
-            <path d="M21.8537 1.4158a10.4504 10.4504 0 0 1-1.284 2.2471A11.9666 11.9666 0 1 0 3.8518 20.7757l.4445.3951a11.9543 11.9543 0 0 0 19.6316-8.2971c.3457-3.0126-.568-6.8649-2.0743-11.458zM5.5805 20.8745a1.0174 1.0174 0 1 1-.1482-1.4323 1.0396 1.0396 0 0 1 .1482 1.4323zm16.1991-3.5806c-2.9385 3.9263-9.2601 2.5928-13.2852 2.7904 0 0-.7161.0494-1.4323.1481 0 0 .2717-.1234.6174-.2469 2.8398-.9877 4.1732-1.1853 5.9018-2.0743 3.2349-1.6545 6.4698-5.2844 7.1118-9.0379-1.2347 3.6053-4.9881 6.7167-8.3959 7.9761-2.3459.8643-6.5685 1.7039-6.5685 1.7039l-.1729-.0988c-2.8645-1.4076-2.9632-7.6304 2.2718-9.6306 2.2966-.889 4.4696-.395 6.9637-.9877 2.6422-.6174 5.7043-2.5929 6.939-5.1857 1.3828 4.1732 3.062 10.643.0493 14.6434z" transform="translate(3 3) scale(0.4166666666666667)" fill="#6DB33F"/>
-            <rect width="16" height="16" rx="4" class="brand-mark-frame"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="490" y="226" class="t-primary" font-size="10.7" font-weight="600" text-anchor="middle">ms-inventario</text>
-        <text data-detail="context" x="490" y="242" class="t-muted" font-size="9" text-anchor="middle">Productos y Stock</text>
-        <text data-detail="fine" x="490" y="248" class="t-backend" font-size="7" text-anchor="middle">Saga Part</text>
+          <text data-node-label="" data-detail-anchor="" x="735" y="460" class="t-primary" font-size="10.7" font-weight="600" text-anchor="middle">GlobalExceptionHandler</text>
+        <text data-detail="context" x="735" y="476" class="t-muted" font-size="9" text-anchor="middle">RFC 9457 ProblemDetail</text>
+        <text data-detail="fine" x="735" y="486" class="t-backend" font-size="7" text-anchor="middle">Error 401 / 409</text>
         </g>
 
-        <g id="node-ventas" data-node-id="ventas" data-node-label="ms-ventas" tabindex="0" role="button" aria-label="Focus ms-ventas, Ventas y Saga, Microservicios de Dominio (Spring Boot), Spring" aria-pressed="false" data-node-kind="backend" data-node-sublabel="Ventas y Saga" data-node-tag="Saga Coord" data-node-context="Microservicios de Dominio (Spring Boot)" data-node-brand="Spring" data-node-brand-id="spring" data-node-brand-status="preset" data-node-brand-source="https://spring.io/trademarks">
-          <title>ms-ventas · Ventas y Saga · Microservicios de Dominio (Spring Boot) · Saga Coord · Spring</title>
-          <rect x="610" y="200" width="140" height="56" rx="6" class="c-mask"/>
-          <rect x="610" y="200" width="140" height="56" rx="6" class="c-backend" data-animate="node" style="--step:4" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(616 206) scale(0.6875)">
-            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
-          </g>
-          <g aria-hidden="true" data-brand-mark="spring" data-brand-title="Spring" data-brand-status="preset" data-brand-source="https://spring.io/trademarks" class="brand-mark" transform="translate(728 206)">
-            <rect width="16" height="16" rx="4" class="brand-mark-badge"/>
-            <path d="M21.8537 1.4158a10.4504 10.4504 0 0 1-1.284 2.2471A11.9666 11.9666 0 1 0 3.8518 20.7757l.4445.3951a11.9543 11.9543 0 0 0 19.6316-8.2971c.3457-3.0126-.568-6.8649-2.0743-11.458zM5.5805 20.8745a1.0174 1.0174 0 1 1-.1482-1.4323 1.0396 1.0396 0 0 1 .1482 1.4323zm16.1991-3.5806c-2.9385 3.9263-9.2601 2.5928-13.2852 2.7904 0 0-.7161.0494-1.4323.1481 0 0 .2717-.1234.6174-.2469 2.8398-.9877 4.1732-1.1853 5.9018-2.0743 3.2349-1.6545 6.4698-5.2844 7.1118-9.0379-1.2347 3.6053-4.9881 6.7167-8.3959 7.9761-2.3459.8643-6.5685 1.7039-6.5685 1.7039l-.1729-.0988c-2.8645-1.4076-2.9632-7.6304 2.2718-9.6306 2.2966-.889 4.4696-.395 6.9637-.9877 2.6422-.6174 5.7043-2.5929 6.939-5.1857 1.3828 4.1732 3.062 10.643.0493 14.6434z" transform="translate(3 3) scale(0.4166666666666667)" fill="#6DB33F"/>
-            <rect width="16" height="16" rx="4" class="brand-mark-frame"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="680" y="226" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">ms-ventas</text>
-        <text data-detail="context" x="680" y="242" class="t-muted" font-size="9" text-anchor="middle">Ventas y Saga</text>
-        <text data-detail="fine" x="680" y="248" class="t-backend" font-size="7" text-anchor="middle">Saga Coord</text>
-        </g>
-
-        <g id="node-reportes" data-node-id="reportes" data-node-label="ms-reportes" tabindex="0" role="button" aria-label="Focus ms-reportes, Proyecciones y PDF, Microservicios de Dominio (Spring Boot), Spring" aria-pressed="false" data-node-kind="backend" data-node-sublabel="Proyecciones y PDF" data-node-tag="Consume" data-node-context="Microservicios de Dominio (Spring Boot)" data-node-brand="Spring" data-node-brand-id="spring" data-node-brand-status="preset" data-node-brand-source="https://spring.io/trademarks">
-          <title>ms-reportes · Proyecciones y PDF · Microservicios de Dominio (Spring Boot) · Consume · Spring</title>
-          <rect x="800" y="200" width="140" height="56" rx="6" class="c-mask"/>
-          <rect x="800" y="200" width="140" height="56" rx="6" class="c-backend" data-animate="node" style="--step:9" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(806 206) scale(0.6875)">
-            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
-          </g>
-          <g aria-hidden="true" data-brand-mark="spring" data-brand-title="Spring" data-brand-status="preset" data-brand-source="https://spring.io/trademarks" class="brand-mark" transform="translate(918 206)">
-            <rect width="16" height="16" rx="4" class="brand-mark-badge"/>
-            <path d="M21.8537 1.4158a10.4504 10.4504 0 0 1-1.284 2.2471A11.9666 11.9666 0 1 0 3.8518 20.7757l.4445.3951a11.9543 11.9543 0 0 0 19.6316-8.2971c.3457-3.0126-.568-6.8649-2.0743-11.458zM5.5805 20.8745a1.0174 1.0174 0 1 1-.1482-1.4323 1.0396 1.0396 0 0 1 .1482 1.4323zm16.1991-3.5806c-2.9385 3.9263-9.2601 2.5928-13.2852 2.7904 0 0-.7161.0494-1.4323.1481 0 0 .2717-.1234.6174-.2469 2.8398-.9877 4.1732-1.1853 5.9018-2.0743 3.2349-1.6545 6.4698-5.2844 7.1118-9.0379-1.2347 3.6053-4.9881 6.7167-8.3959 7.9761-2.3459.8643-6.5685 1.7039-6.5685 1.7039l-.1729-.0988c-2.8645-1.4076-2.9632-7.6304 2.2718-9.6306 2.2966-.889 4.4696-.395 6.9637-.9877 2.6422-.6174 5.7043-2.5929 6.939-5.1857 1.3828 4.1732 3.062 10.643.0493 14.6434z" transform="translate(3 3) scale(0.4166666666666667)" fill="#6DB33F"/>
-            <rect width="16" height="16" rx="4" class="brand-mark-frame"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="870" y="226" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">ms-reportes</text>
-        <text data-detail="context" x="870" y="242" class="t-muted" font-size="9" text-anchor="middle">Proyecciones y PDF</text>
-        <text data-detail="fine" x="870" y="248" class="t-backend" font-size="7" text-anchor="middle">Consume</text>
-        </g>
-
-        <g id="node-notif" data-node-id="notif" data-node-label="ms-notificaciones" tabindex="0" role="button" aria-label="Focus ms-notificaciones, Alertas de Existencia, Microservicios de Dominio (Spring Boot), Spring" aria-pressed="false" data-node-kind="backend" data-node-sublabel="Alertas de Existencia" data-node-tag="Consume" data-node-context="Microservicios de Dominio (Spring Boot)" data-node-brand="Spring" data-node-brand-id="spring" data-node-brand-status="preset" data-node-brand-source="https://spring.io/trademarks">
-          <title>ms-notificaciones · Alertas de Existencia · Microservicios de Dominio (Spring Boot) · Consume · Spring</title>
-          <rect x="990" y="200" width="150" height="56" rx="6" class="c-mask"/>
-          <rect x="990" y="200" width="150" height="56" rx="6" class="c-backend" data-animate="node" style="--step:10" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(996 206) scale(0.6875)">
-            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
-          </g>
-          <g aria-hidden="true" data-brand-mark="spring" data-brand-title="Spring" data-brand-status="preset" data-brand-source="https://spring.io/trademarks" class="brand-mark" transform="translate(1118 206)">
-            <rect width="16" height="16" rx="4" class="brand-mark-badge"/>
-            <path d="M21.8537 1.4158a10.4504 10.4504 0 0 1-1.284 2.2471A11.9666 11.9666 0 1 0 3.8518 20.7757l.4445.3951a11.9543 11.9543 0 0 0 19.6316-8.2971c.3457-3.0126-.568-6.8649-2.0743-11.458zM5.5805 20.8745a1.0174 1.0174 0 1 1-.1482-1.4323 1.0396 1.0396 0 0 1 .1482 1.4323zm16.1991-3.5806c-2.9385 3.9263-9.2601 2.5928-13.2852 2.7904 0 0-.7161.0494-1.4323.1481 0 0 .2717-.1234.6174-.2469 2.8398-.9877 4.1732-1.1853 5.9018-2.0743 3.2349-1.6545 6.4698-5.2844 7.1118-9.0379-1.2347 3.6053-4.9881 6.7167-8.3959 7.9761-2.3459.8643-6.5685 1.7039-6.5685 1.7039l-.1729-.0988c-2.8645-1.4076-2.9632-7.6304 2.2718-9.6306 2.2966-.889 4.4696-.395 6.9637-.9877 2.6422-.6174 5.7043-2.5929 6.939-5.1857 1.3828 4.1732 3.062 10.643.0493 14.6434z" transform="translate(3 3) scale(0.4166666666666667)" fill="#6DB33F"/>
-            <rect width="16" height="16" rx="4" class="brand-mark-frame"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="1065" y="226" class="t-primary" font-size="9.2" font-weight="600" text-anchor="middle">ms-notificaciones</text>
-        <text data-detail="context" x="1065" y="242" class="t-muted" font-size="9" text-anchor="middle">Alertas de Existencia</text>
-        <text data-detail="fine" x="1065" y="248" class="t-backend" font-size="7" text-anchor="middle">Consume</text>
-        </g>
-
-        <g id="node-mongo" data-node-id="mongo" data-node-label="MongoDB 7 Cluster" tabindex="0" role="button" aria-label="Focus MongoDB 7 Cluster, Replica Set (6 Bases Logicas), Architecture component, MongoDB" aria-pressed="false" data-node-kind="database" data-node-sublabel="Replica Set (6 Bases Logicas)" data-node-tag="Database-per-Service" data-node-context="Architecture component" data-node-brand="MongoDB" data-node-brand-id="mongodb" data-node-brand-status="preset" data-node-brand-source="https://www.mongodb.com/pressroom">
-          <title>MongoDB 7 Cluster · Replica Set (6 Bases Logicas) · Architecture component · Database-per-Service · MongoDB</title>
-          <rect x="110" y="360" width="230" height="56" rx="6" class="c-mask"/>
-          <rect x="110" y="360" width="230" height="56" rx="6" class="c-database" data-animate="node" style="--step:5" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(116 366) scale(0.6875)">
+        <g id="node-db" data-node-id="db" data-node-label="auth_db" tabindex="0" role="button" aria-label="Focus auth_db, MongoDB 7 Replica, Architecture component, MongoDB" aria-pressed="false" data-node-kind="database" data-node-sublabel="MongoDB 7 Replica" data-node-context="Architecture component" data-node-brand="MongoDB" data-node-brand-id="mongodb" data-node-brand-status="preset" data-node-brand-source="https://www.mongodb.com/pressroom">
+          <title>auth_db · MongoDB 7 Replica · Architecture component · MongoDB</title>
+          <rect x="1100" y="260" width="140" height="64" rx="6" class="c-mask"/>
+          <rect x="1100" y="260" width="140" height="64" rx="6" class="c-database" data-animate="node" style="--step:5" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(1106 266) scale(0.6875)">
             <ellipse cx="8" cy="4" rx="5" ry="2"/>
             <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
           </g>
-          <g aria-hidden="true" data-brand-mark="mongodb" data-brand-title="MongoDB" data-brand-status="preset" data-brand-source="https://www.mongodb.com/pressroom" class="brand-mark" transform="translate(318 366)">
+          <g aria-hidden="true" data-brand-mark="mongodb" data-brand-title="MongoDB" data-brand-status="preset" data-brand-source="https://www.mongodb.com/pressroom" class="brand-mark" transform="translate(1218 266)">
             <rect width="16" height="16" rx="4" class="brand-mark-badge"/>
             <path d="M17.193 9.555c-1.264-5.58-4.252-7.414-4.573-8.115-.28-.394-.53-.954-.735-1.44-.036.495-.055.685-.523 1.184-.723.566-4.438 3.682-4.74 10.02-.282 5.912 4.27 9.435 4.888 9.884l.07.05A73.49 73.49 0 0111.91 24h.481c.114-1.032.284-2.056.51-3.07.417-.296.604-.463.85-.693a11.342 11.342 0 003.639-8.464c.01-.814-.103-1.662-.197-2.218zm-5.336 8.195s0-8.291.275-8.29c.213 0 .49 10.695.49 10.695-.381-.045-.765-1.76-.765-2.405z" transform="translate(3 3) scale(0.4166666666666667)" fill="#47A248"/>
             <rect width="16" height="16" rx="4" class="brand-mark-frame"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="225" y="386" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">MongoDB 7 Cluster</text>
-        <text data-detail="context" x="225" y="402" class="t-muted" font-size="9" text-anchor="middle">Replica Set (6 Bases Logicas)</text>
-        <text data-detail="fine" x="225" y="408" class="t-database" font-size="7" text-anchor="middle">Database-per-Service</text>
+          <text data-node-label="" data-detail-anchor="" x="1170" y="290" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">auth_db</text>
+        <text data-detail="context" x="1170" y="306" class="t-muted" font-size="9" text-anchor="middle">MongoDB 7 Replica</text>
         </g>
 
-        <g id="node-broker" data-node-id="broker" data-node-label="RabbitMQ Broker" tabindex="0" role="button" aria-label="Focus RabbitMQ Broker, Exchanges: inventario, clientes, ventas, Architecture component, RabbitMQ" aria-pressed="false" data-node-kind="messagebus" data-node-sublabel="Exchanges: inventario, clientes, ventas" data-node-tag="Asincrono :5672" data-node-context="Architecture component" data-node-brand="RabbitMQ" data-node-brand-id="rabbitmq" data-node-brand-status="preset" data-node-brand-source="https://www.rabbitmq.com">
-          <title>RabbitMQ Broker · Exchanges: inventario, clientes, ventas · Architecture component · Asincrono :5672 · RabbitMQ</title>
-          <rect x="570" y="360" width="280" height="56" rx="6" class="c-mask"/>
-          <rect x="570" y="360" width="280" height="56" rx="6" class="c-messagebus" data-animate="node" style="--step:6" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="messagebus" class="semantic-sigil s-messagebus" transform="translate(576 366) scale(0.6875)">
+        <g id="node-bus" data-node-id="bus" data-node-label="RabbitMQ Broker" tabindex="0" role="button" aria-label="Focus RabbitMQ Broker, auth.eventos :5672, Architecture component, RabbitMQ" aria-pressed="false" data-node-kind="messagebus" data-node-sublabel="auth.eventos :5672" data-node-tag="Asincrono" data-node-context="Architecture component" data-node-brand="RabbitMQ" data-node-brand-id="rabbitmq" data-node-brand-status="preset" data-node-brand-source="https://www.rabbitmq.com">
+          <title>RabbitMQ Broker · auth.eventos :5672 · Architecture component · Asincrono · RabbitMQ</title>
+          <rect x="660" y="90" width="150" height="64" rx="6" class="c-mask"/>
+          <rect x="660" y="90" width="150" height="64" rx="6" class="c-messagebus" data-animate="node" style="--step:9" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="messagebus" class="semantic-sigil s-messagebus" transform="translate(666 96) scale(0.6875)">
             <path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/>
             <circle cx="5" cy="4.5" r="1" class="sigil-fill"/>
             <circle cx="10.5" cy="8" r="1" class="sigil-fill"/>
             <circle cx="7" cy="11.5" r="1" class="sigil-fill"/>
           </g>
-          <g aria-hidden="true" data-brand-mark="rabbitmq" data-brand-title="RabbitMQ" data-brand-status="preset" data-brand-source="https://www.rabbitmq.com" class="brand-mark" transform="translate(828 366)">
+          <g aria-hidden="true" data-brand-mark="rabbitmq" data-brand-title="RabbitMQ" data-brand-status="preset" data-brand-source="https://www.rabbitmq.com" class="brand-mark" transform="translate(788 96)">
             <rect width="16" height="16" rx="4" class="brand-mark-badge"/>
             <path d="M23.035 9.601h-7.677a.956.956 0 01-.962-.962V.962a.956.956 0 00-.962-.956H10.56a.956.956 0 00-.962.956V8.64a.956.956 0 01-.962.962H5.762a.956.956 0 01-.961-.962V.962A.956.956 0 003.839 0H.959a.956.956 0 00-.956.962v22.076A.956.956 0 00.965 24h22.07a.956.956 0 00.962-.962V10.58a.956.956 0 00-.962-.98zm-3.86 8.152a1.437 1.437 0 01-1.437 1.443h-1.924a1.437 1.437 0 01-1.436-1.443v-1.917a1.437 1.437 0 011.436-1.443h1.924a1.437 1.437 0 011.437 1.443z" transform="translate(3 3) scale(0.4166666666666667)" fill="#FF6600"/>
             <rect width="16" height="16" rx="4" class="brand-mark-frame"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="710" y="386" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">RabbitMQ Broker</text>
-        <text data-detail="context" x="710" y="402" class="t-muted" font-size="9" text-anchor="middle">Exchanges: inventario, clientes, ventas</text>
-        <text data-detail="fine" x="710" y="408" class="t-messagebus" font-size="7" text-anchor="middle">Asincrono :5672</text>
+          <text data-node-label="" data-detail-anchor="" x="735" y="120" class="t-primary" font-size="10.4" font-weight="600" text-anchor="middle">RabbitMQ Broker</text>
+        <text data-detail="context" x="735" y="136" class="t-muted" font-size="9" text-anchor="middle">auth.eventos :5672</text>
+        <text data-detail="fine" x="735" y="146" class="t-messagebus" font-size="7" text-anchor="middle">Asincrono</text>
+        </g>
+
+        <g id="node-consumers" data-node-id="consumers" data-node-label="Otros MS" tabindex="0" role="button" aria-label="Focus Otros MS, Consumidores de Eventos, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-sublabel="Consumidores de Eventos" data-node-tag="Event Consumer" data-node-context="Architecture component">
+          <title>Otros MS · Consumidores de Eventos · Architecture component · Event Consumer</title>
+          <rect x="870" y="90" width="160" height="64" rx="6" class="c-mask"/>
+          <rect x="870" y="90" width="160" height="64" rx="6" class="c-backend" data-animate="node" style="--step:10" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(876 96) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="950" y="120" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Otros MS</text>
+        <text data-detail="context" x="950" y="136" class="t-muted" font-size="9" text-anchor="middle">Consumidores de Eventos</text>
+        <text data-detail="fine" x="950" y="146" class="t-backend" font-size="7" text-anchor="middle">Event Consumer</text>
         </g>
 
         <!-- Connection labels -->
-        <g data-detail="context" data-edge-from="client" data-edge-to="gateway" data-edge-label="HTTP + JWT" data-edge-key="0" data-edge-id="client-to-gw">
-          <rect x="241" y="58" width="58" height="14" rx="3" class="c-mask"/>
-          <text x="270" y="68" class="t-backend" font-size="8" text-anchor="middle">HTTP + JWT</text>
+        <g data-detail="context" data-edge-from="client" data-edge-to="gateway" data-edge-label="POST /login" data-edge-key="0" data-edge-id="client-to-gw">
+          <rect x="193.6" y="246" width="62.8" height="14" rx="3" class="c-mask"/>
+          <text x="225" y="256" class="t-backend" font-size="8" text-anchor="middle">POST /login</text>
         </g>
-        <g data-detail="context" data-edge-from="gateway" data-edge-to="eureka" data-edge-label="resuelve rutas" data-edge-key="1" data-edge-id="gw-to-eureka">
-          <rect x="566.4" y="58" width="77.2" height="14" rx="3" class="c-mask"/>
-          <text x="605" y="68" class="t-messagebus" font-size="8" text-anchor="middle">resuelve rutas</text>
+        <g data-detail="context" data-edge-from="gateway" data-edge-to="ctrl" data-edge-label="HTTP Sincrono" data-edge-key="1" data-edge-id="gw-to-ctrl">
+          <rect x="393.8" y="328" width="72.4" height="14" rx="3" class="c-mask"/>
+          <text x="430" y="338" class="t-muted" font-size="8" text-anchor="middle">HTTP Sincrono</text>
         </g>
-        <g data-detail="context" data-edge-from="gateway" data-edge-to="auth" data-edge-label="HTTP Sincrono" data-edge-key="2" data-edge-id="gw-to-auth">
-          <rect x="232.8" y="133" width="72.4" height="14" rx="3" class="c-mask"/>
-          <text x="269" y="143" class="t-backend" font-size="8" text-anchor="middle">HTTP Sincrono</text>
+        <g data-detail="context" data-edge-from="ctrl" data-edge-to="svc" data-edge-label="authenticate()" data-edge-key="2" data-edge-id="ctrl-to-svc">
+          <rect x="586.4" y="328" width="77.2" height="14" rx="3" class="c-mask"/>
+          <text x="625" y="338" class="t-muted" font-size="8" text-anchor="middle">authenticate()</text>
         </g>
-        <g data-detail="context" data-edge-from="gateway" data-edge-to="ventas" data-edge-label="HTTP Proxy" data-edge-key="3" data-edge-id="gw-to-ventas">
-          <rect x="532" y="133" width="58" height="14" rx="3" class="c-mask"/>
-          <text x="561" y="143" class="t-muted" font-size="8" text-anchor="middle">HTTP Proxy</text>
+        <g data-detail="context" data-edge-from="svc" data-edge-to="repo" data-edge-label="findByCorreo()" data-edge-key="3" data-edge-id="svc-to-repo">
+          <rect x="796.4" y="246" width="77.2" height="14" rx="3" class="c-mask"/>
+          <text x="835" y="256" class="t-muted" font-size="8" text-anchor="middle">findByCorreo()</text>
         </g>
-        <g data-detail="context" data-edge-from="auth" data-edge-to="mongo" data-edge-label="auth_db" data-edge-key="4" data-edge-id="auth-to-mongo">
-          <rect x="145.7" y="288" width="43.6" height="14" rx="3" class="c-mask"/>
-          <text x="167.5" y="298" class="t-backend" font-size="8" text-anchor="middle">auth_db</text>
+        <g data-detail="context" data-edge-from="repo" data-edge-to="db" data-edge-label="BSON Document" data-edge-key="4" data-edge-id="repo-to-db">
+          <rect x="1028.8" y="272" width="72.4" height="14" rx="3" class="c-mask"/>
+          <text x="1065" y="282" class="t-backend" font-size="8" text-anchor="middle">BSON Document</text>
         </g>
-        <g data-detail="context" data-edge-from="clientes" data-edge-to="broker" data-edge-label="Cliente*" data-edge-key="5" data-edge-id="clientes-to-broker">
-          <rect x="398.8" y="260" width="48.4" height="14" rx="3" class="c-mask"/>
-          <text x="423" y="270" class="t-muted" font-size="8" text-anchor="middle">Cliente*</text>
+        <g data-detail="context" data-edge-from="gateway" data-edge-to="eureka" data-edge-label="lookup" data-edge-key="5" data-edge-id="gw-to-eureka">
+          <rect x="310.6" y="344" width="38.8" height="14" rx="3" class="c-mask"/>
+          <text x="330" y="354" class="t-messagebus" font-size="8" text-anchor="middle">lookup</text>
         </g>
-        <g data-detail="context" data-edge-from="inventario" data-edge-to="broker" data-edge-label="Stock*" data-edge-key="6" data-edge-id="inv-to-broker">
-          <rect x="573.6" y="288" width="38.8" height="14" rx="3" class="c-mask"/>
-          <text x="593" y="298" class="t-muted" font-size="8" text-anchor="middle">Stock*</text>
+        <g data-detail="context" data-edge-from="svc" data-edge-to="advice" data-edge-label="BadCredentials" data-edge-key="6" data-edge-id="svc-to-advice">
+          <rect x="701.9" y="368" width="77.2" height="14" rx="3" class="c-mask"/>
+          <text x="740.5" y="378" class="t-messagebus" font-size="8" text-anchor="middle">BadCredentials</text>
         </g>
-        <g data-detail="context" data-edge-from="ventas" data-edge-to="broker" data-edge-label="Saga Venta" data-edge-key="7" data-edge-id="ventas-to-broker">
-          <rect x="666" y="288" width="58" height="14" rx="3" class="c-mask"/>
-          <text x="695" y="298" class="t-backend" font-size="8" text-anchor="middle">Saga Venta</text>
+        <g data-detail="context" data-edge-from="repo" data-edge-to="advice" data-edge-label="MongoException" data-edge-key="7" data-edge-id="repo-to-advice">
+          <rect x="853.4" y="328" width="77.2" height="14" rx="3" class="c-mask"/>
+          <text x="892" y="338" class="t-messagebus" font-size="8" text-anchor="middle">MongoException</text>
         </g>
-        <g data-detail="context" data-edge-from="broker" data-edge-to="reportes" data-edge-label="Eventos Venta/Stock" data-edge-key="8" data-edge-id="broker-to-reportes">
-          <rect x="746.4" y="288" width="101.2" height="14" rx="3" class="c-mask"/>
-          <text x="797" y="298" class="t-messagebus" font-size="8" text-anchor="middle">Eventos Venta/Stock</text>
+        <g data-detail="context" data-edge-from="svc" data-edge-to="bus" data-edge-label="Publica Eventos" data-edge-key="8" data-edge-id="svc-to-bus">
+          <rect x="754.5" y="216" width="82" height="14" rx="3" class="c-mask"/>
+          <text x="795.5" y="226" class="t-backend" font-size="8" text-anchor="middle">Publica Eventos</text>
         </g>
-        <g data-detail="context" data-edge-from="broker" data-edge-to="notif" data-edge-label="Alertas Stock" data-edge-key="9" data-edge-id="broker-to-notif">
-          <rect x="1028.8" y="302" width="72.4" height="14" rx="3" class="c-mask"/>
-          <text x="1065" y="312" class="t-messagebus" font-size="8" text-anchor="middle">Alertas Stock</text>
+        <g data-detail="context" data-edge-from="bus" data-edge-to="consumers" data-edge-label="Consume Asincrono" data-edge-key="9" data-edge-id="bus-to-consumers">
+          <rect x="794.2" y="76" width="91.6" height="14" rx="3" class="c-mask"/>
+          <text x="840" y="86" class="t-messagebus" font-size="8" text-anchor="middle">Consume Asincrono</text>
         </g>
 
         <!-- Boundary labels (foreground masks keep routes out of titles) -->
-        <g data-graph-role="structural-frame-label" data-composition-frame-id="0" data-composition-frame-kind="security-group" data-composition-frame-label="Microservicios de Dominio (Spring Boot)">
-          <rect data-graph-role="structural-frame-label-mask" x="14" y="180" width="220.6" height="16" rx="3" class="c-mask"/>
-          <text data-boundary-label="" x="18" y="193" class="t-security" font-size="9" font-weight="600">Microservicios de Dominio (Spring Boot)</text>
+        <g data-graph-role="structural-frame-label" data-composition-frame-id="0" data-composition-frame-kind="security-group" data-composition-frame-label="Microservicio ms-auth :8081 (Hibrido Sincrono/Asincrono)">
+          <rect data-graph-role="structural-frame-label-mask" x="434" y="240" width="312.4" height="16" rx="3" class="c-mask"/>
+          <text data-boundary-label="" x="438" y="253" class="t-security" font-size="9" font-weight="600">Microservicio ms-auth :8081 (Hibrido Sincrono/Asincrono)</text>
         </g>
 
         <!-- Legend -->
         <g data-legend="" data-legend-bridge="">
-          <text x="40" y="448" class="t-primary" font-size="12" font-weight="650">Legend</text>
-          <g data-legend-semantic-kind="backend" data-legend-kind="backend" data-legend-label="Backend" data-legend-x="40" data-legend-baseline="468" data-legend-width="78">
-            <rect x="40" y="459" width="16" height="10" rx="2.5" class="c-backend" stroke-width="1"/>
-            <text x="62" y="468" class="t-muted" font-size="10" font-weight="500">Backend</text>
+          <text x="40" y="546" class="t-primary" font-size="12" font-weight="650">Legend</text>
+          <g data-legend-semantic-kind="backend" data-legend-kind="backend" data-legend-label="Backend" data-legend-x="40" data-legend-baseline="566" data-legend-width="78">
+            <rect x="40" y="557" width="16" height="10" rx="2.5" class="c-backend" stroke-width="1"/>
+            <text x="62" y="566" class="t-muted" font-size="10" font-weight="500">Backend</text>
           </g>
-          <g data-legend-semantic-kind="database" data-legend-kind="database" data-legend-label="Database" data-legend-x="140" data-legend-baseline="468" data-legend-width="83">
-            <rect x="140" y="459" width="16" height="10" rx="2.5" class="c-database" stroke-width="1"/>
-            <text x="162" y="468" class="t-muted" font-size="10" font-weight="500">Database</text>
+          <g data-legend-semantic-kind="database" data-legend-kind="database" data-legend-label="Database" data-legend-x="140" data-legend-baseline="566" data-legend-width="83">
+            <rect x="140" y="557" width="16" height="10" rx="2.5" class="c-database" stroke-width="1"/>
+            <text x="162" y="566" class="t-muted" font-size="10" font-weight="500">Database</text>
           </g>
-          <g data-legend-semantic-kind="cloud" data-legend-kind="cloud" data-legend-label="Cloud" data-legend-x="245" data-legend-baseline="468" data-legend-width="68">
-            <rect x="245" y="459" width="16" height="10" rx="2.5" class="c-cloud" stroke-width="1"/>
-            <text x="267" y="468" class="t-muted" font-size="10" font-weight="500">Cloud</text>
+          <g data-legend-semantic-kind="cloud" data-legend-kind="cloud" data-legend-label="Cloud" data-legend-x="245" data-legend-baseline="566" data-legend-width="68">
+            <rect x="245" y="557" width="16" height="10" rx="2.5" class="c-cloud" stroke-width="1"/>
+            <text x="267" y="566" class="t-muted" font-size="10" font-weight="500">Cloud</text>
           </g>
-          <g data-legend-semantic-kind="security" data-legend-kind="security" data-legend-label="Security" data-legend-x="335" data-legend-baseline="468" data-legend-width="83">
-            <rect x="335" y="459" width="16" height="10" rx="2.5" class="c-security" stroke-width="1"/>
-            <text x="357" y="468" class="t-muted" font-size="10" font-weight="500">Security</text>
+          <g data-legend-semantic-kind="security" data-legend-kind="security" data-legend-label="Security" data-legend-x="335" data-legend-baseline="566" data-legend-width="83">
+            <rect x="335" y="557" width="16" height="10" rx="2.5" class="c-security" stroke-width="1"/>
+            <text x="357" y="566" class="t-muted" font-size="10" font-weight="500">Security</text>
           </g>
-          <g data-legend-semantic-kind="messagebus" data-legend-kind="messagebus" data-legend-label="Message bus" data-legend-x="440" data-legend-baseline="468" data-legend-width="98">
-            <rect x="440" y="459" width="16" height="10" rx="2.5" class="c-messagebus" stroke-width="1"/>
-            <text x="462" y="468" class="t-muted" font-size="10" font-weight="500">Message bus</text>
+          <g data-legend-semantic-kind="messagebus" data-legend-kind="messagebus" data-legend-label="Message bus" data-legend-x="440" data-legend-baseline="566" data-legend-width="98">
+            <rect x="440" y="557" width="16" height="10" rx="2.5" class="c-messagebus" stroke-width="1"/>
+            <text x="462" y="566" class="t-muted" font-size="10" font-weight="500">Message bus</text>
           </g>
-          <g data-legend-semantic-kind="external" data-legend-kind="external" data-legend-label="External" data-legend-x="560" data-legend-baseline="468" data-legend-width="83">
-            <rect x="560" y="459" width="16" height="10" rx="2.5" class="c-external" stroke-width="1"/>
-            <text x="582" y="468" class="t-muted" font-size="10" font-weight="500">External</text>
+          <g data-legend-semantic-kind="external" data-legend-kind="external" data-legend-label="External" data-legend-x="560" data-legend-baseline="566" data-legend-width="83">
+            <rect x="560" y="557" width="16" height="10" rx="2.5" class="c-external" stroke-width="1"/>
+            <text x="582" y="566" class="t-muted" font-size="10" font-weight="500">External</text>
           </g>
         </g>
       </svg>
@@ -5628,34 +5593,37 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     <div class="cards">
       <div class="card">
         <div class="card-header">
-          <div class="card-dot cyan"></div>
-          <h3>Acceso y Puertas de Enlace</h3>
+          <div class="card-dot emerald"></div>
+          <h3>Stack Particular: ms-auth</h3>
         </div>
         <ul>
-          <li>&bull; API Gateway (Spring Cloud :8080) centraliza el trafico y valida JWT</li>
-          <li>&bull; Eureka Server (:8761) resuelve rutas dinamicamente por descubrimiento</li>
+          <li>&bull; Java 21 LTS, Spring Boot WebMVC y Spring Data MongoDB (auth_db)</li>
+          <li>&bull; Spring Security con BCrypt (coste 12) y tokens JJWT 0.12.6</li>
+          <li>&bull; Spring AMQP (RabbitTemplate) para emision asincrona de eventos</li>
         </ul>
       </div>
 
       <div class="card">
         <div class="card-header">
-          <div class="card-dot emerald"></div>
-          <h3>Aislamiento y Persistencia</h3>
+          <div class="card-dot cyan"></div>
+          <h3>Stack General del Ecosistema</h3>
         </div>
         <ul>
-          <li>&bull; MongoDB 7 configurado en Replica Set para transacciones multidocumento</li>
-          <li>&bull; 6 bases logicas independientes con un usuario propio por microservicio</li>
+          <li>&bull; Spring Cloud Gateway (:8080) y Eureka Server (:8761)</li>
+          <li>&bull; RabbitMQ Broker (:5672) como bus de eventos no bloqueante</li>
+          <li>&bull; MongoDB 7 Replica Set con 6 bases logicas independientes</li>
         </ul>
       </div>
 
       <div class="card">
         <div class="card-header">
           <div class="card-dot amber"></div>
-          <h3>Regla de Oro: Ninguna Linea Une 2 Servicios</h3>
+          <h3>Patrones y Validacion</h3>
         </div>
         <ul>
-          <li>&bull; Comunicacion inter-servicio 100% asincrona mediante RabbitMQ (:5672)</li>
-          <li>&bull; ms-auth permanece fuera del bus como unico servicio sincrono HTTP</li>
+          <li>&bull; Patron Database-per-Service: cero llamadas HTTP entre microservicios</li>
+          <li>&bull; Entrada HTTP sincrona para login y salida asincrona por eventos</li>
+          <li>&bull; Pruebas de backend con Postman previas al cliente Vue 3</li>
         </ul>
       </div>
     </div>
