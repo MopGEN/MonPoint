@@ -50,7 +50,6 @@ monpoint-ms/
 │   ├── eventos/            Catálogo de eventos — contrato entre servicios
 │   ├── modelo-datos/       Esquema de colecciones
 │   └── api/                Documentación de endpoints
-└── legacy/                 Código de MonPointV2, archivado
 ```
 
 ---
