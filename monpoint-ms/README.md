@@ -36,6 +36,7 @@ docker compose up -d
 
 ```
 monpoint-ms/
+├── CONTRIBUTING.md         Ramas, confirmaciones, revisión e incidencias
 ├── infra/                  Orquestación: docker-compose, inicialización de Mongo
 ├── eureka-server/          Registro de servicios
 ├── api-gateway/            Punto único de entrada
@@ -45,16 +46,21 @@ monpoint-ms/
 ├── ms-clientes/            Clientes
 ├── ms-reportes/            Configuración y proyecciones
 ├── ms-notificaciones/      Alertas de existencia baja
-├── cliente-web/            Aplicación Vue 3 (desde la semana 5)
-├── docs/
-│   ├── eventos/            Catálogo de eventos — contrato entre servicios
-│   ├── modelo-datos/       Esquema de colecciones
-│   └── api/                Documentación de endpoints
--└── legacy/                 Código de MonPointV2, archivado
-+
-+El código de MonPointV2 está archivado en /MonPointV2, en la raíz del
-+repositorio. No se modifica: es la referencia funcional de la migración.
+├── cliente-web/            Aplicación Vue 3 (desde el sprint 5)
+└── docs/
+    ├── planeacion/         Los cuatro documentos del proyecto, cerrados y versionados
+    ├── prototipo/          Referencia de comportamiento y textos de la interfaz
+    ├── arquitectura/       Diagramas
+    ├── eventos/            Catálogo de eventos — contrato entre servicios
+    ├── modelo-datos/       Esquema de colecciones
+    └── api/                Documentación de endpoints
 ```
+
+El código de MonPointV2 está archivado en `/MonPointV2`, en la raíz del
+repositorio. No se modifica: es la referencia funcional de la migración.
+
+Las plantillas de incidencia y de solicitud de integración viven en `/.github`,
+también en la raíz, porque GitHub solo las reconoce ahí.
 
 ---
 
@@ -122,20 +128,24 @@ usuario de un servicio no tiene permiso sobre las bases de los demás.
 | El cliente web recibe 401 en toda petición | El filtro de JWT corre antes que el de CORS | Revisar el orden de los filtros en el Gateway |
 | Un servicio arranca y muere | Arrancó antes que MongoDB | Verificar que su `depends_on` usa `condition: service_healthy` |
 | Los totales salen mal por centavos | Los importes se guardaron como texto | Declarar `Decimal128` explícitamente en la entidad |
-| Un correo duplicado no da error | Los índices no se crearon | Declararlos: Spring Boot 3 no los crea automáticamente |
+| Un correo duplicado no da error | Los índices no se crearon | Declararlos: Spring Data MongoDB no los crea automáticamente |
 
 ---
 
 ## Documentación del proyecto
 
-| Documento | Contenido | Ruta | 
+| Documento | Contenido | Ruta |
 |---|---|---|
-| 01 — Plan de Trabajo | Metodología, cronograma, asignaciones, puntos de control | docs/planeacion/01-plan-de-trabajo.pdf
-| 02 — Requisitos y Alcance | Qué se construye y qué explícitamente no | docs/planeacion/02-requisitos-y-alcance.pdf
-| 03 — Product Backlog | Historias con criterios de aceptación | docs/planeacion/03-product-backlog.pdf
-| 04 — Modelo de Datos | Colecciones campo por campo | docs/planeacion/04-modelo-de-datos.pdf
-| Prototipo del cliente | Diseño de Interfaz | docs/prototipo/index.html
-| Diagrama de arquitectura | Representacion grafica de la aplicacion | docs/arquitectura/01-componentes-y-trafico.jpg
+| 01 — Plan de Trabajo | Metodología, cronograma, asignaciones, puntos de control | [`docs/planeacion/`](docs/planeacion/MonPoint_MS_01_Plan_de_Trabajo_del_Equipo.pdf) |
+| 02 — Requisitos y Alcance | Qué se construye y qué explícitamente no | [`docs/planeacion/`](docs/planeacion/MonPoint_MS_02_Especificacion_de_Requisitos_y_Alcance.pdf) |
+| 03 — Product Backlog | Historias con criterios de aceptación | [`docs/planeacion/`](docs/planeacion/MonPoint_MS_03_Product_Backlog_y_Convenciones_de_Trabajo.pdf) |
+| 04 — Modelo de Datos | Colecciones campo por campo | [`docs/planeacion/`](docs/planeacion/MonPoint_MS_04_Modelo_de_Datos.pdf) |
+| Prototipo del cliente | Comportamiento y textos de la interfaz | [`docs/prototipo/index.html`](docs/prototipo/index.html) |
+| Diagrama de arquitectura | Componentes, tráfico HTTP y flujo de eventos | [`docs/arquitectura/`](docs/arquitectura/01-componentes-y-trafico.jpg) |
+| Convenciones de trabajo | Ramas, confirmaciones, revisión e incidencias | [`CONTRIBUTING.md`](CONTRIBUTING.md) |
 
-El tablero de tareas está en Asana. El prototipo del cliente web define el
-comportamiento y los textos de la interfaz.
+La versión vigente de cada documento está impresa en su portada; el historial lo
+guarda git. No se crean copias con la versión en el nombre del archivo.
+
+El tablero de actividades está en Asana, y es la fuente sobre fechas y
+secuencia. Este repositorio no lo replica.
