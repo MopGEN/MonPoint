@@ -125,12 +125,14 @@ usuario de un servicio no tiene permiso sobre las bases de los demás.
 
 ## Documentación del proyecto
 
-| Documento | Contenido |
-|---|---|
-| 01 — Plan de Trabajo | Metodología, cronograma, asignaciones, puntos de control |
-| 02 — Requisitos y Alcance | Qué se construye y qué explícitamente no |
-| 03 — Product Backlog | Historias con criterios de aceptación |
-| 04 — Modelo de Datos | Colecciones campo por campo |
+| Documento | Contenido | Ruta | 
+|---|---|---|
+| 01 — Plan de Trabajo | Metodología, cronograma, asignaciones, puntos de control | docs/planeacion/01-plan-de-trabajo.pdf
+| 02 — Requisitos y Alcance | Qué se construye y qué explícitamente no | docs/planeacion/02-requisitos-y-alcance.pdf
+| 03 — Product Backlog | Historias con criterios de aceptación | docs/planeacion/03-product-backlog.pdf
+| 04 — Modelo de Datos | Colecciones campo por campo | docs/planeacion/04-modelo-de-datos.pdf
+| Prototipo del cliente | Diseño de Interfaz | docs/prototipo/index.html
+| Diagrama de arquitectura | Representacion grafica de la aplicacion | docs/arquitectura/01-componentes-y-trafico.jpg
 
 El tablero de tareas está en Asana. El prototipo del cliente web define el
 comportamiento y los textos de la interfaz.
