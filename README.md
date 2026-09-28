@@ -4,7 +4,7 @@ Sistema de gestión para punto de venta (POS) enfocado en la administración com
 
 Como siguiente paso para el proyecto, estamos proponiendo dividir el sistema en seis microservicios (autenticación/usuarios, inventario/catálogo, ventas/facturación, notificaciones, reportes/dashboard), comunicados vía API REST. Con esto buscamos cubrir requerimientos de escalabilidad, mantenibilidad y disponibilidad que el diseño monolítico actual no resuelve del todo.
 
-## Tecnologías
+## Tecnologías (Version V2)
 - Java 21 (LTS)
 - JavaFX 21
 - Hibernate ORM 6.4
