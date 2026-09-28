@@ -50,6 +50,10 @@ monpoint-ms/
 │   ├── eventos/            Catálogo de eventos — contrato entre servicios
 │   ├── modelo-datos/       Esquema de colecciones
 │   └── api/                Documentación de endpoints
+-└── legacy/                 Código de MonPointV2, archivado
++
++El código de MonPointV2 está archivado en /MonPointV2, en la raíz del
++repositorio. No se modifica: es la referencia funcional de la migración.
 ```
 
 ---
