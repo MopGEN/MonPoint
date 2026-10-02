@@ -50,8 +50,12 @@ servicios.forEach(function (s) {
   // MongoDB no crea una base hasta que contiene al menos un documento.
   // Insertamos un marcador para que la base exista de inmediato y sea
   // visible al inspeccionarla con Compass o mongosh.
+  //
+  // getCollection() es obligatorio: en mongosh, db._inicializacion devuelve
+  // undefined porque los nombres que empiezan con guion bajo no se resuelven
+  // como colecciones, y el guion se cortaria con un TypeError.
   db_servicio.createCollection("_inicializacion");
-  db_servicio._inicializacion.insertOne({
+  db_servicio.getCollection("_inicializacion").insertOne({
     creadaEn: new Date(),
     nota: "Marcador de creacion. Se puede borrar sin consecuencias."
   });

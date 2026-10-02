@@ -34,7 +34,26 @@ services:
   mongodb:
     image: mongo:7
     container_name: monpoint-mongodb
-    command: ["--replSet", "rs0", "--bind_ip_all"]
+    # POR QUE ESTE ENTRYPOINT GENERA UN keyFile
+    #
+    # Al definir MONGO_INITDB_ROOT_USERNAME, la imagen arranca mongod con
+    # --auth. MongoDB exige un keyFile cuando se combinan --auth y --replSet;
+    # sin el, se detiene con "security.keyFile is required when authorization
+    # is enabled with replica sets".
+    #
+    # El keyFile sirve para que los miembros del replica set se autentiquen
+    # entre si. Con un solo nodo su contenido da igual, asi que se genera uno
+    # nuevo en cada arranque con los permisos que mongod exige (400, dueno
+    # mongodb). Despues se delega en el entrypoint original de la imagen, que
+    # sigue ejecutando mongo-init y creando el usuario root.
+    entrypoint:
+      - bash
+      - -c
+      - |
+        openssl rand -base64 756 > /data/keyfile
+        chmod 400 /data/keyfile
+        chown mongodb:mongodb /data/keyfile
+        exec docker-entrypoint.sh mongod --replSet rs0 --bind_ip_all --keyFile /data/keyfile
     ports:
       - "27017:27017"
     environment:
