@@ -45,6 +45,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         // Página de error interna de Spring Boot: sin esto, un 404 o un 500 llegaría como 401.
                         .requestMatchers("/error").permitAll()
+                        // Salud del servicio para Eureka y Docker; solo responde UP/DOWN, sin detalles.
+                        .requestMatchers(HttpMethod.GET, "/actuator/health", "/actuator/health/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/auth/usuarios").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/auth/usuarios/{id}/desactivar").hasRole("ADMIN")
