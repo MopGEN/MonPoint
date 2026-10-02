@@ -62,3 +62,13 @@ desktop.ini
 logs/
 tmp/
 temp/
+
+# -----------------------------------------------------------------------------
+# Contexto y configuracion de Claude Code / MCP / Planes locales
+# -----------------------------------------------------------------------------
+CLAUDE.md
+CLAUDE.local.md
+.claude/
+.claude.json
+.mcp.json
+plan_implementacion_ms_auth.md
