@@ -19,5 +19,8 @@ public interface UsuarioService {
 
     List<UsuarioResponse> listarActivos();
 
+    /** Estado actual del usuario en la BD; lo usa {@code GET /auth/me} con el id del token. */
+    UsuarioResponse obtenerPorId(String id);
+
     void desactivar(String id, UserPrincipal ejecutor);
 }

@@ -99,6 +99,11 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
+    public UsuarioResponse obtenerPorId(String id) {
+        return UsuarioResponse.from(buscarPorId(id));
+    }
+
+    @Override
     @Transactional
     public void desactivar(String id, UserPrincipal ejecutor) {
         if (id.equals(ejecutor.id())) {
