@@ -153,6 +153,29 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--
+                Mockito como agente de la JVM en las pruebas. Sin esto se "auto-adjunta" en tiempo
+                de ejecución, algo que el JDK ya advierte y que dejará de permitir por defecto.
+                El goal "properties" expone la ruta del jar como ${org.mockito:mockito-core:jar}.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>-javaagent:${org.mockito:mockito-core:jar}</argLine>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
