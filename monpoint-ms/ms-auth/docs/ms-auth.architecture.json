@@ -1,0 +1,247 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura del Microservicio ms-auth",
+    "subtitle": "Seguridad Stateless, MongoDB y Comunicacion Asincrona con RabbitMQ",
+    "output": "ms-auth.html",
+    "quality_profile": "showcase",
+    "animation": "trace",
+    "views": [
+      {
+        "id": "auth-flow",
+        "label": "Flujo Sincrono de Login",
+        "focus": ["client", "gateway", "ctrl", "svc", "repo", "db"],
+        "note": "Ciclo síncrono de autenticación HTTP y emisión inmediata del Token JWT."
+      },
+      {
+        "id": "async-events",
+        "label": "Emision Asincrona de Eventos",
+        "focus": ["svc", "bus", "consumers"],
+        "note": "Publicación no bloqueante de eventos hacia RabbitMQ para otros microservicios."
+      },
+      {
+        "id": "fault-tolerance",
+        "label": "Tolerancia a Fallos",
+        "focus": ["gateway", "ctrl", "svc", "advice"],
+        "note": "Aislamiento de errores mediante el estándar RFC 9457 ProblemDetail."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "client",
+      "type": "external",
+      "label": "Cliente Web",
+      "sublabel": "Vue 3 :5173 / Postman",
+      "brand": "vue",
+      "pos": [30, 260],
+      "size": [160, 64]
+    },
+    {
+      "id": "gateway",
+      "type": "cloud",
+      "label": "API Gateway",
+      "sublabel": "Spring Cloud :8080",
+      "tag": "Valida JWT",
+      "brand": "spring",
+      "pos": [260, 260],
+      "size": [140, 64]
+    },
+    {
+      "id": "eureka",
+      "type": "cloud",
+      "label": "Eureka Server",
+      "sublabel": "Discovery :8761",
+      "tag": "Registry",
+      "brand": "spring",
+      "pos": [260, 430],
+      "size": [140, 64]
+    },
+    {
+      "id": "ctrl",
+      "type": "backend",
+      "label": "AuthController",
+      "sublabel": "REST :8081",
+      "brand": "spring",
+      "pos": [460, 260],
+      "size": [130, 64]
+    },
+    {
+      "id": "svc",
+      "type": "security",
+      "label": "AuthService",
+      "sublabel": "BCrypt + JJWT",
+      "tag": "Event Producer",
+      "pos": [660, 260],
+      "size": [140, 64]
+    },
+    {
+      "id": "repo",
+      "type": "backend",
+      "label": "UsuarioRepository",
+      "sublabel": "Spring Data Mongo",
+      "brand": "spring",
+      "pos": [870, 260],
+      "size": [160, 64]
+    },
+    {
+      "id": "advice",
+      "type": "backend",
+      "label": "GlobalExceptionHandler",
+      "sublabel": "RFC 9457 ProblemDetail",
+      "tag": "Error 401 / 409",
+      "pos": [660, 430],
+      "size": [150, 64]
+    },
+    {
+      "id": "db",
+      "type": "database",
+      "label": "auth_db",
+      "sublabel": "MongoDB 7 Replica",
+      "brand": "mongodb",
+      "pos": [1100, 260],
+      "size": [140, 64]
+    },
+    {
+      "id": "bus",
+      "type": "messagebus",
+      "label": "RabbitMQ Broker",
+      "sublabel": "auth.eventos :5672",
+      "tag": "Asincrono",
+      "brand": "rabbitmq",
+      "pos": [660, 90],
+      "size": [150, 64]
+    },
+    {
+      "id": "consumers",
+      "type": "backend",
+      "label": "Otros MS",
+      "sublabel": "Consumidores de Eventos",
+      "tag": "Event Consumer",
+      "pos": [870, 90],
+      "size": [160, 64]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "security-group",
+      "label": "Microservicio ms-auth :8081 (Hibrido Sincrono/Asincrono)",
+      "wraps": ["ctrl", "svc", "repo", "advice"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "client-to-gw",
+      "from": "client",
+      "to": "gateway",
+      "label": "POST /login",
+      "variant": "emphasis",
+      "labelDy": -26
+    },
+    {
+      "id": "gw-to-ctrl",
+      "from": "gateway",
+      "to": "ctrl",
+      "label": "HTTP Sincrono",
+      "labelDy": 56
+    },
+    {
+      "id": "ctrl-to-svc",
+      "from": "ctrl",
+      "to": "svc",
+      "label": "authenticate()",
+      "labelDy": 56
+    },
+    {
+      "id": "svc-to-repo",
+      "from": "svc",
+      "to": "repo",
+      "label": "findByCorreo()",
+      "labelDy": -26
+    },
+    {
+      "id": "repo-to-db",
+      "from": "repo",
+      "to": "db",
+      "label": "BSON Document",
+      "variant": "emphasis"
+    },
+    {
+      "id": "gw-to-eureka",
+      "from": "gateway",
+      "to": "eureka",
+      "label": "lookup",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 40
+    },
+    {
+      "id": "svc-to-advice",
+      "from": "svc",
+      "to": "advice",
+      "label": "BadCredentials",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 40
+    },
+    {
+      "id": "repo-to-advice",
+      "from": "repo",
+      "to": "advice",
+      "label": "MongoException",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "right"
+    },
+    {
+      "id": "svc-to-bus",
+      "from": "svc",
+      "to": "bus",
+      "label": "Publica Eventos",
+      "variant": "emphasis",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "labelDx": 55
+    },
+    {
+      "id": "bus-to-consumers",
+      "from": "bus",
+      "to": "consumers",
+      "label": "Consume Asincrono",
+      "variant": "dashed",
+      "labelDy": -26
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Stack Particular: ms-auth",
+      "items": [
+        "Java 21 LTS, Spring Boot WebMVC y Spring Data MongoDB (auth_db)",
+        "Spring Security con BCrypt (coste 12) y tokens JJWT 0.12.6",
+        "Spring AMQP (RabbitTemplate) para emision asincrona de eventos"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Stack General del Ecosistema",
+      "items": [
+        "Spring Cloud Gateway (:8080) y Eureka Server (:8761)",
+        "RabbitMQ Broker (:5672) como bus de eventos no bloqueante",
+        "MongoDB 7 Replica Set con 6 bases logicas independientes"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Patrones y Validacion",
+      "items": [
+        "Patron Database-per-Service: cero llamadas HTTP entre microservicios",
+        "Entrada HTTP sincrona para login y salida asincrona por eventos",
+        "Pruebas de backend con Postman previas al cliente Vue 3"
+      ]
+    }
+  ]
+}

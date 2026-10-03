@@ -1,0 +1,252 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "MonPoint — Arquitectura MVC Desacoplado",
+    "subtitle": "Vista (Vue 3 SPA) · Controlador (Spring Cloud Gateway + REST) · Modelo (MongoDB Replica Set + RabbitMQ)",
+    "output": "mvc-desacoplado.html",
+    "quality_profile": "showcase",
+    "animation": "trace",
+    "views": [
+      {
+        "id": "vista-layer",
+        "label": "1. Capa de Vista (V)",
+        "focus": ["vista_client"],
+        "note": "La Vista es una SPA en Vue 3 que solo procesa UI y contratos JSON; no depende de Java ni renderiza en servidor."
+      },
+      {
+        "id": "controller-layer",
+        "label": "2. Capa de Controladores (C)",
+        "focus": ["gateway_macro", "eureka", "ctrl_auth", "ctrl_inv", "ctrl_ventas", "ctrl_otros"],
+        "note": "Controlador desacoplado: Gateway enruta perimetralmente y los micro-controladores validan DTOs de dominio."
+      },
+      {
+        "id": "model-layer",
+        "label": "3. Capa de Modelo (M)",
+        "focus": ["db_mongo", "broker"],
+        "note": "Modelo descentralizado: persistencia aislada en MongoDB Replica Set (auth_db...) y eventos en RabbitMQ."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "vista_client",
+      "type": "frontend",
+      "label": "VISTA (V) — Cliente Web SPA",
+      "sublabel": "Vue 3 · Pinia · Vite · Nginx :5173",
+      "tag": "Renderiza UI & JSON",
+      "brand": "vue",
+      "pos": [360, 40],
+      "size": [300, 56]
+    },
+    {
+      "id": "gateway_macro",
+      "type": "cloud",
+      "label": "CONTROLADOR (C) — API Gateway",
+      "sublabel": "Spring Cloud :8080 · Valida JWT Local",
+      "tag": "Enrutador Perimetral",
+      "brand": "spring",
+      "pos": [330, 160],
+      "size": [280, 56]
+    },
+    {
+      "id": "eureka",
+      "type": "cloud",
+      "label": "Eureka Server",
+      "sublabel": "Discovery Registry :8761",
+      "tag": "Service Registry",
+      "brand": "spring",
+      "pos": [720, 160],
+      "size": [200, 56]
+    },
+    {
+      "id": "ctrl_auth",
+      "type": "security",
+      "label": "ms-auth (Controller)",
+      "sublabel": "AuthController :8081",
+      "tag": "Síncrono HTTP",
+      "brand": "spring",
+      "pos": [40, 290],
+      "size": [190, 54]
+    },
+    {
+      "id": "ctrl_inv",
+      "type": "backend",
+      "label": "ms-inventario (Controller)",
+      "sublabel": "ProductosController :8082",
+      "tag": "Saga Part",
+      "brand": "spring",
+      "pos": [260, 290],
+      "size": [200, 54]
+    },
+    {
+      "id": "ctrl_ventas",
+      "type": "backend",
+      "label": "ms-ventas (Controller)",
+      "sublabel": "VentasController :8083",
+      "tag": "Saga Coord",
+      "brand": "spring",
+      "pos": [490, 290],
+      "size": [200, 54]
+    },
+    {
+      "id": "ctrl_otros",
+      "type": "backend",
+      "label": "Otros Microservicios",
+      "sublabel": "clientes · reportes · notificaciones",
+      "tag": "REST Controllers",
+      "brand": "spring",
+      "pos": [720, 290],
+      "size": [220, 54]
+    },
+    {
+      "id": "db_mongo",
+      "type": "database",
+      "label": "MODELO (M) — MongoDB 7 Cluster",
+      "sublabel": "Replica Set rs0 (auth_db, inventario_db...)",
+      "tag": "Database-per-Service",
+      "brand": "mongodb",
+      "pos": [100, 450],
+      "size": [360, 56]
+    },
+    {
+      "id": "broker",
+      "type": "messagebus",
+      "label": "MODELO (M) — RabbitMQ Broker",
+      "sublabel": "Exchanges: inventario, ventas, clientes",
+      "tag": "Event-Driven :5672",
+      "brand": "rabbitmq",
+      "pos": [550, 450],
+      "size": [340, 56]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "security-group",
+      "label": "Capa de Controladores de Dominio (Spring Boot REST)",
+      "wraps": ["ctrl_auth", "ctrl_inv", "ctrl_ventas", "ctrl_otros"]
+    },
+    {
+      "kind": "region",
+      "label": "Capa de Modelo Desacoplado (Bases Aisladas + Eventos Asíncronos)",
+      "wraps": ["db_mongo", "broker"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "view-to-gw",
+      "from": "vista_client",
+      "to": "gateway_macro",
+      "label": "HTTPS (JSON + JWT)",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "gw-to-eureka",
+      "from": "gateway_macro",
+      "to": "eureka",
+      "label": "resuelve rutas",
+      "variant": "dashed",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "gw-to-auth",
+      "from": "gateway_macro",
+      "to": "ctrl_auth",
+      "label": "Auth :8081",
+      "variant": "emphasis",
+      "fromSide": "left",
+      "toSide": "top"
+    },
+    {
+      "id": "gw-to-inv",
+      "from": "gateway_macro",
+      "to": "ctrl_inv",
+      "label": "Inventario :8082",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "gw-to-ventas",
+      "from": "gateway_macro",
+      "to": "ctrl_ventas",
+      "label": "Ventas :8083",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "gw-to-otros",
+      "from": "gateway_macro",
+      "to": "ctrl_otros",
+      "label": "Clientes / Reportes",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "auth-to-db",
+      "from": "ctrl_auth",
+      "to": "db_mongo",
+      "label": "auth_db",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "inv-to-db",
+      "from": "ctrl_inv",
+      "to": "db_mongo",
+      "label": "inventario_db",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "ventas-to-broker",
+      "from": "ctrl_ventas",
+      "to": "broker",
+      "label": "Saga Venta",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "broker-to-otros",
+      "from": "broker",
+      "to": "ctrl_otros",
+      "label": "Consume Eventos",
+      "variant": "dashed",
+      "fromSide": "top",
+      "toSide": "bottom"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "¿Por qué la Vista está Desacoplada?",
+      "items": [
+        "La interfaz vive 100% en el navegador (Vue 3 SPA); el backend no renderiza HTML ni estilos.",
+        "Se comunica exclusivamente mediante peticiones asíncronas HTTP e intercambio de DTOs en JSON.",
+        "Permite cambiar o rehacer el frontend (móvil, web) sin modificar ni una sola línea del backend."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "¿Por qué el Controlador está Desacoplado?",
+      "items": [
+        "El API Gateway oculta la ubicación física (IPs y puertos) de los microservicios mediante Eureka.",
+        "Valida tokens JWT de forma local, evitando cuellos de botella síncronos contra ms-auth.",
+        "Los micro-controladores REST solo procesan datos de entrada (@Valid) y responden contratos limpios."
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "¿Por qué el Modelo está Desacoplado?",
+      "items": [
+        "Patrón Database-per-Service: 6 bases lógicas independientes en MongoDB 7 Replica Set (rs0).",
+        "Regla de Oro: Ninguna línea une dos servicios. No hay JOINs ni dependencias síncronas entre tablas.",
+        "La coordinación de negocio (Saga de Ventas e Inventario) se resuelve de forma asíncrona en RabbitMQ."
+      ]
+    }
+  ]
+}
