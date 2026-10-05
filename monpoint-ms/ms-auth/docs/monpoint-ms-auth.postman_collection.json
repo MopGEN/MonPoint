@@ -1,0 +1,536 @@
+{
+	"info": {
+		"_postman_id": "monpoint-ms-auth-collection",
+		"name": "MonPoint — ms-auth (API Suite)",
+		"description": "Colección completa de pruebas para el microservicio ms-auth de MonPoint. Incluye autenticación JWT, registro de usuarios, listados, gestión y pruebas de seguridad RFC 9457.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Autenticación (/auth)",
+			"item": [
+				{
+					"name": "1.1 Login Admin (Exitoso - 200)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Token JWT recibido y almacenado en variable authToken\", function () {",
+									"    var data = pm.response.json();",
+									"    pm.expect(data.token).to.not.be.empty;",
+									"    pm.expect(data.rol).to.eql(\"ADMIN\");",
+									"    pm.expect(data.tipo).to.eql(\"Bearer\");",
+									"    // Guarda automáticamente el token para las siguientes peticiones",
+									"    pm.environment.set(\"authToken\", data.token);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"correo\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "Inicia sesión con el administrador precargado. Extrae y guarda el JWT en la variable {{authToken}}."
+					},
+					"response": []
+				},
+				{
+					"name": "1.2 Consultar Perfil Propio (/me - 200)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Perfil coincide con el usuario autenticado\", function () {",
+									"    var data = pm.response.json();",
+									"    pm.expect(data.correo).to.eql(\"admin@monpoint.com\");",
+									"    pm.expect(data.rol).to.eql(\"ADMIN\");",
+									"    pm.expect(data.activo).to.be.true;",
+									"    if (data.id) {",
+									"        pm.environment.set(\"adminId\", data.id);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/auth/me",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"me"
+							]
+						},
+						"description": "Obtiene la información en tiempo real del usuario dueño del token desde MongoDB."
+					},
+					"response": []
+				},
+				{
+					"name": "1.3 Login Fallido - Credenciales erróneas (401 RFC 9457)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 401 Unauthorized\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"Respuesta ProblemDetail con mensaje opaco\", function () {",
+									"    var data = pm.response.json();",
+									"    pm.expect(data.status).to.eql(401);",
+									"    pm.expect(data.detail).to.eql(\"Credenciales incorrectas\");",
+									"    pm.expect(data.title).to.eql(\"No autenticado\");",
+									"    pm.expect(data.requestId).to.not.be.empty;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"correo\": \"admin@monpoint.com\",\n  \"password\": \"ContrasenaInvalida123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "Verifica que contraseñas erróneas reciban un 401 opaco anti-enumeración de usuarios."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2. Gestión de Usuarios (/auth/register y /auth/usuarios)",
+			"item": [
+				{
+					"name": "2.1 Registrar Vendedor (201 Created)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Vendedor registrado con rol VENDEDOR\", function () {",
+									"    var data = pm.response.json();",
+									"    pm.expect(data.rol).to.eql(\"VENDEDOR\");",
+									"    pm.expect(data.id).to.not.be.empty;",
+									"    pm.environment.set(\"vendedorId\", data.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Vendedor Carlos\",\n  \"correo\": \"{{vendedorEmail}}\",\n  \"password\": \"{{vendedorPassword}}\",\n  \"rol\": \"VENDEDOR\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						},
+						"description": "Alta de un nuevo usuario por parte del ADMIN (RegistroRequest). Guarda el ID generado en {{vendedorId}}."
+					},
+					"response": []
+				},
+				{
+					"name": "2.2 Listar Usuarios Activos (200 OK)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Devuelve arreglo de usuarios activos\", function () {",
+									"    var data = pm.response.json();",
+									"    pm.expect(data).to.be.an(\"array\");",
+									"    pm.expect(data.length).to.be.at.least(1);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/auth/usuarios",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"usuarios"
+							]
+						},
+						"description": "Lista todos los usuarios con activo: true (requiere ROLE_ADMIN)."
+					},
+					"response": []
+				},
+				{
+					"name": "2.3 Login con el Vendedor Creado (200 OK)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Token emitido contiene rol VENDEDOR\", function () {",
+									"    var data = pm.response.json();",
+									"    pm.expect(data.rol).to.eql(\"VENDEDOR\");",
+									"    pm.environment.set(\"vendedorToken\", data.token);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"correo\": \"{{vendedorEmail}}\",\n  \"password\": \"{{vendedorPassword}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "Comprueba que las credenciales del nuevo vendedor son válidas y guardan su token en {{vendedorToken}}."
+					},
+					"response": []
+				},
+				{
+					"name": "2.4 Desactivar Vendedor (204 No Content)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 204 No Content\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/auth/usuarios/{{vendedorId}}/desactivar",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"usuarios",
+								"{{vendedorId}}",
+								"desactivar"
+							]
+						},
+						"description": "ADMIN desactiva al vendedor recién creado. No devuelve cuerpo (204)."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3. Seguridad y Validaciones Negativas (RFC 9457)",
+			"item": [
+				{
+					"name": "3.1 Petición protegida sin Token (401 ProblemDetail)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"Header WWW-Authenticate presente y formato ProblemDetail\", function () {",
+									"    pm.response.to.have.header(\"WWW-Authenticate\");",
+									"    var data = pm.response.json();",
+									"    pm.expect(data.status).to.eql(401);",
+									"    pm.expect(data.title).to.eql(\"No autenticado\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/auth/usuarios",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"usuarios"
+							]
+						},
+						"description": "Verifica que el CustomAuthenticationEntryPoint responde 401 limpio cuando no hay token."
+					},
+					"response": []
+				},
+				{
+					"name": "3.2 Vendedor intentando registrar usuarios (403 Forbidden)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 403 Forbidden\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});",
+									"",
+									"pm.test(\"CustomAccessDeniedHandler responde ProblemDetail\", function () {",
+									"    var data = pm.response.json();",
+									"    pm.expect(data.status).to.eql(403);",
+									"    pm.expect(data.title).to.eql(\"Acceso denegado\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{vendedorToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Otro usuario\",\n  \"correo\": \"otro@monpoint.com\",\n  \"password\": \"Segura123!\",\n  \"rol\": \"VENDEDOR\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						},
+						"description": "Un token válido pero de rol VENDEDOR es rechazado con 403 ante rutas exclusivas de ADMIN."
+					},
+					"response": []
+				},
+				{
+					"name": "3.3 Registro con Contraseña Débil (400 Bad Request H-012)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 400 Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Desglosa cada regla de contraseña incumplida\", function () {",
+									"    var data = pm.response.json();",
+									"    pm.expect(data.status).to.eql(400);",
+									"    pm.expect(data.properties.errores).to.be.an(\"array\");",
+									"    pm.expect(data.properties.errores.length).to.be.above(0);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Usuario Débil\",\n  \"correo\": \"debil@monpoint.com\",\n  \"password\": \"123\",\n  \"rol\": \"VENDEDOR\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						},
+						"description": "PasswordValidator rechaza la contraseña corta y sin mayúsculas/símbolos."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "4. Actuator Healthcheck",
+			"item": [
+				{
+					"name": "4.1 Estado del Servicio (/actuator/health)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Servicio reporta UP\", function () {",
+									"    var data = pm.response.json();",
+									"    pm.expect(data.status).to.eql(\"UP\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/actuator/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"actuator",
+								"health"
+							]
+						},
+						"description": "Ruta pública de salud consultada por Eureka y el healthcheck de Docker."
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
