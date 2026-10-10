@@ -164,6 +164,16 @@
 					"name": "2.1 Registrar Vendedor (201 Created)",
 					"event": [
 						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Genera un correo único en cada corrida para evitar colisiones 409 por el índice único de Mongo",
+									"pm.environment.set(\"vendedorEmail\", \"vendedor_\" + Date.now() + \"@monpoint.com\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
 							"listen": "test",
 							"script": {
 								"exec": [
@@ -450,8 +460,9 @@
 									"pm.test(\"Desglosa cada regla de contraseña incumplida\", function () {",
 									"    var data = pm.response.json();",
 									"    pm.expect(data.status).to.eql(400);",
-									"    pm.expect(data.properties.errores).to.be.an(\"array\");",
-									"    pm.expect(data.properties.errores.length).to.be.above(0);",
+									"    var errores = data.errores || (data.properties && data.properties.errores);",
+									"    pm.expect(errores).to.be.an(\"array\");",
+									"    pm.expect(errores.length).to.be.above(0);",
 									"});"
 								],
 								"type": "text/javascript"
