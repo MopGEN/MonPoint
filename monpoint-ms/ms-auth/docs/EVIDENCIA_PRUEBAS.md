@@ -12,22 +12,3 @@ Ejecución completa mediante el **Collection Runner** de Postman contra el servi
 * Control de acceso basado en roles (RBAC): rechazo `403 Forbidden` a vendedores intentando registrar usuarios.
 * Borrado lógico con `204 No Content` y rechazo `401 Unauthorized` a usuarios inactivos.
 * Validación estricta de contraseñas (H-012) con desglose de reglas incumplidas (`400 Bad Request` en RFC 9457).
-
-![Resultados de Postman Runner](evidencias/postman-runner-passed.png)
-
----
-
-## 2. Persistencia y Estado en Base de Datos (DataGrip / MongoDB)
-Visualización directa de la colección `usuarios` en `auth_db` tras las pruebas:
-* Creación de documentos con hash de contraseña BCrypt (costo 12).
-* Normalización de correos (`Locale.ROOT`).
-* Campo `activo` reflejando el borrado lógico (`true` / `false`).
-
-![Tabla de Usuarios en DataGrip](evidencias/datagrip-mongo-usuarios.png)
-
----
-
-## 3. Colección y Entorno Utilizados
-Los archivos de prueba para importar en Postman se encuentran organizados en:
-* [`docs/postman/monpoint-ms-auth.postman_collection.json`](postman/monpoint-ms-auth.postman_collection.json)
-* [`docs/postman/monpoint-local.postman_environment.json`](postman/monpoint-local.postman_environment.json)
