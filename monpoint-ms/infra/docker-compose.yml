@@ -200,6 +200,9 @@ services:
     depends_on:
       eureka-server:
         condition: service_healthy
+    # Tambien se registra en Eureka: margen para mandar su baja al apagarse
+    # (ver el bloque de ms-auth).
+    stop_grace_period: 15s
     networks:
       - monpoint-red
     healthcheck:
