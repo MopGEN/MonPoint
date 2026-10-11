@@ -157,6 +157,9 @@ services:
       - "8761:8761"    # Panel de estado: http://localhost:8761
     environment:
       SERVER_PORT: 8761
+    # Tiempo que Docker espera tras "docker compose stop" antes de matar el
+    # proceso. Da margen a Spring para cerrar en orden (ver ms-auth).
+    stop_grace_period: 15s
     networks:
       - monpoint-red
     healthcheck:
@@ -233,6 +236,13 @@ services:
         condition: service_healthy
       eureka-server:
         condition: service_healthy
+    # POR QUE 15 SEGUNDOS
+    # Al apagarse, el cliente de Eureka espera hasta 3 s a su tarea de
+    # replicacion y solo despues manda la baja. Si Docker mata el proceso
+    # antes, la baja no llega: la instancia queda DOWN en Eureka hasta que su
+    # registro expira (30-60 s). Con este margen, "docker compose stop" la
+    # da de baja al instante.
+    stop_grace_period: 15s
     networks:
       - monpoint-red
 
@@ -274,6 +284,9 @@ services:
   #       condition: service_healthy
   #     eureka-server:
   #       condition: service_healthy
+  #   # Obligatorio en todo servicio que se registre en Eureka: sin este margen,
+  #   # Docker lo mata antes de que mande su baja (ver el bloque de ms-auth).
+  #   stop_grace_period: 15s
   #   networks:
   #     - monpoint-red
   # ===========================================================================
