@@ -9,9 +9,11 @@
 # Directorio de salida donde Maven almacena los archivos binarios compilados
 **/target/
 
-# MacOS
-# Archivo oculto creado por finder de macOS
+# Sistema operativo
+# Archivos ocultos que crean Finder (macOS) y el Explorador (Windows)
 .DS_Store
+Thumbs.db
+desktop.ini
 
 # Archivos locales de la app
 **/sesion.dat
@@ -24,10 +26,37 @@ CLAUDE.local.md
 .claude.json
 .mcp.json
 
-# Variables de entorno
+# Variables de entorno: el .env real y cualquier variante (.env.local, .env.prod,
+# .env.bak...). Solo se versiona el ejemplo, que no lleva valores reales.
 .env
 *.env
 *.env.local
+.env.*
+!.env.example
+
+# Llaves privadas, certificados y almacenes de claves, en cualquier carpeta.
+# Una clave que entra al historial queda ahi aunque se borre despues: MonPointV2
+# subio su clave.key en el primer commit y sigue recuperable desde el historial.
+*.key
+*.pem
+*.p8
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.truststore
+*.crt
+*.cer
+*.der
+id_rsa*
+id_ed25519*
+id_ecdsa*
+
+# Compilados de Java (ademas de **/target/)
+*.class
+*.jar
+*.war
+!**/.mvn/wrapper/maven-wrapper.jar
 
 # IDEs extras (evitar problemas futuros)
 .vscode/
@@ -37,6 +66,7 @@ CLAUDE.local.md
 
 # Logs de ejecucion de datos; evitar filtracion de datos
 *.log
+logs/
 
 # skills1 
 .agents/

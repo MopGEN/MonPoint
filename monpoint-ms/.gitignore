@@ -8,13 +8,25 @@
 # El .env real contiene claves; el .env.example no y por eso si se versiona.
 .env
 *.env
+.env.*
 !.env.example
 
-# Claves y certificados, por si alguno aparece durante el desarrollo
+# Claves, certificados y almacenes de claves, por si alguno aparece durante el
+# desarrollo. Una clave que entra al historial queda ahi aunque se borre despues.
 *.key
 *.pem
+*.p8
 *.p12
+*.pfx
 *.jks
+*.keystore
+*.truststore
+*.crt
+*.cer
+*.der
+id_rsa*
+id_ed25519*
+id_ecdsa*
 
 # -----------------------------------------------------------------------------
 # Compilacion de Java / Maven
