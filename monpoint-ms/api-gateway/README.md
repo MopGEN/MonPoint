@@ -70,6 +70,30 @@ El rol **no** se revisa en el Gateway: cada servicio verifica el suyo con `X-Use
 - **Cabeceras:** `Authorization`, `Content-Type` y `X-Request-ID`. `X-Request-ID` queda expuesta al navegador.
 - **El preflight se responde antes de validar el token**, así que nunca da 401.
 - **Los 401 también llevan cabeceras CORS**, para que el cliente web pueda leerlos y cerrar la sesión.
+- **Tu servicio no configura CORS:** el navegador solo habla con el Gateway.
+
+## Qué debe hacer tu microservicio para funcionar detrás del Gateway
+
+1. **Tu ruta ya existe.** No hace falta tocar el Gateway: `/inventario/**`, `/ventas/**`, `/clientes/**`, `/reportes/**` y `/notificaciones/**` ya apuntan a `lb://ms-…`. Basta con que te registres en Eureka con ese nombre (ver [`eureka-server/README.md`](../eureka-server/README.md)).
+2. **Usa tu prefijo completo en los controladores**, porque el Gateway no lo quita:
+   ```java
+   @RestController
+   @RequestMapping("/inventario/productos")   // no "/productos"
+   ```
+3. **Lee la identidad de las cabeceras**, no vuelvas a validar el token (no tienes la clave ni la necesitas):
+   ```java
+   @GetMapping
+   public ResponseEntity<List<ProductoResponse>> listar(
+           @RequestHeader("X-User-Id") String usuarioId,
+           @RequestHeader("X-User-Role") String rol) { ... }
+   ```
+   El Gateway garantiza que esas cabeceras vienen del token (borra las que mande el cliente). **Tú decides qué rol puede hacer qué** y respondes 403 en `ProblemDetail` si no alcanza.
+4. **Propaga el `X-Request-ID`** en tus logs y en tus errores, para seguir una petición de punta a punta (copia `ms-auth/.../audit/RequestIdFilter`).
+5. **No publiques puertos** en el compose: si tu servicio responde en `localhost:808x` desde tu máquina, se rompe el criterio "los servicios no son accesibles desde fuera" (H-002).
+6. **Mientras no estés registrado**, tu ruta responde **503**. Al registrarte, el Gateway tarda unos 20 s en verte.
+7. **Prueba siempre a través del Gateway:** `http://localhost:8080/<tu-prefijo>/...` con `Authorization: Bearer <token>` (pídelo en `POST /auth/login`).
+
+Guía completa para construir un servicio: [`ms-auth/README.md`](../ms-auth/README.md#guía-para-tu-microservicio).
 
 ## Variables de entorno
 

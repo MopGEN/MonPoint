@@ -49,13 +49,31 @@ Son 4 pruebas y no necesitan MongoDB ni Docker. Levantan el servidor real en un 
 | `panelWeb_RespondeElDashboardDeEureka` | `/` ➔ 200 con el panel de Eureka |
 | `instanciaRegistrada_ApareceEnElPanel_YDesapareceAlDarseDeBaja` | Registro, consulta y baja de una instancia por la API REST, y su reflejo en el panel |
 
-## Cómo se registra un servicio
+## Qué debe hacer tu microservicio para registrarse
 
-Ya lo hace `ms-auth`. Un servicio nuevo necesita:
+Ya lo hace `ms-auth`; cópialo. Checklist:
 
-1. La dependencia `spring-cloud-starter-netflix-eureka-client` y `spring-boot-starter-actuator`.
-2. Las propiedades de `ms-auth/src/main/resources/application.properties`, sección *Eureka Discovery Client*: `defaultZone` desde `EUREKA_URL`, `prefer-ip-address=true`, `instance-id` con la IP, latido de 10 s, expiración de 30 s y `healthcheck.enabled=true`.
-3. En `docker-compose.yml`: `EUREKA_URL: http://eureka-server:8761/eureka/` y `depends_on` con `eureka-server` en `service_healthy`.
+1. **Dependencias:** `spring-cloud-starter-netflix-eureka-client` y `spring-boot-starter-actuator`, con el BOM de Spring Cloud **2025.1.3**.
+2. **Nombre:** `spring.application.name` exactamente `ms-inventario`, `ms-ventas`, `ms-clientes`, `ms-reportes` o `ms-notificaciones`. Es el nombre con el que el Gateway te busca (`lb://ms-…`); si no coincide, el Gateway responde 503.
+3. **Propiedades:**
+   ```properties
+   eureka.client.service-url.defaultZone=${EUREKA_URL:http://localhost:8761/eureka/}
+   eureka.instance.prefer-ip-address=true
+   eureka.instance.instance-id=${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
+   eureka.instance.lease-renewal-interval-in-seconds=10
+   eureka.instance.lease-expiration-duration-in-seconds=30
+   eureka.client.healthcheck.enabled=true
+   eureka.client.instance-info-replication-interval-seconds=10
+   management.endpoints.web.exposure.include=health
+   management.endpoint.health.show-details=never
+   ```
+   - `prefer-ip-address`: en Docker los demás no resuelven el hostname de tu contenedor.
+   - `healthcheck.enabled`: si tu MongoDB cae, Eureka te marca `DOWN` y el Gateway deja de mandarte tráfico.
+4. **Compose:** `EUREKA_URL: http://eureka-server:8761/eureka/`, `depends_on: eureka-server: condition: service_healthy` y **`stop_grace_period: 15s`** (ver abajo por qué).
+5. **Pruebas:** apaga Eureka en ellas con `@SpringBootTest(properties = "eureka.client.enabled=false")`; si no, tardan y llenan el log de `Connection refused`.
+6. **Comprueba:** levanta tu servicio y busca su nombre en http://localhost:8761. Primero aparece `DOWN` unos 10 s y luego `UP`; es normal.
+
+Guía completa para construir un servicio: [`ms-auth/README.md`](../ms-auth/README.md#guía-para-tu-microservicio).
 
 ## Tiempos
 
