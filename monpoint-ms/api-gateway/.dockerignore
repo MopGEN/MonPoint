@@ -1,0 +1,13 @@
+# Para construir la imagen solo hacen falta pom.xml y src/.
+# Todo lo demas se excluye para no enviarlo al daemon de Docker.
+target/
+.mvn/
+mvnw
+mvnw.cmd
+docs/
+*.md
+.idea/
+*.iml
+.vscode/
+Dockerfile
+.dockerignore

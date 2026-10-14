@@ -34,9 +34,31 @@ services:
   mongodb:
     image: mongo:7
     container_name: monpoint-mongodb
-    command: ["--replSet", "rs0", "--bind_ip_all"]
+    # POR QUE ESTE ENTRYPOINT GENERA UN keyFile
+    #
+    # Al definir MONGO_INITDB_ROOT_USERNAME, la imagen arranca mongod con
+    # --auth. MongoDB exige un keyFile cuando se combinan --auth y --replSet;
+    # sin el, se detiene con "security.keyFile is required when authorization
+    # is enabled with replica sets".
+    #
+    # El keyFile sirve para que los miembros del replica set se autentiquen
+    # entre si. Con un solo nodo su contenido da igual, asi que se genera uno
+    # nuevo en cada arranque con los permisos que mongod exige (400, dueno
+    # mongodb). Despues se delega en el entrypoint original de la imagen, que
+    # sigue ejecutando mongo-init y creando el usuario root.
+    entrypoint:
+      - bash
+      - -c
+      - |
+        openssl rand -base64 756 > /data/keyfile
+        chmod 400 /data/keyfile
+        chown mongodb:mongodb /data/keyfile
+        exec docker-entrypoint.sh mongod --replSet rs0 --bind_ip_all --keyFile /data/keyfile
+    # Solo para inspeccion con Compass o mongosh desde TU maquina: el prefijo
+    # 127.0.0.1 impide que otros equipos de la misma red (p. ej. el WiFi de la
+    # escuela) se conecten. Los servicios no lo necesitan: usan la red interna.
     ports:
-      - "27017:27017"
+      - "127.0.0.1:27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
@@ -90,9 +112,11 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     container_name: monpoint-rabbitmq
+    # Solo desde tu maquina (127.0.0.1): los servicios en Docker usan la red
+    # interna; el 5672 publicado sirve para correr un servicio desde el IDE.
     ports:
-      - "5672:5672"    # Protocolo AMQP: por aqui hablan los servicios
-      - "15672:15672"  # Consola web: http://localhost:15672
+      - "127.0.0.1:5672:5672"    # Protocolo AMQP: por aqui hablan los servicios
+      - "127.0.0.1:15672:15672"  # Consola web: http://localhost:15672
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
@@ -134,10 +158,16 @@ services:
   eureka-server:
     build: ../eureka-server
     container_name: monpoint-eureka
+    # Solo desde tu maquina (127.0.0.1): la API de Eureka no tiene
+    # autenticacion, y desde otra computadora de la red alguien podria
+    # registrar una instancia falsa (p. ej. un MS-AUTH) y desviar trafico.
     ports:
-      - "8761:8761"    # Panel de estado: http://localhost:8761
+      - "127.0.0.1:8761:8761"    # Panel de estado: http://localhost:8761
     environment:
       SERVER_PORT: 8761
+    # Tiempo que Docker espera tras "docker compose stop" antes de matar el
+    # proceso. Da margen a Spring para cerrar en orden (ver ms-auth).
+    stop_grace_period: 15s
     networks:
       - monpoint-red
     healthcheck:
@@ -178,6 +208,9 @@ services:
     depends_on:
       eureka-server:
         condition: service_healthy
+    # Tambien se registra en Eureka: margen para mandar su baja al apagarse
+    # (ver el bloque de ms-auth).
+    stop_grace_period: 15s
     networks:
       - monpoint-red
     healthcheck:
@@ -186,6 +219,72 @@ services:
       timeout: 5s
       retries: 10
       start_period: 40s
+
+  # ===========================================================================
+  # ms-auth — autenticacion y gestion de usuarios (puerto 8081, auth_db)
+  # ===========================================================================
+  # Sale de la plantilla de abajo, con dos diferencias:
+  #   - Sin RabbitMQ: ms-auth esta fuera del bus (por ahora sus eventos solo
+  #     van al log), asi que no depende de que el broker este arriba.
+  #   - El healthcheck lo trae su Dockerfile (curl a /actuator/health): queda
+  #     healthy cuando la app arranco y MongoDB contesta.
+  #
+  # Como todos los servicios de dominio, NO publica puertos: se llega a el
+  # a traves del Gateway (/auth/**).
+  # ===========================================================================
+  ms-auth:
+    build: ../ms-auth
+    container_name: monpoint-auth
+    environment:
+      SERVER_PORT: 8081
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      # Dentro de la red Docker "mongodb" si resuelve, asi que aqui no hace
+      # falta directConnection=true (solo se usa al correr ms-auth fuera de Docker).
+      MONGO_URI: mongodb://auth_user:auth_pass@mongodb:27017/auth_db?replicaSet=rs0&authSource=auth_db
+      JWT_SECRET: ${JWT_SECRET}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+    # POR QUE 15 SEGUNDOS
+    # Al apagarse, el cliente de Eureka espera hasta 3 s a su tarea de
+    # replicacion y solo despues manda la baja. Si Docker mata el proceso
+    # antes, la baja no llega: la instancia queda DOWN en Eureka hasta que su
+    # registro expira (30-60 s). Con este margen, "docker compose stop" la
+    # da de baja al instante.
+    stop_grace_period: 15s
+    networks:
+      - monpoint-red
+
+  # ===========================================================================
+  # ms-clientes — clientes (puerto 8084, clientes_db)
+  # ===========================================================================
+  # Sale de la plantilla de abajo. NO publica puertos: se llega a el a traves
+  # del Gateway (/clientes/**). Solo publica eventos; no consume.
+  # ===========================================================================
+  ms-clientes:
+    build: ../ms-clientes
+    container_name: monpoint-clientes
+    environment:
+      SERVER_PORT: 8084
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      # Dentro de la red Docker "mongodb" si resuelve: sin directConnection=true.
+      MONGO_URI: mongodb://clientes_user:clientes_pass@mongodb:27017/clientes_db?replicaSet=rs0&authSource=clientes_db
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: ${RABBITMQ_USER}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+    # Sin este margen Docker lo mata antes de que mande su baja a Eureka (ver ms-auth).
+    stop_grace_period: 15s
+    networks:
+      - monpoint-red
 
   # ===========================================================================
   # PLANTILLA PARA LOS MICROSERVICIOS
@@ -225,6 +324,9 @@ services:
   #       condition: service_healthy
   #     eureka-server:
   #       condition: service_healthy
+  #   # Obligatorio en todo servicio que se registre en Eureka: sin este margen,
+  #   # Docker lo mata antes de que mande su baja (ver el bloque de ms-auth).
+  #   stop_grace_period: 15s
   #   networks:
   #     - monpoint-red
   # ===========================================================================
@@ -257,8 +359,9 @@ services:
 # nombres automaticamente; por eso las cadenas de conexion nunca llevan
 # direcciones IP.
 #
-# Desde fuera de la red solo se alcanza lo que publica puertos: el Gateway,
-# y las consolas de MongoDB y RabbitMQ para inspeccion durante el desarrollo.
+# Desde fuera de la red solo se alcanza lo que publica puertos: el Gateway
+# (abierto, es la puerta de entrada) y, SOLO desde la propia maquina
+# (127.0.0.1), MongoDB, RabbitMQ y Eureka para inspeccion durante el desarrollo.
 # =============================================================================
 networks:
   monpoint-red:
