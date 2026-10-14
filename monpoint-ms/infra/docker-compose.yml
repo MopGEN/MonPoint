@@ -221,6 +221,33 @@ services:
       start_period: 40s
 
   # ===========================================================================
+  # ms-inventario — productos y existencias (puerto 8082, inventario_db)
+  # ===========================================================================
+  # NO publica puertos: se llega a el a traves del Gateway (/inventario/**).
+  # Consume VentaCreada (cola con cola de fallidos).
+  # ===========================================================================
+  ms-inventario:
+    build: ../ms-inventario
+    container_name: monpoint-inventario
+    environment:
+      SERVER_PORT: 8082
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      # Dentro de la red Docker "mongodb" si resuelve: sin directConnection=true.
+      MONGO_URI: mongodb://inventario_user:inventario_pass@mongodb:27017/inventario_db?replicaSet=rs0&authSource=inventario_db
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: ${RABBITMQ_USER}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+    # Sin este margen Docker lo mata antes de que mande su baja a Eureka (ver ms-auth).
+    stop_grace_period: 15s
+    networks:
+      - monpoint-red # ===========================================================================
   # ms-auth — autenticacion y gestion de usuarios (puerto 8081, auth_db)
   # ===========================================================================
   # Sale de la plantilla de abajo, con dos diferencias:
