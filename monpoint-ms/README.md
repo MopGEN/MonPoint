@@ -85,10 +85,10 @@ resuelve registrando el `eventoId` ya procesado antes de aplicar el cambio.
 | Componente | Puerto | ¿Expuesto al exterior? |
 |---|---|---|
 | API Gateway | 8080 | Sí — única puerta de entrada |
-| Eureka | 8761 | Sí — solo para inspección |
-| MongoDB | 27017 | Sí — solo para inspección |
-| RabbitMQ (AMQP) | 5672 | Sí — solo para inspección |
-| RabbitMQ (consola) | 15672 | Sí — solo para inspección |
+| Eureka | 8761 | Solo desde tu máquina (`127.0.0.1`), para inspección |
+| MongoDB | 27017 | Solo desde tu máquina (`127.0.0.1`), para inspección |
+| RabbitMQ (AMQP) | 5672 | Solo desde tu máquina (`127.0.0.1`), para inspección |
+| RabbitMQ (consola) | 15672 | Solo desde tu máquina (`127.0.0.1`), para inspección |
 | ms-auth | 8081 | No |
 | ms-inventario | 8082 | No |
 | ms-ventas | 8083 | No |
