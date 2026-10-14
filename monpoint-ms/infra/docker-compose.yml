@@ -258,6 +258,35 @@ services:
       - monpoint-red
 
   # ===========================================================================
+  # ms-clientes — clientes (puerto 8084, clientes_db)
+  # ===========================================================================
+  # Sale de la plantilla de abajo. NO publica puertos: se llega a el a traves
+  # del Gateway (/clientes/**). Solo publica eventos; no consume.
+  # ===========================================================================
+  ms-clientes:
+    build: ../ms-clientes
+    container_name: monpoint-clientes
+    environment:
+      SERVER_PORT: 8084
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      # Dentro de la red Docker "mongodb" si resuelve: sin directConnection=true.
+      MONGO_URI: mongodb://clientes_user:clientes_pass@mongodb:27017/clientes_db?replicaSet=rs0&authSource=clientes_db
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: ${RABBITMQ_USER}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+    # Sin este margen Docker lo mata antes de que mande su baja a Eureka (ver ms-auth).
+    stop_grace_period: 15s
+    networks:
+      - monpoint-red
+
+  # ===========================================================================
   # PLANTILLA PARA LOS MICROSERVICIOS
   # ===========================================================================
   # Copiar este bloque para cada servicio conforme se construya, cambiando
