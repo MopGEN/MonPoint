@@ -1,0 +1,553 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura Completa: Docker Compose, Eureka, API Gateway y ms-auth",
+    "output": "monpoint-auth-completo.html",
+    "quality_profile": "showcase",
+    "animation": "trace",
+    "repository": {
+      "url": "https://github.com/MopGEN/MonPoint",
+      "provider": "github",
+      "revision": "7079281c2b7c01e0cb9e5df2b028001715fce1b6"
+    },
+    "views": [
+      {
+        "id": "docker-eureka",
+        "label": "1. Docker Compose y Eureka (:8761)",
+        "focus": ["compose", "eureka", "gw_lb", "mongo"],
+        "note": "Orquestación en red monpoint-red, healthchecks, stop_grace_period 15s y descubrimiento dinámico lb://."
+      },
+      {
+        "id": "gateway-pipeline",
+        "label": "2. API Gateway (:8080 — 6 Pasos)",
+        "focus": ["client", "gw_entry", "gw_jwt", "gw_lb", "eureka", "auth_sec"],
+        "note": "Recorrido reactivo: RequestId -> CORS -> Ruta WebFlux -> Filtro JWT HS256 -> LoadBalancer -> ms-auth."
+      },
+      {
+        "id": "auth-login",
+        "label": "3. Login, BCrypt y JWT en ms-auth",
+        "focus": ["gw_lb", "auth_sec", "auth_ctrl", "auth_svc", "user_svc", "auth_repo", "mongo"],
+        "note": "Login manual con BCrypt(12), hashFicticio anti-enumeración y firma explícita Jwts.SIG.HS256."
+      },
+      {
+        "id": "crud-tx-audit",
+        "label": "4. Usuarios, Transacciones y Auditoría",
+        "focus": ["auth_sec", "auth_ctrl", "user_svc", "audit_bus", "auth_repo", "mongo"],
+        "note": "Validación JWT en memoria, 403 antes de 404, PasswordValidator (8-72B) y transacciones en Replica Set rs0."
+      },
+      {
+        "id": "rfc9457-errors",
+        "label": "5. Manejo de Errores RFC 9457",
+        "focus": ["gw_entry", "gw_jwt", "auth_sec", "auth_ctrl", "auth_advice"],
+        "note": "Respuestas uniformes application/problem+json con requestId tanto en el Gateway como en ms-auth."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "client",
+      "type": "external",
+      "label": "Cliente Web",
+      "sublabel": "Vue 3 :5173 / Postman",
+      "tag": "HTTP Externo",
+      "brand": "vue",
+      "pos": [25, 80],
+      "size": [160, 68]
+    },
+    {
+      "id": "compose",
+      "type": "cloud",
+      "label": "docker-compose.yml",
+      "sublabel": "monpoint-red + stop 15s",
+      "tag": "Orquestador",
+      "brand": "docker",
+      "sources": [
+        {
+          "path": "monpoint-ms/infra/docker-compose.yml",
+          "line": 12,
+          "end_line": 259,
+          "label": "Orquestación completa Docker"
+        }
+      ],
+      "pos": [25, 260],
+      "size": [160, 68]
+    },
+    {
+      "id": "eureka",
+      "type": "database",
+      "label": "eureka-server",
+      "sublabel": ":8761 Standalone Evict 5s",
+      "tag": "Self-Preserv=false",
+      "brand": "spring",
+      "sources": [
+        {
+          "path": "monpoint-ms/eureka-server/src/main/java/com/monpoint/eureka/EurekaServerApplication.java",
+          "line": 14,
+          "end_line": 22,
+          "label": "@EnableEurekaServer"
+        },
+        {
+          "path": "monpoint-ms/eureka-server/src/main/resources/application.properties",
+          "line": 1,
+          "end_line": 34,
+          "label": "Configuración standalone y 5s"
+        },
+        {
+          "path": "monpoint-ms/eureka-server/Dockerfile",
+          "line": 12,
+          "end_line": 34,
+          "label": "Dockerfile multi-stage Eureka"
+        }
+      ],
+      "pos": [25, 440],
+      "size": [160, 68]
+    },
+    {
+      "id": "gw_entry",
+      "type": "cloud",
+      "label": "1-2. RequestId+CORS",
+      "sublabel": "RequestIdFilter + CorsConfig",
+      "tag": "OPTIONS 200 OK",
+      "brand": "spring",
+      "sources": [
+        {
+          "path": "monpoint-ms/api-gateway/src/main/java/com/monpoint/gateway/filter/RequestIdWebFilter.java",
+          "line": 21,
+          "end_line": 61,
+          "label": "X-Request-ID (set, no add)"
+        },
+        {
+          "path": "monpoint-ms/api-gateway/src/main/java/com/monpoint/gateway/config/CorsConfig.java",
+          "line": 27,
+          "end_line": 46,
+          "label": "CorsWebFilter antes de JWT"
+        },
+        {
+          "path": "monpoint-ms/api-gateway/src/main/java/com/monpoint/gateway/ApiGatewayApplication.java",
+          "line": 12,
+          "end_line": 20,
+          "label": "ApiGatewayApplication"
+        }
+      ],
+      "pos": [265, 80],
+      "size": [165, 68]
+    },
+    {
+      "id": "gw_jwt",
+      "type": "security",
+      "label": "3-4. Rutas + JwtFilter",
+      "sublabel": "JwtGlobalFilter + Validador",
+      "tag": "Anti-Spoof + HS256",
+      "brand": "spring",
+      "sources": [
+        {
+          "path": "monpoint-ms/api-gateway/src/main/java/com/monpoint/gateway/filter/JwtAuthenticationGlobalFilter.java",
+          "line": 38,
+          "end_line": 128,
+          "label": "Filtro global JWT y 401"
+        },
+        {
+          "path": "monpoint-ms/api-gateway/src/main/java/com/monpoint/gateway/security/JwtValidador.java",
+          "line": 21,
+          "end_line": 59,
+          "label": "Verificación local JJWT HS256"
+        },
+        {
+          "path": "monpoint-ms/api-gateway/src/main/java/com/monpoint/gateway/security/JwtProperties.java",
+          "line": 15,
+          "end_line": 26,
+          "label": "Validación >= 32 bytes"
+        }
+      ],
+      "pos": [265, 260],
+      "size": [165, 68]
+    },
+    {
+      "id": "gw_lb",
+      "type": "cloud",
+      "label": "5-6. LoadBalancer",
+      "sublabel": "lb://ms-* sin StripPrefix",
+      "tag": "Fetch/Cache 10s",
+      "brand": "spring",
+      "sources": [
+        {
+          "path": "monpoint-ms/api-gateway/src/main/resources/application.properties",
+          "line": 7,
+          "end_line": 56,
+          "label": "Rutas Gateway 5 y Eureka 10s"
+        },
+        {
+          "path": "monpoint-ms/api-gateway/Dockerfile",
+          "line": 12,
+          "end_line": 34,
+          "label": "Dockerfile multi-stage Gateway"
+        }
+      ],
+      "pos": [265, 440],
+      "size": [165, 68]
+    },
+    {
+      "id": "auth_advice",
+      "type": "security",
+      "label": "ExceptionHandler",
+      "sublabel": "RFC 9457 ProblemDetail",
+      "tag": "400/401/403/404/409",
+      "sources": [
+        {
+          "path": "monpoint-ms/ms-auth/src/main/java/com/monpoint/auth/controller/GlobalExceptionHandler.java",
+          "line": 45,
+          "end_line": 183,
+          "label": "Mapeo global RFC 9457"
+        }
+      ],
+      "pos": [510, 80],
+      "size": [165, 68]
+    },
+    {
+      "id": "auth_ctrl",
+      "type": "backend",
+      "label": "3. Auth & UsuarioCtrl",
+      "sublabel": "6 Endpoints REST /auth/**",
+      "tag": "@Valid DTOs",
+      "brand": "spring",
+      "sources": [
+        {
+          "path": "monpoint-ms/ms-auth/src/main/java/com/monpoint/auth/controller/AuthController.java",
+          "line": 24,
+          "end_line": 49,
+          "label": "POST /login, /register, GET /me"
+        },
+        {
+          "path": "monpoint-ms/ms-auth/src/main/java/com/monpoint/auth/controller/UsuarioController.java",
+          "line": 25,
+          "end_line": 53,
+          "label": "GET, PUT, PATCH /auth/usuarios"
+        }
+      ],
+      "pos": [510, 260],
+      "size": [165, 68]
+    },
+    {
+      "id": "auth_sec",
+      "type": "security",
+      "label": "1-2. Security+JwtFilter",
+      "sublabel": "RequestId + Stateless Mem",
+      "tag": "SecurityConfig",
+      "brand": "spring",
+      "sources": [
+        {
+          "path": "monpoint-ms/ms-auth/src/main/java/com/monpoint/auth/audit/RequestIdFilter.java",
+          "line": 24,
+          "end_line": 60,
+          "label": "RequestIdFilter + MDC"
+        },
+        {
+          "path": "monpoint-ms/ms-auth/src/main/java/com/monpoint/auth/config/SecurityConfig.java",
+          "line": 24,
+          "end_line": 71,
+          "label": "Cadena stateless y RBAC"
+        },
+        {
+          "path": "monpoint-ms/ms-auth/src/main/java/com/monpoint/auth/security/JwtAuthenticationFilter.java",
+          "line": 32,
+          "end_line": 73,
+          "label": "Filtro JWT 100% en memoria"
+        }
+      ],
+      "pos": [510, 440],
+      "size": [165, 68]
+    },
+    {
+      "id": "auth_svc",
+      "type": "security",
+      "label": "4a. AuthService+JWT",
+      "sublabel": "BCrypt(12) + hashFicticio",
+      "tag": "Jwts.SIG.HS256",
+      "sources": [
+        {
+          "path": "monpoint-ms/ms-auth/src/main/java/com/monpoint/auth/service/impl/AuthServiceImpl.java",
+          "line": 26,
+          "end_line": 73,
+          "label": "Login manual anti-timing"
+        },
+        {
+          "path": "monpoint-ms/ms-auth/src/main/java/com/monpoint/auth/security/JwtService.java",
+          "line": 22,
+          "end_line": 76,
+          "label": "Emisión y validación HS256"
+        }
+      ],
+      "pos": [755, 80],
+      "size": [165, 68]
+    },
+    {
+      "id": "user_svc",
+      "type": "backend",
+      "label": "4b. UsuarioService",
+      "sublabel": "@Transactional + Reglas",
+      "tag": "PasswordValidator",
+      "brand": "spring",
+      "sources": [
+        {
+          "path": "monpoint-ms/ms-auth/src/main/java/com/monpoint/auth/service/impl/UsuarioServiceImpl.java",
+          "line": 30,
+          "end_line": 122,
+          "label": "CRUD, 403 antes de 404 y anti-409"
+        }
+      ],
+      "pos": [755, 260],
+      "size": [165, 68]
+    },
+    {
+      "id": "auth_repo",
+      "type": "backend",
+      "label": "5. UsuarioRepo+Seed",
+      "sublabel": "Usuario + DataInitializer",
+      "tag": "@Indexed unique",
+      "brand": "spring",
+      "sources": [
+        {
+          "path": "monpoint-ms/ms-auth/src/main/java/com/monpoint/auth/repository/UsuarioRepository.java",
+          "line": 10,
+          "end_line": 24,
+          "label": "Consultas Spring Data Mongo"
+        },
+        {
+          "path": "monpoint-ms/ms-auth/src/main/java/com/monpoint/auth/model/Usuario.java",
+          "line": 23,
+          "end_line": 95,
+          "label": "Entidad Usuario sin setters"
+        },
+        {
+          "path": "monpoint-ms/ms-auth/src/main/java/com/monpoint/auth/config/DataInitializer.java",
+          "line": 17,
+          "end_line": 52,
+          "label": "Semillero admin@monpoint.com"
+        }
+      ],
+      "pos": [755, 440],
+      "size": [165, 68]
+    },
+    {
+      "id": "audit_bus",
+      "type": "messagebus",
+      "label": "Auditoría + Eventos",
+      "sublabel": "AuthAudit + EventPublisher",
+      "tag": "clave=valor",
+      "sources": [
+        {
+          "path": "monpoint-ms/ms-auth/src/main/java/com/monpoint/auth/audit/AuthAuditService.java",
+          "line": 17,
+          "end_line": 47,
+          "label": "Bitácora de seguridad"
+        },
+        {
+          "path": "monpoint-ms/ms-auth/src/main/java/com/monpoint/auth/event/impl/LoggingAuthEventPublisher.java",
+          "line": 12,
+          "end_line": 21,
+          "label": "Puerto de eventos fail-safe"
+        }
+      ],
+      "pos": [995, 260],
+      "size": [165, 68]
+    },
+    {
+      "id": "mongo",
+      "type": "database",
+      "label": "MongoDB 7 (auth_db)",
+      "sublabel": "Replica Set rs0 + keyFile",
+      "tag": "MongoConfig Tx",
+      "brand": "mongodb",
+      "sources": [
+        {
+          "path": "monpoint-ms/infra/docker-compose.yml",
+          "line": 34,
+          "end_line": 95,
+          "label": "Contenedor monpoint-mongodb"
+        },
+        {
+          "path": "monpoint-ms/ms-auth/src/main/java/com/monpoint/auth/config/MongoConfig.java",
+          "line": 15,
+          "end_line": 23,
+          "label": "Auditing + MongoTransactionManager"
+        }
+      ],
+      "pos": [995, 440],
+      "size": [165, 68]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "api-gateway (:8080 público)",
+      "wraps": ["gw_entry", "gw_jwt", "gw_lb"]
+    },
+    {
+      "kind": "security-group",
+      "label": "ms-auth (:8081 interno en monpoint-red)",
+      "wraps": ["auth_sec", "auth_ctrl", "auth_advice", "auth_svc", "user_svc", "auth_repo"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "client-to-gw",
+      "from": "client",
+      "to": "gw_entry",
+      "label": "HTTP :8080",
+      "variant": "emphasis"
+    },
+    {
+      "id": "compose-to-eureka",
+      "from": "compose",
+      "to": "eureka",
+      "label": "health 15s",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 42
+    },
+    {
+      "id": "compose-to-gw",
+      "from": "compose",
+      "to": "gw_jwt",
+      "label": "JWT+CORS",
+      "variant": "dashed"
+    },
+    {
+      "id": "eureka-to-gw",
+      "from": "eureka",
+      "to": "gw_lb",
+      "label": "lb:// IPs",
+      "variant": "emphasis"
+    },
+    {
+      "id": "gw-1-to-2",
+      "from": "gw_entry",
+      "to": "gw_jwt",
+      "label": "paso 3-4",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 42
+    },
+    {
+      "id": "gw-2-to-3",
+      "from": "gw_jwt",
+      "to": "gw_lb",
+      "label": "paso 5-6",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 42
+    },
+    {
+      "id": "gw-to-auth",
+      "from": "gw_lb",
+      "to": "auth_sec",
+      "label": "/auth/**",
+      "variant": "emphasis"
+    },
+    {
+      "id": "sec-to-ctrl",
+      "from": "auth_sec",
+      "to": "auth_ctrl",
+      "label": "Principal",
+      "variant": "security",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "labelDy": -42
+    },
+    {
+      "id": "ctrl-to-advice",
+      "from": "auth_ctrl",
+      "to": "auth_advice",
+      "label": "RFC 9457",
+      "variant": "dashed",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "labelDy": -42
+    },
+    {
+      "id": "ctrl-to-authsvc",
+      "from": "auth_ctrl",
+      "to": "auth_svc",
+      "label": "login()",
+      "variant": "emphasis",
+      "fromSide": "right",
+      "toSide": "left",
+      "labelDx": 28
+    },
+    {
+      "id": "ctrl-to-usersvc",
+      "from": "auth_ctrl",
+      "to": "user_svc",
+      "label": "CRUD",
+      "variant": "default",
+      "labelDy": 18
+    },
+    {
+      "id": "authsvc-to-usersvc",
+      "from": "auth_svc",
+      "to": "user_svc",
+      "label": "BCrypt",
+      "variant": "security",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 42
+    },
+    {
+      "id": "usersvc-to-audit",
+      "from": "user_svc",
+      "to": "audit_bus",
+      "label": "audita",
+      "variant": "dashed"
+    },
+    {
+      "id": "usersvc-to-repo",
+      "from": "user_svc",
+      "to": "auth_repo",
+      "label": "save()",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 42
+    },
+    {
+      "id": "repo-to-mongo",
+      "from": "auth_repo",
+      "to": "mongo",
+      "label": "rs0 Tx",
+      "variant": "emphasis"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "1. Docker Compose y Eureka Server (:8761)",
+      "items": [
+        "monpoint-red: red interna donde solo api-gateway publica puerto (8080:8080); Mongo y Eureka en 127.0.0.1",
+        "stop_grace_period: 15s: da margen a Spring para enviar DELETE a Eureka antes de apagarse (exit 143)",
+        "Eureka standalone: self-preservation=false, barrido cada 5s, latidos cada 10s y prefer-ip-address=true"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "2. API Gateway (:8080 — 6 Pasos Reactivos)",
+      "items": [
+        "Pasos 1-3: RequestIdWebFilter (X-Request-ID) -> CorsWebFilter (OPTIONS 200 OK) -> Rutas WebFlux Gateway 5.0",
+        "Paso 4: JwtAuthenticationGlobalFilter borra X-User-Id/Role del cliente y valida HS256 con JwtValidador",
+        "Pasos 5-6: LoadBalancer resuelve lb://ms-auth en Eureka (caché 10s) y Netty reenvía sin StripPrefix"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "3. Microservicio ms-auth (:8081) y MongoDB rs0",
+      "items": [
+        "Seguridad: cadena stateless 100% en memoria, BCrypt(12) con hashFicticio anti-timing y Jwts.SIG.HS256",
+        "Dominio: 403 antes de 404 anti-sondeo, bloqueo de auto-cambio de rol y PasswordValidator (8-72 bytes UTF-8)",
+        "Persistencia: MongoDB 7 Replica Set rs0 con keyFile 400, @Transactional, @Indexed unique y ProblemDetail"
+      ]
+    }
+  ]
+}
