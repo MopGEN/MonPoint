@@ -19,7 +19,7 @@ public record ProductoEvento(String eventoId, String tipo, String version, Strin
                              Datos datos) {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public record Datos(String productoId, String nombre, BigDecimal precio, boolean activo,
+    public record Datos(String productoId, String nombre, BigDecimal precio, Boolean activo,
                         String fechaActualizacion) {
     }
 }

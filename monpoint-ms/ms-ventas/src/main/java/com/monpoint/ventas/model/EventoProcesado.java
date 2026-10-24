@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
+import java.util.Objects;
 
 /** Registro de un evento procesado para la idempotencia del consumidor. */
 @Document(collection = "eventos_procesados")
@@ -32,7 +33,7 @@ public class EventoProcesado {
 
     public static EventoProcesado de(String eventoId, String tipo, Instant fechaProcesado) {
         EventoProcesado evento = new EventoProcesado();
-        evento.eventoId = eventoId;
+        evento.eventoId = Objects.requireNonNull(eventoId, "El eventoId es obligatorio");
         evento.tipo = tipo;
         evento.fechaProcesado = fechaProcesado;
         return evento;
