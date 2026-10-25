@@ -10,7 +10,7 @@ FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src
-# Las pruebas se omiten aqui porque necesitan MongoDB: se corren antes con ./mvnw test.
+# Las pruebas se ejecutan antes con mvn test; las de integracion requieren MongoDB.
 RUN --mount=type=cache,target=/root/.m2 mvn -q -B package -DskipTests
 
 # --- Etapa 2: ejecucion ------------------------------------------------------
