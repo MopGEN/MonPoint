@@ -9,6 +9,12 @@
 # de este archivo hay un bloque comentado con la plantilla para cada uno.
 # =============================================================================
 
+# El nombre del proyecto no se deja al azar: por omision Compose usa el del
+# directorio ("infra"), que choca con cualquier otro proyecto que tenga una
+# carpeta igual. Fijarlo aqui hace que los tres tengamos los mismos nombres
+# de volumen y de red sin acordarnos de pasar -p.
+name: monpoint-ms
+
 services:
 
   # ===========================================================================
@@ -62,6 +68,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGO_VENTAS_PASSWORD: ${MONGO_VENTAS_PASSWORD}
     volumes:
       - mongodb-datos:/data/db
       # Los archivos .js de esta carpeta se ejecutan UNA VEZ, cuando el
@@ -309,6 +316,35 @@ services:
       eureka-server:
         condition: service_healthy
     # Sin este margen Docker lo mata antes de que mande su baja a Eureka (ver ms-auth).
+    stop_grace_period: 15s
+    networks:
+      - monpoint-red
+
+  # ===========================================================================
+  # ms-ventas — ventas y saga de confirmacion (puerto 8083, ventas_db)
+  # ===========================================================================
+  # Publica VentaCreada y consume StockReservado/StockRechazado.
+  # Mantiene replicas locales del catalogo y de los clientes.
+  # NO publica puertos: se llega a el por el Gateway (/ventas/**).
+  # ===========================================================================
+  ms-ventas:
+    build: ../ms-ventas
+    container_name: monpoint-ventas
+    environment:
+      SERVER_PORT: 8083
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      # La clave sale del .env, que no se versiona (RNF-06).
+      MONGO_URI: mongodb://ventas_user:${MONGO_VENTAS_PASSWORD}@mongodb:27017/ventas_db?replicaSet=rs0&authSource=ventas_db
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: ${RABBITMQ_USER}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
     stop_grace_period: 15s
     networks:
       - monpoint-red
