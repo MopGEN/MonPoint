@@ -29,10 +29,20 @@
 // pero no administrar el servidor ni tocar otras bases.
 // -----------------------------------------------------------------------------
 
+// ms-ventas toma su clave del .env (RNF-06). Si falta, se detiene aqui en vez de
+// crear usuarios a medias: ventas_db es el tercero de seis, y un fallo a mitad
+// dejaria sin crear clientes_db, reportes_db y notificaciones_db.
+const claveVentas = process.env.MONGO_VENTAS_PASSWORD;
+if (!claveVentas) {
+  throw new Error(
+    "Falta MONGO_VENTAS_PASSWORD. Copiala de infra/.env.example a tu infra/.env y repite docker compose down -v && docker compose up -d."
+  );
+}
+
 const servicios = [
   { base: "auth_db",           usuario: "auth_user",           clave: "auth_pass" },
   { base: "inventario_db",     usuario: "inventario_user",     clave: "inventario_pass" },
-  { base: "ventas_db",         usuario: "ventas_user",         clave: "ventas_pass" },
+  { base: "ventas_db",         usuario: "ventas_user",         clave: claveVentas },
   { base: "clientes_db",       usuario: "clientes_user",       clave: "clientes_pass" },
   { base: "reportes_db",       usuario: "reportes_user",       clave: "reportes_pass" },
   { base: "notificaciones_db", usuario: "notificaciones_user", clave: "notificaciones_pass" }
