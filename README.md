@@ -1,3 +1,5 @@
+<img width="640" height="480" alt="pintar-pait" src="https://github.com/user-attachments/assets/cb5583c7-09d5-47f7-a5bf-ec1f05b26eb1" />
+
 # MonPoint
 
 Sistema de gestión para punto de venta (POS) enfocado en la administración
@@ -85,7 +87,8 @@ JWT, Eureka, MongoDB, comunicación asíncrona y contenedores.
 
 El tablero de actividades está en Asana y es la fuente sobre fechas y secuencia.
 Las incidencias técnicas y las solicitudes de integración viven aquí. No se
-duplica información entre las dos.
+duplica información entre las dos.![Uploading pintar-pait.gif…]()
+
 
 ---
 
