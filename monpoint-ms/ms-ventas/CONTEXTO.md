@@ -155,3 +155,44 @@ planeación y los contratos vigentes siguen siendo la autoridad del proyecto.
 - El respaldo de D: corresponde al momento previo al traslado; no se actualiza
   automáticamente con los datos nuevos del stack. El contenedor antiguo de
   MariaDB se verificó en ejecución después de completar la infraestructura.
+
+## Actividad 4.1: registro asíncrono con folio
+
+- Se verificó la 3.6 en main: PR #6 fusionado, commit `4c1c315`, Hugo asignado
+  para revisión posterior. El usuario se encarga de marcar Asana y enviar el
+  aviso de la credencial. No se confirmó aquí que ya lo haya hecho.
+- Rama `feat/4.1-ms-ventas-registro-asincrono`, creada desde main actualizado.
+- Se incorporaron el puerto, adaptador Rabbit y siete pruebas del archivo
+  `ms-ventas-41-publicador.tar.gz` entregado por el usuario.
+- Corrección expresamente acordada: `clienteNombre` en el evento y ningún
+  `subtotal` por línea. La fecha del payload se mantiene como `fecha` y se toma
+  de `ventas.fechaCreacion`. Contrato en `../docs/eventos/venta-creada.md`.
+- Cliente opcional. Si se envía uno no disponible en clientes_replica, devolver
+  400 con el texto exacto acordado para 5.5 (constante en VentaService). No se
+  distingue un cliente inexistente de un evento de alta aún en tránsito.
+- Venta, líneas embebidas y Contador respetan el esquema: clienteNombre,
+  fechaCreacion, fechas de resolución/cancelación reservadas para 4.4,
+  importes Decimal128, referencias ObjectId y folio Int64. No se guarda subtotal.
+- El DTO solo acepta clienteId y líneas con productoId/cantidad. Totales,
+  nombres, precios, folio y estado enviados por el cliente se ignoran.
+- VentaService valida y congela, calcula, obtiene folio con findAndModify/$inc,
+  inserta y llama al publicador dentro de TransactionTemplate. Los conflictos
+  transitorios reintentan la transacción completa; nunca se reintenta un commit
+  de resultado desconocido. Venta y contador se revierten juntos.
+- El adaptador publica en afterCommit y conserva el contrato de no propagar
+  fallos de envío. El log de fallo incluye ventaId, folio y eventoId para poder
+  reconstruir el evento desde el snapshot persistido. Sin outbox sigue existiendo
+  la ventana entre commit y publicación, y el POST no tiene clave de idempotencia.
+- POST /ventas responde 202 con id, folio y PENDIENTE; exige ADMIN/VENDEDOR.
+  SecurityConfig, ProblemDetail y RequestIdFilter siguen el patrón de inventario.
+- Verificación: 74 pruebas, cero fallos/omisiones con MongoDB habilitado; diez
+  son de integración. Ocho ventas concurrentes obtuvieron folios distintos y
+  consecutivos. Se verificaron rollback y visibilidad de la venta antes del envío.
+- Recorrido real Gateway → ventas → RabbitMQ → inventario: 202, total 123.45
+  aunque la petición mandaba 0.01, stock pasó de 10 a 7. Se conserva la venta
+  de demostración folio 11, id `6adeba6ef5098dca5fd7cab3`, PENDIENTE hasta 4.4;
+  producto `6adeba6cd1357790e8c2d983`, cliente `6adeba6dca4889987a5e63d1`.
+  La cola temporal de captura del evento se eliminó al terminar la prueba.
+- Pendiente para la consulta por fecha: el guion 02 heredado indexa `fecha`,
+  mientras el esquema de venta usa `fechaCreacion`. Se documenta y no se cambian
+  índices compartidos en este paso. El índice único de folio sí se exige al arrancar.

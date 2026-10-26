@@ -38,7 +38,7 @@ public class VerificadorDeIndices implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         exigirIndiceUnico("eventos_procesados", "eventoId");
-        exigirIndice("ventas", "folio");
+        exigirIndiceUnico("ventas", "folio");
         exigirIndice("ventas", "estado");
         log.info("evento=INDICES_VERIFICADOS resultado=ok");
     }
