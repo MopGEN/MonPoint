@@ -27,8 +27,11 @@ nombre y precio; la venta congela `clienteNombre`. No se almacena subtotal.
 - Cliente omitido o nulo: venta sin cliente. Si se envía un cliente no disponible
   en la réplica: **400**, con este `detail` que la caja de 5.5 debe mostrar tal cual:
   `el cliente no está disponible; si acaba de darlo de alta, inténtelo de nuevo en unos segundos`
+- `clienteId` (cuando se envía) y `productoId` deben tener 24 caracteres
+  hexadecimales. Un formato inválido devuelve **400** con un `detail` específico
+  del campo, antes de abrir la transacción o consultar las réplicas.
 - La réplica es eventualmente consistente: no se puede distinguir una alta que
-  aún no llegó de un identificador inventado. No se consulta a ms-clientes.
+  aún no llegó de un identificador válido pero inventado. No se consulta a ms-clientes.
 - Sin identidad: **401**; rol distinto de ADMIN/VENDEDOR: **403**.
 
 Orden: validar réplicas → congelar/calcular → incrementar atómicamente

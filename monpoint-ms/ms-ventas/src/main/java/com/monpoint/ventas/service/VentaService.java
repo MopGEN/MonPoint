@@ -16,6 +16,7 @@ import com.monpoint.ventas.repository.VentaRepository;
 import com.monpoint.ventas.security.UsuarioActual;
 import jakarta.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
@@ -65,6 +66,14 @@ public class VentaService {
         }
         if (solicitud == null || !validator.validate(solicitud).isEmpty()) {
             throw new VentaInvalidaException("La venta requiere líneas con producto y cantidad positiva");
+        }
+        if (solicitud.clienteId() != null && !ObjectId.isValid(solicitud.clienteId())) {
+            throw new VentaInvalidaException("El formato de clienteId es inválido: debe contener 24 caracteres hexadecimales");
+        }
+        for (var linea : solicitud.lineas()) {
+            if (!ObjectId.isValid(linea.productoId())) {
+                throw new VentaInvalidaException("El formato de productoId es inválido: debe contener 24 caracteres hexadecimales");
+            }
         }
         for (int intento = 1; ; intento++) {
             try {

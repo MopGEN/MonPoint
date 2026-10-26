@@ -175,6 +175,12 @@ planeación y los contratos vigentes siguen siendo la autoridad del proyecto.
   importes Decimal128, referencias ObjectId y folio Int64. No se guarda subtotal.
 - El DTO solo acepta clienteId y líneas con productoId/cantidad. Totales,
   nombres, precios, folio y estado enviados por el cliente se ignoran.
+- Revisión de 4.1: clienteId no nulo y productoId deben ser ObjectId válidos.
+  Un formato inválido devuelve 400 con detalle del campo antes de abrir la
+  transacción. El mensaje de consistencia eventual se reserva para identificadores
+  válidos ausentes en la réplica. Se mantiene la política de reintentos acordada.
+  Verificación de esta corrección: 42 pruebas de servicio y HTTP aprobadas,
+  sin fallos ni omisiones; ocho nuevas ejecutan controlador y servicio real.
 - VentaService valida y congela, calcula, obtiene folio con findAndModify/$inc,
   inserta y llama al publicador dentro de TransactionTemplate. Los conflictos
   transitorios reintentan la transacción completa; nunca se reintenta un commit

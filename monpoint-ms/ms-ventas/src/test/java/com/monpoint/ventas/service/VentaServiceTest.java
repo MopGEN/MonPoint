@@ -32,6 +32,8 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class VentaServiceTest {
+    private static final String PRODUCTO_ID = "507f1f77bcf86cd799439011";
+    private static final String CLIENTE_ID = "507f1f77bcf86cd799439012";
     private static final ValidatorFactory VALIDACION = Validation.buildDefaultValidatorFactory();
     private static final UsuarioActual VENDEDOR = new UsuarioActual("usuario", "VENDEDOR");
     @Mock ProductoReplicaRepository productos;
@@ -65,9 +67,9 @@ class VentaServiceTest {
         return Stream.of(null, new VentaRequest(null, null), new VentaRequest(null, List.of()),
                 new VentaRequest(null, Arrays.asList((VentaRequest.LineaRequest) null)),
                 new VentaRequest(null, List.of(new VentaRequest.LineaRequest(" ", 1))),
-                new VentaRequest(null, List.of(new VentaRequest.LineaRequest("p", null))),
-                new VentaRequest(null, List.of(new VentaRequest.LineaRequest("p", 0))),
-                new VentaRequest(null, List.of(new VentaRequest.LineaRequest("p", -1))));
+                new VentaRequest(null, List.of(new VentaRequest.LineaRequest(PRODUCTO_ID, null))),
+                new VentaRequest(null, List.of(new VentaRequest.LineaRequest(PRODUCTO_ID, 0))),
+                new VentaRequest(null, List.of(new VentaRequest.LineaRequest(PRODUCTO_ID, -1))));
     }
 
     @ParameterizedTest @MethodSource("invalidas")
@@ -78,8 +80,8 @@ class VentaServiceTest {
 
     @ParameterizedTest @ValueSource(booleans = {true, false})
     void productoAusenteOInactivoNoGeneraVenta(boolean ausente) {
-        when(productos.findById("p")).thenReturn(ausente ? Optional.empty()
-                : Optional.of(ProductoReplica.crear("p", "P", BigDecimal.TEN, false, Instant.now())));
+        when(productos.findById(PRODUCTO_ID)).thenReturn(ausente ? Optional.empty()
+                : Optional.of(ProductoReplica.crear(PRODUCTO_ID, "P", BigDecimal.TEN, false, Instant.now())));
         assertThatThrownBy(() -> servicio.registrar(solicitud(null), VENDEDOR))
                 .isInstanceOf(VentaInvalidaException.class);
         verifyNoInteractions(ventas, folios, publicador);
@@ -87,8 +89,8 @@ class VentaServiceTest {
 
     @Test void clienteNoDisponibleConservaMensajeAcordado() {
         productoValido();
-        when(clientes.findById("c")).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> servicio.registrar(solicitud("c"), VENDEDOR))
+        when(clientes.findById(CLIENTE_ID)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> servicio.registrar(solicitud(CLIENTE_ID), VENDEDOR))
                 .isInstanceOf(VentaInvalidaException.class).hasMessage(VentaService.CLIENTE_NO_DISPONIBLE);
         verifyNoInteractions(ventas, folios, publicador);
     }
@@ -114,8 +116,8 @@ class VentaServiceTest {
 
     @Test void rechazaDesbordamientoDeProductosRepetidos() {
         productoValido();
-        var solicitud = new VentaRequest(null, List.of(new VentaRequest.LineaRequest("p", Integer.MAX_VALUE),
-                new VentaRequest.LineaRequest("p", 1)));
+        var solicitud = new VentaRequest(null, List.of(new VentaRequest.LineaRequest(PRODUCTO_ID, Integer.MAX_VALUE),
+                new VentaRequest.LineaRequest(PRODUCTO_ID, 1)));
         assertThatThrownBy(() -> servicio.registrar(solicitud, VENDEDOR)).isInstanceOf(VentaInvalidaException.class);
         verifyNoInteractions(ventas, folios, publicador);
     }
@@ -146,11 +148,11 @@ class VentaServiceTest {
     }
 
     private ProductoReplica productoValido() {
-        var producto = ProductoReplica.crear("p", "Tinta", new BigDecimal("41.15"), true, Instant.now());
-        when(productos.findById("p")).thenReturn(Optional.of(producto));
+        var producto = ProductoReplica.crear(PRODUCTO_ID, "Tinta", new BigDecimal("41.15"), true, Instant.now());
+        when(productos.findById(PRODUCTO_ID)).thenReturn(Optional.of(producto));
         return producto;
     }
     private VentaRequest solicitud(String cliente) {
-        return new VentaRequest(cliente, List.of(new VentaRequest.LineaRequest("p", 3)));
+        return new VentaRequest(cliente, List.of(new VentaRequest.LineaRequest(PRODUCTO_ID, 3)));
     }
 }
