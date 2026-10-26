@@ -202,3 +202,42 @@ planeación y los contratos vigentes siguen siendo la autoridad del proyecto.
 - Pendiente para la consulta por fecha: el guion 02 heredado indexa `fecha`,
   mientras el esquema de venta usa `fechaCreacion`. Se documenta y no se cambian
   índices compartidos en este paso. El índice único de folio sí se exige al arrancar.
+
+## Actividad 4.4: resolución de la saga
+
+- La 4.1 se fusionó por autorización del usuario: PR #8, commit `58b6a65` en
+  main, incluida la corrección de formatos de identificadores. Se creó desde
+  ese main la rama `feat/4.4-ms-ventas-resolucion-saga`.
+- Se incorporaron los parches del puerto/adaptador y las seis pruebas entregadas
+  en `ms-ventas-44-cierre.tar.gz`. El mecanismo afterCommit se conserva.
+- StockEventoListener resuelve y registra eventoId en una misma transacción.
+  Duplicados no consultan la venta; venta ausente propaga; venta resuelta registra
+  sin modificar ni publicar. Confirmación y cancelación son transiciones terminales.
+- fechaResolucion es la hora local del servicio al resolver, truncada a milisegundos
+  para coincidir exactamente con BSON y con el evento de cierre.
+- Los cierres llevan la venta completa y sin subtotal. VentaCancelada lleva el
+  código de inventario; la frase comprensible vive en motivoCancelacion.
+- El nombre y el solicitado salen de la venta congelada; se suman líneas repetidas
+  del producto. No hay consulta de stock ni acceso a productos_replica al resolver.
+- El usuario pidió preparar un mensaje para Victor sobre disponible/solicitado:
+  `docs/mensaje-victor-stock.md`. No se envió. Mientras se acuerda la ampliación,
+  el mensaje del cajero funciona sin disponible.
+- Se conservan los tres escuchadores independientes: el consumidor de stock tiene
+  transiciones y publicación diferentes a las réplicas. No se introdujo clase base.
+- La limitación sin outbox incluye ahora cierres: la venta puede quedar resuelta
+  sin que reportes reciba el evento; reentregar stock no repara la publicación.
+  Se documenta en README y en `../docs/eventos/venta-cierre.md`.
+- Verificación final (26 de octubre): 115 pruebas aprobadas, cero fallos, errores
+  u omisiones; 18 usan MongoDB real. Las ocho nuevas de integración incluyen
+  reversión por índice único en ambos desenlaces y dos respuestas concurrentes.
+- Recorrido real Gateway → ventas → RabbitMQ → inventario → ventas:
+  folio 40 (`6adf4d3a2b81803d3a3320eb`) CONFIRMADA, total 123.45;
+  folio 41 (`6adf4d3a2b81803d3a3320ed`) CANCELADA, total 329.20.
+  Producto `6adf4d3996990119d4102583`: stock 10 → 7; el rechazo de 8 unidades
+  no descontó nada. Ambos POST respondieron 202 PENDIENTE antes del cierre.
+  Reentregas reales no publicaron cierres adicionales; tres colas de fallidos en cero.
+- La venta de demostración de la 4.1, folio 11, también pasó a CONFIRMADA al
+  consumir la respuesta de inventario que estaba esperando en ventas.stock.
+- Imagen local de ms-ventas reconstruida y desplegada; los ocho servicios saludables.
+  Evidencia local en `target/evidencia-cierre-44.json` y guion de comprobación en
+  `target/verificar-cierre-44.ps1` (ignorados por Git). Se conservaron ventas de demo.
