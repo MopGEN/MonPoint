@@ -11,8 +11,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * <b>HUECO DE CONTRATO PENDIENTE CON VICTOR.</b> La tarea 5.2 exige que una venta cancelada muestre un motivo
  * en lenguaje comprensible, del tipo <i>«existencia insuficiente de Tinta para sello, disponible 1,
  * solicitado 3»</i>. Con lo que llega hoy se puede construir el nombre del producto (está en
- * productos_replica) y el solicitado (está en la venta), pero <b>no el disponible</b>: la existencia no se
- * replica, por diseño. Los campos {@code disponible} y {@code solicitado} ya están declarados aquí como
+ * las líneas congeladas de la venta) y el solicitado (también en la venta), pero <b>no el disponible</b>:
+ * la existencia no se replica, por diseño. Los campos {@code disponible} y {@code solicitado} ya están declarados aquí como
  * {@link Integer} para que, en cuanto ms-inventario los publique, lleguen sin tocar este archivo; mientras
  * tanto llegan nulos y el mensaje se degrada a la versión sin disponible.
  */
