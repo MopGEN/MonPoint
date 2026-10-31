@@ -1,4 +1,4 @@
-# ms-ventas — réplica local y registro asíncrono (3.6 y 4.1)
+# ms-ventas — réplicas y saga de venta (3.6, 4.1 y 4.4)
 
 ## Registro de ventas
 
@@ -45,13 +45,49 @@ Un fallo al enviar se registra con ventaId y folio sin convertir la respuesta
 en 500. Sin outbox existe una ventana de pérdida entre commit y envío: la venta
 puede permanecer PENDIENTE y requiere atención manual. No hay idempotencia HTTP
 por reenvío del POST: ante una respuesta perdida, repetir puede crear otra venta.
-La resolución de StockReservado/StockRechazado pertenece a 4.4 y no se implementa
-en este paso. Contrato: [VentaCreada](../docs/eventos/venta-creada.md).
+Contrato de inicio: [VentaCreada](../docs/eventos/venta-creada.md).
 
 Los campos persistidos siguen el Documento 04 (`clienteNombre`, `fechaCreacion`).
 Los índices heredados del guion 02 usan `fecha`; al implementar la consulta por
 fecha deberá alinearse ese índice con `fechaCreacion`. Este POST usa únicamente
 el índice único de folio, que también se exige al arrancar.
+
+## Cierre de la saga (4.4)
+
+`StockEventoListener` consume `ventas.stock`: `StockReservado` confirma y
+`StockRechazado` cancela. Resolución e inserción de `eventoId` comparten una
+transacción MongoDB; `VentaConfirmada`/`VentaCancelada` se envían después del commit.
+
+- Un evento ya registrado se descarta antes de buscar la venta.
+- Una venta inexistente produce una excepción; Spring AMQP hace tres intentos
+  y envía el mensaje a `ventas.stock.fallidos` al agotarlos.
+- Una venta ya resuelta conserva estado, motivo y fecha. Se registra el nuevo
+  `eventoId`, sin volver a publicar, incluso si la respuesta tardía es contraria.
+- Dos respuestas concurrentes que leen PENDIENTE chocan al escribir la misma
+  venta. Una transacción se revierte y el reintento ve la venta ya resuelta.
+- `fechaResolucion` corresponde al momento de resolver en ms-ventas, con
+  precisión de milisegundos para coincidir con BSON. No depende de la fecha del sobre.
+- El nombre y la cantidad solicitada salen de las líneas congeladas. Los productos
+  repetidos suman sus cantidades. No se consulta `productos_replica` ni se almacena stock.
+- Por ahora el motivo comprensible omite «disponible»: inventario aún no lo envía.
+  Ejemplo: `existencia insuficiente de Tinta para sello, solicitado 3`.
+
+El evento de cierre lleva la venta completa para construir `ventas_proy`, sin
+consultas HTTP entre servicios. La cancelación incluye el **código** de inventario
+en `motivo`; la frase para el cajero queda en `ventas.motivoCancelacion`.
+Contrato: [Eventos de cierre](../docs/eventos/venta-cierre.md).
+
+**Limitación sin outbox:** si el proceso cae entre commit y envío, o falla RabbitMQ,
+la venta queda resuelta y el evento registrado, pero reportes/notificaciones pueden
+no recibir el cierre. Una reentrega de stock se descarta y no lo vuelve a publicar.
+Hay que revisar los errores de publicación y reconciliar/reemitir manualmente;
+esta actividad no implementa recuperación automática. Un fallo de envío posterior
+al commit se registra sin intentar revertir una transacción que ya terminó.
+
+Se mantienen los tres escuchadores independientes: productos/clientes actualizan
+réplicas; stock aplica transiciones terminales y publica un resultado. Comparten
+infraestructura transaccional y de transporte, pero una clase base ocultaría esas
+decisiones diferentes. Se reevaluará si aparecen más consumidores con la misma lógica.
 
 ## Réplicas
 
@@ -90,7 +126,8 @@ Windows, la URI usa `localhost:27017`, `replicaSet=rs0`,
 mvn test
 ```
 
-Sin esa variable, `ReplicasTransaccionTest` y `VentaRegistroIntegracionTest` se
+Sin esa variable, `ReplicasTransaccionTest`, `VentaRegistroIntegracionTest` y
+`StockResolucionIntegracionTest` se
 omiten explícitamente. Con ella se comprueban:
 
 - Rollback de creación/actualización de ambas réplicas ante conflicto real del
@@ -100,6 +137,12 @@ omiten explícitamente. Con ella se comprueban:
 - Rollback de venta y contador después de registrar el callback afterCommit.
 - Snapshots históricos, Decimal128, ObjectId e Int64 en BSON; ausencia de subtotal.
 - Broker caído después del commit: la venta permanece PENDIENTE.
+- Cierre confirmado/cancelado visible fuera de la transacción antes de publicar.
+- Conflicto real de índice único al registrar stock: se revierte la resolución
+  y no se ejecuta el envío pendiente de afterCommit, en ambos desenlaces.
+- Respuestas contrarias concurrentes: un solo cierre publicado; la reentrega
+  registra la respuesta restante sin modificar la venta.
+- Broker caído después del cierre: la venta sigue resuelta y la reentrega se descarta.
 
 Cada prueba elimina únicamente sus documentos; no borra colecciones ni reinicia
 el contador compartido. Los folios consumidos por las pruebas quedan avanzados.

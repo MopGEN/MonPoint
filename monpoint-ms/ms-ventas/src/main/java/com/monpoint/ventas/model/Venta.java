@@ -53,6 +53,25 @@ public class Venta {
         this.folio = folio;
     }
 
+    public void confirmar(Instant fecha) {
+        exigirPendiente();
+        this.fechaResolucion = Objects.requireNonNull(fecha, "La fecha de resolución es obligatoria");
+        this.motivoCancelacion = null;
+        this.estado = EstadoVenta.CONFIRMADA;
+    }
+
+    public void cancelar(String motivo, Instant fecha) {
+        exigirPendiente();
+        if (motivo == null || motivo.isBlank()) throw new IllegalArgumentException("El motivo es obligatorio");
+        this.fechaResolucion = Objects.requireNonNull(fecha, "La fecha de resolución es obligatoria");
+        this.motivoCancelacion = motivo;
+        this.estado = EstadoVenta.CANCELADA;
+    }
+
+    private void exigirPendiente() {
+        if (estado != EstadoVenta.PENDIENTE) throw new IllegalStateException("La venta ya está resuelta");
+    }
+
     /** MongoDB puede materializar un ArrayList; tampoco se expone mutable después de leerlo. */
     public List<LineaVenta> getLineas() {
         return List.copyOf(lineas);

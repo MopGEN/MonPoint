@@ -67,6 +67,44 @@ public class RabbitVentaEventPublisher implements VentaEventPublisher {
         publicar(VentasEventos.TIPO_VENTA_CREADA, VentasEventos.RK_VENTA_CREADA, datos);
     }
 
+    @Override
+    public void publicarVentaConfirmada(VentaPublicada venta) {
+        publicar(VentasEventos.TIPO_VENTA_CONFIRMADA, VentasEventos.RK_VENTA_CONFIRMADA, datosDe(venta, null));
+    }
+
+    @Override
+    public void publicarVentaCancelada(VentaPublicada venta, String motivo) {
+        publicar(VentasEventos.TIPO_VENTA_CANCELADA, VentasEventos.RK_VENTA_CANCELADA, datosDe(venta, motivo));
+    }
+
+    /** @param motivo null en la confirmacion; el codigo de ms-inventario en la cancelacion. */
+    private static Map<String, Object> datosDe(VentaPublicada venta, String motivo) {
+        List<Map<String, Object>> detalle = new ArrayList<>();
+        for (LineaPublicada linea : venta.lineas()) {
+            Map<String, Object> item = new LinkedHashMap<>();
+            item.put("productoId", linea.productoId());
+            item.put("nombreProducto", linea.nombreProducto());
+            item.put("cantidad", linea.cantidad());
+            item.put("precioUnitario", linea.precioUnitario());
+            detalle.add(item);
+        }
+
+        Map<String, Object> datos = new LinkedHashMap<>();
+        datos.put("ventaId", venta.ventaId());
+        datos.put("folio", venta.folio());
+        datos.put("clienteId", venta.clienteId());
+        datos.put("clienteNombre", venta.clienteNombre());
+        datos.put("total", venta.total());
+        datos.put("fechaCreacion", venta.fechaCreacion() != null ? venta.fechaCreacion().toString() : null);
+        datos.put("fechaResolucion",
+                venta.fechaResolucion() != null ? venta.fechaResolucion().toString() : null);
+        datos.put("lineas", detalle);
+        if (motivo != null) {
+            datos.put("motivo", motivo);
+        }
+        return datos;
+    }
+
     // ------------------------------------------------------------------
 
     private void publicar(String tipo, String routingKey, Map<String, Object> datos) {
@@ -107,8 +145,8 @@ public class RabbitVentaEventPublisher implements VentaEventPublisher {
         } catch (Exception ex) {
             // La venta esta persistida y confirmada. Se registra con todo lo necesario para reenviarla a mano
             // y se continua: fallar aqui daria un 500 sobre una venta que si existe.
-            log.error("evento={} eventoId={} ventaId={} folio={} NO se pudo publicar. La venta queda PENDIENTE y hay que "
-                            + "reenviarla o cancelarla a mano (RF-3.10). routingKey={} causa={}",
+            log.error("evento={} eventoId={} ventaId={} folio={} NO se pudo publicar. La transacción ya confirmó; "
+                            + "revisar la venta persistida y reenviar el evento manualmente. routingKey={} causa={}",
                     sobre.tipo(), sobre.eventoId(), sobre.datos().get("ventaId"), sobre.datos().get("folio"),
                     routingKey, ex.toString(), ex);
         }
