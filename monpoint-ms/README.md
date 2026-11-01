@@ -89,7 +89,7 @@ resuelve registrando el `eventoId` ya procesado antes de aplicar el cambio.
 
 | Componente | Puerto | ¿Expuesto al exterior? |
 |---|---|---|
-| API Gateway | 8080 | Sí — única puerta de entrada |
+| API Gateway | 8080 | Sí — única puerta de entrada a la API |
 | Eureka | 8761 | Solo desde tu máquina (`127.0.0.1`), para inspección |
 | MongoDB | 27017 | Solo desde tu máquina (`127.0.0.1`), para inspección |
 | RabbitMQ (AMQP) | 5672 | Solo desde tu máquina (`127.0.0.1`), para inspección |

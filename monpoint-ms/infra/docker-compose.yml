@@ -1,7 +1,7 @@
 # =============================================================================
 # MonPoint MS — Orquestacion del sistema completo
 # =============================================================================
-# Levanta todo con:   docker compose up -d
+# Levanta todo con:   docker compose up -d --build
 # Detiene y limpia:   docker compose down -v
 #
 # Contiene la infraestructura compartida (MongoDB, RabbitMQ, Eureka, Gateway).
@@ -187,7 +187,7 @@ services:
   # ===========================================================================
   # API Gateway — punto unico de entrada
   # ===========================================================================
-  # ES EL UNICO COMPONENTE QUE PUBLICA UN PUERTO AL EXTERIOR.
+  # ES EL UNICO PUNTO DE ENTRADA A LA API. Nginx sirve la interfaz en :3000.
   #
   # Los servicios de dominio no exponen puertos: solo son alcanzables desde
   # dentro de la red monpoint-red. Quien quiera hablar con ellos pasa por el
@@ -203,7 +203,7 @@ services:
     build: ../api-gateway
     container_name: monpoint-gateway
     ports:
-      - "8080:8080"    # Unica puerta de entrada al sistema
+      - "8080:8080"    # Unica puerta de entrada a la API
     environment:
       SERVER_PORT: 8080
       EUREKA_URL: http://eureka-server:8761/eureka/
@@ -423,7 +423,7 @@ services:
 # direcciones IP.
 #
 # Desde fuera de la red solo se alcanza lo que publica puertos: el Gateway
-# (abierto, es la puerta de entrada) y, SOLO desde la propia maquina
+# (API), nginx (interfaz web) y, SOLO desde la propia maquina
 # (127.0.0.1), MongoDB, RabbitMQ y Eureka para inspeccion durante el desarrollo.
 # =============================================================================
 networks:
