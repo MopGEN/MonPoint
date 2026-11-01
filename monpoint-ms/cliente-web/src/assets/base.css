@@ -1,0 +1,203 @@
+/*
+ * Base del cliente web: variables, reinicio y unas pocas primitivas.
+ *
+ * ALCANCE: esto es el andamiaje (tarea 5.1). El diseno de la pantalla de caja
+ * es la tarea 5.5 y vive en su propio componente. Aqui solo se fijan los
+ * valores que deben ser iguales en todas las pantallas, tomados del prototipo
+ * aprobado (docs/prototipo/index.html) para que el cliente real y el prototipo
+ * no divergan.
+ */
+
+:root {
+  /* Paleta del prototipo */
+  --mp-marino: #12233f;
+  --mp-verde: #1f9d6e;
+  --mp-tinta: #0a1422;
+
+  --mp-verde-oscuro: #17805a;
+  --mp-rojo: #c0392b;
+  --mp-ambar: #b7791f;
+
+  /* Superficies y texto, modo claro */
+  --mp-fondo: #f4f6f9;
+  --mp-superficie: #ffffff;
+  --mp-borde: #d8dee8;
+  --mp-texto: var(--mp-tinta);
+  --mp-texto-suave: #5a6677;
+
+  --mp-radio: 8px;
+  --mp-sombra: 0 1px 2px rgb(10 20 34 / 8%), 0 4px 12px rgb(10 20 34 / 6%);
+
+  --mp-tipografia: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, sans-serif;
+  /* Para importes y folios: cifras de ancho fijo para que las columnas no
+     bailen al cambiar el numero. */
+  --mp-tipografia-cifras: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo,
+    Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema='claro']) {
+    --mp-fondo: var(--mp-tinta);
+    --mp-superficie: #132238;
+    --mp-borde: #24364f;
+    --mp-texto: #e8edf4;
+    --mp-texto-suave: #9aa8bb;
+    --mp-sombra: 0 1px 2px rgb(0 0 0 / 40%), 0 4px 12px rgb(0 0 0 / 30%);
+  }
+}
+
+:root[data-tema='oscuro'] {
+  --mp-fondo: var(--mp-tinta);
+  --mp-superficie: #132238;
+  --mp-borde: #24364f;
+  --mp-texto: #e8edf4;
+  --mp-texto-suave: #9aa8bb;
+  --mp-sombra: 0 1px 2px rgb(0 0 0 / 40%), 0 4px 12px rgb(0 0 0 / 30%);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--mp-fondo);
+  color: var(--mp-texto);
+  font-family: var(--mp-tipografia);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0 0 0.5rem;
+  line-height: 1.25;
+  font-weight: 650;
+}
+
+/* Reinicio de controles: heredan tipografia en lugar de la del sistema. */
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+/* Foco visible y uniforme. No se elimina el contorno: es el unico indicador
+   para quien navega con teclado, que en una caja es el caso normal. */
+:focus-visible {
+  outline: 2px solid var(--mp-verde);
+  outline-offset: 2px;
+}
+
+.mp-cifra {
+  font-family: var(--mp-tipografia-cifras);
+  font-variant-numeric: tabular-nums;
+}
+
+.mp-tarjeta {
+  background: var(--mp-superficie);
+  border: 1px solid var(--mp-borde);
+  border-radius: var(--mp-radio);
+  box-shadow: var(--mp-sombra);
+}
+
+.mp-boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  border: 1px solid transparent;
+  border-radius: var(--mp-radio);
+  background: var(--mp-verde);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mp-boton:hover:not(:disabled) {
+  background: var(--mp-verde-oscuro);
+}
+
+.mp-boton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.mp-boton--secundario {
+  background: transparent;
+  border-color: var(--mp-borde);
+  color: var(--mp-texto);
+}
+
+.mp-boton--secundario:hover:not(:disabled) {
+  background: var(--mp-fondo);
+}
+
+.mp-campo {
+  display: block;
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--mp-borde);
+  border-radius: var(--mp-radio);
+  background: var(--mp-superficie);
+}
+
+.mp-etiqueta {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--mp-texto-suave);
+}
+
+/* Avisos. El color NO es el unico portador del significado: cada variante
+   lleva texto que lo nombra, por accesibilidad. */
+.mp-aviso {
+  padding: 0.7rem 0.9rem;
+  border-left: 4px solid var(--mp-borde);
+  border-radius: 4px;
+  background: var(--mp-fondo);
+  font-size: 0.9375rem;
+}
+
+.mp-aviso--error {
+  border-left-color: var(--mp-rojo);
+  background: rgb(192 57 43 / 8%);
+}
+
+.mp-aviso--pendiente {
+  border-left-color: var(--mp-ambar);
+  background: rgb(183 121 31 / 10%);
+}
+
+.mp-aviso--exito {
+  border-left-color: var(--mp-verde);
+  background: rgb(31 157 110 / 10%);
+}
+
+/* Visible solo para lectores de pantalla. */
+.mp-solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
