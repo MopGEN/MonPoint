@@ -70,8 +70,14 @@ public class StockEventoListener {
             return;
         }
 
-        if (rechazo == null) venta.confirmar(ahora);
-        else venta.cancelar(motivoParaCajero(venta, rechazo), ahora);
+        if (rechazo == null) {
+            venta.confirmar(ahora);
+        } else {
+            // motivoParaCajero valida que el productoId venga y que pertenezca a la venta; se llama
+            // antes de leerlo para no depender del orden de evaluación de los argumentos.
+            String motivo = motivoParaCajero(venta, rechazo);
+            venta.cancelar(motivo, rechazo.productoId(), ahora);
+        }
         ventas.save(venta);
         var salida = new VentaPublicada(venta.getId(), venta.getFolio(), venta.getClienteId(),
                 venta.getClienteNombre(), venta.getTotal(), venta.getFechaCreacion(), venta.getFechaResolucion(),

@@ -122,6 +122,10 @@ Tres decisiones que conviene no revertir sin leer esto:
 - **`motivo` llega redactado, no como código.** `StockEventoListener` traduce
   `EXISTENCIA_INSUFICIENTE` y los otros dos códigos a una frase de caja antes de
   persistirla. El cliente no traduce nada.
+- **`productoIdRechazado` acompaña al motivo en CANCELADA.** La frase nombra el
+  producto en texto; el identificador permite a la caja señalar la línea exacta
+  del carrito (actividad 5.5, paso 9) sin analizar la cadena. Las ventas
+  canceladas antes de esa actividad lo traen en `null`.
 - **La respuesta lleva `Cache-Control: no-store`.** La caja consulta este recurso
   repetidamente mientras la venta está PENDIENTE; sin la cabecera, una respuesta
   cacheada dejaría el sondeo sin ver el cambio a CONFIRMADA.

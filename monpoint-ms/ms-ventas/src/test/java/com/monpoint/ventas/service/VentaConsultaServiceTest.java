@@ -89,7 +89,7 @@ class VentaConsultaServiceTest {
     @Test
     void unaVentaCanceladaTraeElMotivoYaRedactado() {
         Venta venta = ventaDeTres();
-        venta.cancelar("existencia insuficiente de Tinta para sello, solicitado 3",
+        venta.cancelar("existencia insuficiente de Tinta para sello, solicitado 3", PRODUCTO,
                 Instant.parse("2026-10-31T21:00:04Z"));
         when(ventas.findById(ID)).thenReturn(Optional.of(venta));
 
@@ -97,7 +97,21 @@ class VentaConsultaServiceTest {
 
         assertThat(detalle.estado()).isEqualTo(EstadoVenta.CANCELADA);
         assertThat(detalle.motivo()).isEqualTo("existencia insuficiente de Tinta para sello, solicitado 3");
+        // El identificador acompana a la frase: la caja senala la linea sin analizar el texto.
+        assertThat(detalle.productoIdRechazado()).isEqualTo(PRODUCTO);
         assertThat(detalle.fechaResolucion()).isEqualTo(Instant.parse("2026-10-31T21:00:04Z"));
+    }
+
+    @Test
+    void cancelarExigeElProductoQueProvocoElRechazo() {
+        Venta venta = ventaDeTres();
+
+        assertThatThrownBy(() -> venta.cancelar("motivo", null, Instant.now()))
+                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> venta.cancelar("motivo", "   ", Instant.now()))
+                .isInstanceOf(IllegalArgumentException.class);
+        // La venta sigue PENDIENTE: un intento invalido no la resuelve a medias.
+        assertThat(venta.getEstado()).isEqualTo(EstadoVenta.PENDIENTE);
     }
 
     @Test
@@ -110,6 +124,7 @@ class VentaConsultaServiceTest {
 
         assertThat(detalle.estado()).isEqualTo(EstadoVenta.CONFIRMADA);
         assertThat(detalle.motivo()).isNull();
+        assertThat(detalle.productoIdRechazado()).isNull();
         assertThat(detalle.fechaResolucion()).isNotNull();
     }
 
