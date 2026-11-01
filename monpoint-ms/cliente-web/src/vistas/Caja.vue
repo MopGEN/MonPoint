@@ -1,198 +1,434 @@
 <script setup>
-/**
- * ╔══════════════════════════════════════════════════════════════════════════╗
- * ║  PANTALLA DE CAJA — ESQUELETO. EL CONTENIDO ES LA TAREA 5.5.             ║
- * ╚══════════════════════════════════════════════════════════════════════════╝
- *
- * Este archivo NO implementa la caja. Deja el contrato escrito para que la 5.5
- * se construya sin volver a leer el codigo de los servicios, y una sonda de
- * conexion que valida el andamiaje (criterio de aceptacion de la 5.1).
- *
- * ── CONTRATO CON EL GATEWAY ────────────────────────────────────────────────
- * Todas las rutas pasan por el Gateway; los servicios no se exponen al
- * navegador. Prefijos enrutados: /auth, /inventario, /ventas, /clientes,
- * /reportes, /notificaciones.
- *
- * REGISTRAR UNA VENTA
- *   gateway.enviar('/ventas', { clienteId, lineas: [{ productoId, cantidad }] })
- *
- *   - `clienteId` es opcional: omitirlo registra una venta sin cliente. Si se
- *     envia un identificador inexistente en la replica, el servicio responde
- *     400 con el mensaje de cliente no disponible todavia, que el cliente HTTP
- *     ya entrega listo para mostrar en ErrorDeGateway.message.
- *   - NO se envia `total` ni `subtotal`: el servidor los calcula. Enviarlos no
- *     da error, simplemente se ignoran. El importe que se muestre al cajero
- *     debe ser el que devuelve el servidor, nunca el calculado en el navegador.
- *   - La respuesta es 202 con la venta en estado PENDIENTE y su `folio`. NO es
- *     una confirmacion: significa que la venta se acepto y la saga arranco.
- *
- * SABER COMO TERMINO LA VENTA
- *   La resolucion a CONFIRMADA o CANCELADA llega por mensajeria entre
- *   servicios, no por la respuesta HTTP. El navegador la conoce consultando:
- *
- *     gateway.obtener(`/ventas/${id}`)
- *
- *   Ya implementado (tarea 5.2).
- *
- *   Devuelve { id, folio, estado, clienteId, clienteNombre, lineas, total,
- *   motivo, fechaCreacion, fechaResolucion }, y cada linea trae productoId,
- *   nombreProducto, precioUnitario, cantidad y subtotal.
- *
- *   `estado` vale PENDIENTE, CONFIRMADA o CANCELADA.
- *
- *   En CANCELADA, `motivo` NO es un codigo: llega ya redactado para el cajero,
- *   del tipo «existencia insuficiente de Tinta para sello, solicitado 3». Se
- *   muestra tal cual. La traduccion de los tres codigos del catalogo ocurre en
- *   ms-ventas, dentro de StockEventoListener, antes de persistir la venta; aqui
- *   no hay nada que traducir. Falta el dato «disponible» hasta que
- *   ms-inventario lo publique, y la frase se degrada sin el.
- *
- *   Los campos que no aplican llegan en null, no omitidos: `motivo` salvo en
- *   CANCELADA, `fechaResolucion` mientras esta PENDIENTE, y los dos de cliente
- *   en una venta sin cliente. La forma del objeto no cambia entre estados.
- *
- *   EL SERVIDOR YA CALCULA `subtotal` Y `total`. No los recalcules aqui:
- *   en JavaScript 41.15 * 3 da 123.44999999999999, y el importe mostrado
- *   diferiria del cobrado.
- *
- *   La respuesta viaja con Cache-Control: no-store, de modo que el sondeo no
- *   recibira una version cacheada.
- *
- * ── DECISIONES QUE LA 5.5 TIENE QUE TOMAR ──────────────────────────────────
- *   1. Como se espera la resolucion: sondeo con intervalo y tope, o accion
- *      explicita del cajero. Un sondeo sin tope deja peticiones corriendo para
- *      siempre si la saga se atasca.
- *   2. Que se muestra mientras esta PENDIENTE. La caja no puede quedarse en
- *      blanco ni dar por buena una venta sin confirmar.
- *   3. Que pasa si el navegador se queda sin respuesta tras el 202: la venta ya
- *      existe en el servidor. Hay que poder recuperarla por folio, no
- *      registrarla otra vez.
- */
-import { ref } from 'vue'
-import { gateway, ErrorDeGateway } from '@/api/gateway'
-import { useSesion } from '@/stores/sesion'
-
-const sesion = useSesion()
-
-const sonda = ref(null)
-const sondeando = ref(false)
-
-/**
- * Sonda del andamiaje. Es temporal: la 5.5 la borra.
- *
- * Diagnostico segun lo que devuelva:
- *   200/404 → el andamiaje funciona. El token se adjunto y el Gateway enruto;
- *             un 404 solo dice que esa ruta concreta no existe en el servicio.
- *   401     → el token NO esta llegando. Revisar el filtro del Gateway o la
- *             inyeccion de configurarGateway en main.js.
- *   503     → el Gateway enruto pero no hay instancias del servicio en Eureka.
- *             Es lo normal durante los ~20 s posteriores a levantarlo.
- *   0       → no hay contacto: infraestructura caida, VITE_GATEWAY_URL mal, o
- *             CORS rechazado por el Gateway (mirar la consola del navegador).
- */
-async function probarConexion () {
-  sondeando.value = true
-  sonda.value = null
-  try {
-    const datos = await gateway.obtener('/inventario/productos')
-    sonda.value = {
-      clase: 'exito',
-      texto: `Conexion correcta. El Gateway respondio y el token se adjunto. Elementos recibidos: ${
-        Array.isArray(datos) ? datos.length : 'respuesta no es una lista'
-      }.`,
-    }
-  } catch (e) {
-    const estado = e instanceof ErrorDeGateway ? e.estado : -1
-    if (estado === 404) {
-      sonda.value = {
-        clase: 'pendiente',
-        texto:
-          'El andamiaje funciona: el Gateway enruto y acepto el token. La ruta ' +
-          '/inventario/productos no existe con ese nombre; ajustar al endpoint real.',
-      }
-    } else if (estado === 503) {
-      sonda.value = {
-        clase: 'pendiente',
-        texto:
-          'El Gateway responde pero no encuentra instancias del servicio en Eureka. ' +
-          'Si acaba de levantar la infraestructura, espere unos 20 segundos y repita.',
-      }
-    } else if (estado === 401 || estado === 403) {
-      sonda.value = {
-        clase: 'error',
-        texto: `El Gateway rechazo la credencial (${estado}). El token no esta llegando o el rol no alcanza.`,
-      }
-    } else {
-      sonda.value = { clase: 'error', texto: e?.message ?? 'Fallo desconocido.' }
-    }
-  } finally {
-    sondeando.value = false
+import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { gateway } from '@/api/gateway'
+import { useCaja } from '@/stores/caja'
+import { crearCobro, editable, cantidadValida, dinero, estimado } from '@/caja/cobro'
+const s = useCaja().cobro
+const cobro = crearCobro(s, gateway)
+const productos = ref([]),
+  clientes = ref([]),
+  busqueda = ref('')
+const cargando = ref(false),
+  errorCatalogo = ref(''),
+  errorClientes = ref('')
+let carga,
+  desmontado = false
+const puedeEditar = computed(() => editable(s))
+const validas = computed(() => s.lineas.every((l) => cantidadValida(l.cantidad)))
+const total = computed(() => (validas.value ? dinero(estimado(s.lineas)) : '—'))
+const visibles = computed(() =>
+  productos.value.filter(
+    (p) =>
+      p.activo !== false &&
+      p.nombre
+        .toLocaleLowerCase('es-MX')
+        .includes(busqueda.value.trim().toLocaleLowerCase('es-MX')),
+  ),
+)
+const rechazado = computed(() => (s.estado === 'cancelada' ? s.venta?.productoIdRechazado : null))
+async function cargar() {
+  if (cargando.value) return
+  cargando.value = true
+  errorCatalogo.value = ''
+  errorClientes.value = ''
+  carga = new AbortController()
+  const [p, c] = await Promise.allSettled([
+    gateway.obtener('/inventario/productos', { senal: carga.signal }),
+    gateway.obtener('/clientes', { senal: carga.signal }),
+  ])
+  if (desmontado) return
+  if (p.status === 'fulfilled' && Array.isArray(p.value)) productos.value = p.value
+  else errorCatalogo.value = p.reason?.message ?? 'No se pudo cargar el catálogo.'
+  if (c.status === 'fulfilled' && Array.isArray(c.value)) clientes.value = c.value
+  else errorClientes.value = c.reason?.message ?? 'No se pudieron cargar los clientes.'
+  cargando.value = false
+}
+function agregar(p) {
+  if (!puedeEditar.value) return
+  const l = s.lineas.find((l) => l.productoId === p.id)
+  if (l) {
+    if (cantidadValida(l.cantidad + 1)) l.cantidad++
+  } else s.lineas.push({ productoId: p.id, nombre: p.nombre, precio: p.precio, cantidad: 1 })
+}
+function quitar(id) {
+  if (puedeEditar.value) s.lineas = s.lineas.filter((l) => l.productoId !== id)
+}
+function prevenirSalida(e) {
+  if (
+    s.lineas.length ||
+    s.pendientes.some((p) => !['CONFIRMADA', 'CANCELADA'].includes(p.detalle?.estado))
+  ) {
+    e.preventDefault()
+    e.returnValue = ''
   }
 }
+onMounted(() => {
+  void cargar()
+  window.addEventListener('beforeunload', prevenirSalida)
+})
+onUnmounted(() => {
+  desmontado = true
+  carga?.abort()
+  cobro.detener()
+  window.removeEventListener('beforeunload', prevenirSalida)
+})
 </script>
 
 <template>
-  <section class="mp-tarjeta panel">
-    <h1>Caja</h1>
-    <p class="nota">
-      Pantalla pendiente de construir (tarea 5.5). El andamiaje de la 5.1 esta
-      en su lugar: sesion en memoria, guarda de rutas y cliente HTTP con token.
-    </p>
-
-    <dl class="datos">
-      <dt>Usuario</dt>
-      <dd>{{ sesion.usuario?.correo }}</dd>
-      <dt>Rol</dt>
-      <dd>{{ sesion.rol }}</dd>
-      <dt>Gateway</dt>
-      <dd class="mp-cifra">{{ gateway.base }}</dd>
-    </dl>
-
-    <button type="button" class="mp-boton" :disabled="sondeando" @click="probarConexion">
-      {{ sondeando ? 'Probando...' : 'Probar conexion con el Gateway' }}
-    </button>
-
-    <p
-      v-if="sonda"
-      class="mp-aviso resultado"
-      :class="`mp-aviso--${sonda.clase}`"
-      role="status"
+  <section class="caja">
+    <header class="cabecera">
+      <div>
+        <p class="sobre">PUNTO DE VENTA</p>
+        <h1>Caja</h1>
+        <p class="suave">Arma el carrito y consulta el resultado del cobro.</p>
+      </div>
+      <button class="mp-boton mp-boton--secundario" :disabled="cargando" @click="cargar">
+        {{ cargando ? 'Actualizando…' : 'Actualizar catálogo' }}
+      </button>
+    </header>
+    <div class="columnas">
+      <section class="mp-tarjeta panel" aria-labelledby="titulo-catalogo">
+        <h2 id="titulo-catalogo">Productos</h2>
+        <label class="mp-etiqueta" for="buscar">Buscar por nombre</label
+        ><input
+          id="buscar"
+          v-model="busqueda"
+          class="mp-campo"
+          type="search"
+          placeholder="Escribe el nombre del producto"
+        />
+        <p v-if="errorCatalogo" role="alert" class="mp-aviso mp-aviso--error">
+          {{ errorCatalogo }}
+        </p>
+        <p v-else-if="cargando" role="status">Cargando productos…</p>
+        <p v-else-if="!visibles.length" class="vacio">No hay productos para esta búsqueda.</p>
+        <ul class="productos">
+          <li v-for="p in visibles" :key="p.id" class="producto">
+            <div>
+              <strong>{{ p.nombre }}</strong>
+              <p class="suave">Existencia: {{ p.existencia }}</p>
+              <span class="mp-cifra precio">{{ dinero(p.precio) }}</span>
+            </div>
+            <button
+              class="mp-boton mp-boton--secundario"
+              :aria-label="`Agregar ${p.nombre}`"
+              :disabled="!puedeEditar"
+              @click="agregar(p)"
+            >
+              Agregar
+            </button>
+          </li>
+        </ul>
+        <p class="suave">La existencia puede cambiar. Se confirma al procesar el cobro.</p>
+      </section>
+      <section class="mp-tarjeta panel" aria-labelledby="titulo-carrito">
+        <h2 id="titulo-carrito">
+          Carrito <span class="contador">{{ s.lineas.length }}</span>
+        </h2>
+        <label class="mp-etiqueta" for="cliente">Cliente (opcional)</label
+        ><select id="cliente" v-model="s.clienteId" class="mp-campo" :disabled="!puedeEditar">
+          <option value="">Venta sin cliente</option>
+          <option v-for="c in clientes" :key="c.id" :value="c.id">{{ c.nombre }}</option>
+        </select>
+        <p v-if="errorClientes" role="alert" class="mp-aviso mp-aviso--error">
+          {{ errorClientes }} Puede registrar una venta sin cliente.
+        </p>
+        <p v-if="!s.lineas.length" class="vacio">Agrega productos para comenzar una venta.</p>
+        <ul class="lineas">
+          <li
+            v-for="l in s.lineas"
+            :key="l.productoId"
+            :class="['linea', { rechazada: rechazado === l.productoId }]"
+          >
+            <div class="linea-titulo">
+              <strong>{{ l.nombre }}</strong
+              ><button
+                class="quitar"
+                :aria-label="`Quitar ${l.nombre}`"
+                :disabled="!puedeEditar"
+                @click="quitar(l.productoId)"
+              >
+                Quitar
+              </button>
+            </div>
+            <p v-if="rechazado === l.productoId" class="marca-rechazo">
+              ⚠ Producto señalado en el rechazo
+            </p>
+            <div class="linea-cantidad">
+              <label :for="`cantidad-${l.productoId}`">Cantidad</label
+              ><input
+                :id="`cantidad-${l.productoId}`"
+                v-model.number="l.cantidad"
+                class="mp-campo cantidad"
+                type="number"
+                min="1"
+                max="2147483647"
+                step="1"
+                :disabled="!puedeEditar"
+                :aria-invalid="!cantidadValida(l.cantidad)"
+              /><span class="mp-cifra">{{
+                cantidadValida(l.cantidad) ? dinero(estimado([l])) : '—'
+              }}</span>
+            </div>
+          </li>
+        </ul>
+        <p v-if="!validas" role="alert" class="mp-aviso mp-aviso--error">
+          Use cantidades enteras positivas.
+        </p>
+        <p v-if="s.error" role="alert" class="mp-aviso mp-aviso--error">{{ s.error }}</p>
+        <div v-if="s.estado === 'enviando'" class="resultado proceso" role="status">
+          <span class="icono">◷</span>
+          <h3>Enviando el cobro…</h3>
+          <p>Espera la respuesta antes de iniciar otra operación.</p>
+        </div>
+        <div v-if="s.estado === 'enProceso'" class="resultado proceso" role="status">
+          <span class="icono">◷</span>
+          <h3>Venta en proceso</h3>
+          <p>Folio {{ s.venta.folio }} · Estamos confirmando la operación.</p>
+        </div>
+        <div v-if="s.estado === 'confirmada'" class="resultado confirmada" role="status">
+          <span class="icono">✓</span>
+          <h3>Venta confirmada</h3>
+          <p>Folio {{ s.venta.folio }}</p>
+          <p>
+            Total cobrado <strong class="mp-cifra definitivo">{{ dinero(s.venta.total) }}</strong>
+          </p>
+          <ul class="detalle">
+            <li v-for="(l, i) in s.venta.lineas" :key="i">
+              {{ l.cantidad }} × {{ l.nombreProducto }} <span>{{ dinero(l.subtotal) }}</span>
+            </li>
+          </ul>
+          <button class="mp-boton mp-boton--secundario" @click="cobro.nueva">Nueva venta</button>
+        </div>
+        <div v-if="s.estado === 'cancelada'" class="resultado cancelada" role="alert">
+          <span class="icono">✕</span>
+          <h3>Venta cancelada</h3>
+          <p>Folio {{ s.venta.folio }}</p>
+          <p>{{ s.venta.motivo }}</p>
+          <p>
+            Conservamos el carrito. Corrige las cantidades o quita productos antes de cobrar de
+            nuevo.
+          </p>
+        </div>
+        <div v-if="s.estado !== 'confirmada'" class="pie-carrito">
+          <div>
+            <span>Total estimado</span><strong class="mp-cifra total">{{ total }}</strong>
+          </div>
+          <button
+            class="mp-boton cobrar"
+            :disabled="!puedeEditar || !s.lineas.length || !validas"
+            @click="cobro.cobrar"
+          >
+            {{
+              s.estado === 'enviando'
+                ? 'Enviando…'
+                : s.estado === 'enProceso'
+                  ? 'Esperando resultado…'
+                  : 'Cobrar'
+            }}
+          </button>
+        </div>
+      </section>
+    </div>
+    <section
+      v-if="s.pendientes.length"
+      class="mp-tarjeta panel bandeja"
+      aria-labelledby="titulo-pendientes"
     >
-      {{ sonda.texto }}
-    </p>
+      <h2 id="titulo-pendientes">Seguimiento de operaciones</h2>
+      <p class="suave">
+        Puedes atender otra venta. Consulta estas operaciones antes de volver a cobrarlas.
+      </p>
+      <article v-for="(p, i) in s.pendientes" :key="i" class="operacion" aria-live="polite">
+        <strong>{{ p.folio != null ? `Folio ${p.folio}` : 'Operación sin folio recibido' }}</strong
+        ><template v-if="p.detalle?.estado === 'CONFIRMADA'"
+          ><p>✓ Venta confirmada · Total cobrado: {{ dinero(p.detalle.total) }}</p></template
+        ><template v-else-if="p.detalle?.estado === 'CANCELADA'"
+          ><p>✕ Venta cancelada</p>
+          <p>{{ p.detalle.motivo }}</p></template
+        ><template v-else
+          ><p>◷ Resultado sin confirmar</p>
+          <p>{{ p.mensaje }}</p>
+          <button
+            v-if="p.id"
+            class="mp-boton mp-boton--secundario"
+            :disabled="p.consultando"
+            @click="cobro.consultarPendiente(p)"
+          >
+            {{ p.consultando ? 'Consultando…' : 'Consultar de nuevo' }}
+          </button></template
+        >
+      </article>
+    </section>
   </section>
 </template>
 
 <style scoped>
+.caja {
+  max-width: 1280px;
+  margin: auto;
+}
+.cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.sobre {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  color: var(--mp-verde-oscuro);
+  margin: 0 0 0.5rem;
+}
+.suave {
+  color: var(--mp-texto-suave);
+  margin: 0.4rem 0;
+}
+.columnas {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
 .panel {
-  max-width: 640px;
   padding: 1.5rem;
 }
-
-.nota {
-  margin: 0 0 1.25rem;
+.productos,
+.lineas,
+.detalle {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+.productos {
+  max-height: 60vh;
+  overflow: auto;
+}
+.producto {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--mp-borde);
+}
+.precio {
+  font-weight: 700;
+}
+.vacio {
+  text-align: center;
+  padding: 2rem 0.5rem;
   color: var(--mp-texto-suave);
 }
-
-.datos {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.35rem 1rem;
-  margin: 0 0 1.25rem;
-  font-size: 0.9375rem;
-}
-
-.datos dt {
+.contador {
+  font-size: 0.875rem;
   color: var(--mp-texto-suave);
+}
+.linea {
+  border-bottom: 1px solid var(--mp-borde);
+  padding: 1rem 0.5rem;
+}
+.linea-titulo,
+.linea-cantidad,
+.detalle li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.linea-cantidad {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+}
+.cantidad {
+  width: 6rem;
+}
+.quitar {
+  border: 0;
+  background: none;
+  text-decoration: underline;
+  color: var(--mp-texto-suave);
+  cursor: pointer;
+}
+.quitar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.rechazada {
+  border-left: 4px solid var(--mp-rojo);
+  background: rgb(192 57 43 / 8%);
+}
+.marca-rechazo {
+  font-size: 0.875rem;
   font-weight: 600;
 }
-
-.datos dd {
-  margin: 0;
-  overflow-wrap: anywhere;
+.pie-carrito {
+  border-top: 1px solid var(--mp-borde);
+  padding-top: 1rem;
 }
-
+.pie-carrito > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.total,
+.definitivo {
+  display: block;
+  font-size: 2rem;
+}
+.cobrar {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 1rem;
+}
 .resultado {
   margin-top: 1rem;
+  padding: 1.25rem;
+  border-radius: var(--mp-radio);
+}
+.icono {
+  font-size: 2rem;
+  display: block;
+}
+.proceso {
+  border: 2px dashed var(--mp-ambar);
+  background: rgb(183 121 31 / 8%);
+}
+.confirmada {
+  color: white;
+  background: #17795a;
+}
+.confirmada button {
+  color: white;
+  border-color: white;
+}
+.confirmada button:hover {
+  color: var(--mp-texto);
+}
+.cancelada {
+  border-left: 5px solid var(--mp-rojo);
+  background: rgb(192 57 43 / 8%);
+}
+.bandeja {
+  margin-top: 1.5rem;
+}
+.operacion {
+  padding: 1rem 0;
+  border-top: 1px solid var(--mp-borde);
+}
+@media (max-width: 760px) {
+  .columnas {
+    grid-template-columns: 1fr;
+  }
+  .cabecera {
+    align-items: start;
+    flex-direction: column;
+  }
+  .panel {
+    padding: 1rem;
+  }
 }
 </style>
