@@ -1,0 +1,17 @@
+{
+  "RESULTADOS.md": "25f09323173442d4999eff7114464509eb1393ec0e7425941f36659e300f14df",
+  "cancelada.png": "1de44a67af7033cf66c55b8c01e44085ea0182dcaa04180ec404e08cca819ba5",
+  "confirmada.png": "dcfc5388242777624238a118830c0f989f6d39a88aa4530467a14d437275bc08",
+  "estado-final.txt": "3b52b30a675efe85b782428a9b624d4f40b41597f413800de0f59dc7ac52bf41",
+  "primer-recorrido/cancelada.png": "917130a8e3d6ef7fb33fa559391059726b4d9bd85b73d67e467630912fd6b505",
+  "primer-recorrido/confirmada.png": "1c858255b4ab67784161aba76ba0cc944bd93ffb541902d654c3071ffcef5844",
+  "primer-recorrido/failure.png": "6d7224b4ef259c5760e5e77e45f93bd21a8bfe35f2fc5543a0e6a466b7a4831e",
+  "primer-recorrido/real-browser.mjs": "be69e458dcd3a0aceb7d3dc1aafa07bb3814e4e94cafce5ee6c38fa25b9c9b39",
+  "primer-recorrido/real-results.json": "04f98c8611a453d3a6fc8e24a3e3fee3e6926013dcad4d0e010becd4beb6944e",
+  "primer-recorrido/sin-respuesta.png": "9975038458b0f2a42a860036ad996f3d6d1e4babc199ff4f20372e4e21aa7f34",
+  "readiness.json": "b98c7cfcede7b7eec3b09c6674a307e24fd70d8958415f0bdbe002fe2f7be49b",
+  "real-browser.mjs": "fd6a14891854226f7016e314a68a262cb52a762df0a5ba658b805d2c66baa1ff",
+  "real-results.json": "a611554aef57a8e7ef370241c4634b043f2623695477e07eab0f665eb089b6a6",
+  "recuperada.png": "c47109d021f2ae5524c4ae80b3ca1a2764d76e4b2338d9b36265fc4df77ac676",
+  "sin-respuesta.png": "d3b54b64b48e940736379b2038cd77efc2bf4d0d32d0ab901f735702fef49109"
+}

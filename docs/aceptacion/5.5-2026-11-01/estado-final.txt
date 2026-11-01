@@ -1,0 +1,8 @@
+monpoint-ventas  Up 12 hours (healthy)
+monpoint-inventario  Up 35 seconds (healthy)
+monpoint-clientes  Up 12 hours (healthy)
+monpoint-auth  Up 12 hours (healthy)
+monpoint-gateway  Up 12 hours (healthy)
+monpoint-rabbitmq  Up 12 hours (healthy)
+monpoint-eureka  Up 12 hours (healthy)
+monpoint-mongodb  Up 17 hours (healthy)
