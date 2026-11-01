@@ -99,6 +99,8 @@ class StockResolucionIntegracionTest {
         assertThat(finalizada.getFechaResolucion()).isEqualTo(resuelta.getFechaResolucion());
         assertThat(finalizada.getMotivoCancelacion()).isEqualTo(confirmar ? null
                 : "existencia insuficiente de Tinta histórica, solicitado 3");
+        // Contra MongoDB real: el identificador se guarda como ObjectId y vuelve como el mismo hexadecimal.
+        assertThat(finalizada.getProductoIdRechazado()).isEqualTo(confirmar ? null : productoId);
         assertThat(eventos.existsByEventoId(eventoId)).isTrue();
         assertThat(eventos.existsByEventoId(segundoEvento)).isTrue();
         verify(rabbit).send(eq("ventas.eventos"), eq(confirmar ? "venta.confirmada" : "venta.cancelada"), any(Message.class));

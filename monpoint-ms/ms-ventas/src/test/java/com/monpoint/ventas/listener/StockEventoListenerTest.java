@@ -58,7 +58,7 @@ class StockEventoListenerTest {
     void ventaResueltaRegistraSinModificarNiVolverAPublicar(String tipo, boolean confirmada) {
         var venta = pendiente();
         if (confirmada) venta.confirmar(FECHA);
-        else venta.cancelar("Motivo anterior", FECHA);
+        else venta.cancelar("Motivo anterior", PRODUCTO, FECHA);
         when(ventas.findById(ID)).thenReturn(Optional.of(venta));
         // Un cierre tardío no necesita reconstruir su motivo: la decisión ya es ignorarlo.
         recibir(tipo, Map.of("ventaId", ID));
@@ -104,6 +104,9 @@ class StockEventoListenerTest {
                 "solicitado", 999, "nombreProducto", "Nombre ajeno"));
         assertThat(venta.getEstado()).isEqualTo(EstadoVenta.CANCELADA);
         assertThat(venta.getMotivoCancelacion()).isEqualTo(frase);
+        // El identificador se guarda junto a la frase para que la caja senale la linea del carrito
+        // (actividad 5.5, paso 9) sin tener que analizar el texto del motivo.
+        assertThat(venta.getProductoIdRechazado()).isEqualTo(PRODUCTO);
         assertThat(venta.getFechaResolucion()).isNotNull();
         verify(publicador).publicarVentaCancelada(any(), eq(codigo));
         verify(eventos).save(any(EventoProcesado.class));
@@ -148,9 +151,9 @@ class StockEventoListenerTest {
 
     @Test void entidadImpideResolverDosVeces() {
         var venta = pendiente();
-        venta.cancelar("Motivo", FECHA);
+        venta.cancelar("Motivo", PRODUCTO, FECHA);
         assertThatThrownBy(() -> venta.confirmar(Instant.now())).isInstanceOf(IllegalStateException.class);
-        assertThatThrownBy(() -> venta.cancelar("Otro", Instant.now())).isInstanceOf(IllegalStateException.class);
+        assertThatThrownBy(() -> venta.cancelar("Otro", PRODUCTO, Instant.now())).isInstanceOf(IllegalStateException.class);
         assertThat(venta.getMotivoCancelacion()).isEqualTo("Motivo");
         assertThat(venta.getFechaResolucion()).isEqualTo(FECHA);
     }

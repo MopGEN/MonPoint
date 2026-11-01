@@ -54,6 +54,7 @@ class VentaConsultaTest {
                         new BigDecimal("41.15"), 3, new BigDecimal("123.45"))),
                 new BigDecimal("123.45"),
                 "existencia insuficiente de Tinta para sello, solicitado 3",
+                "68f1a2b3c4d5e6f700000003",
                 Instant.parse("2026-10-31T21:00:00Z"), Instant.parse("2026-10-31T21:00:04Z"));
     }
 
@@ -92,7 +93,10 @@ class VentaConsultaTest {
 
         mvc.perform(get("/ventas/{id}", ID).header("X-User-Id", "u").header("X-User-Role", "VENDEDOR"))
                 .andExpect(jsonPath("$.motivo")
-                        .value("existencia insuficiente de Tinta para sello, solicitado 3"));
+                        .value("existencia insuficiente de Tinta para sello, solicitado 3"))
+                // Junto al motivo viaja el identificador, para que la caja pueda senalar la linea
+                // del carrito sin analizar la frase.
+                .andExpect(jsonPath("$.productoIdRechazado").value("68f1a2b3c4d5e6f700000003"));
     }
 
     /**
@@ -114,7 +118,7 @@ class VentaConsultaTest {
                 ID, 1043L, EstadoVenta.PENDIENTE, null, null,
                 List.of(new LineaDetalle("68f1a2b3c4d5e6f700000003", "Tinta para sello",
                         new BigDecimal("41.15"), 1, new BigDecimal("41.15"))),
-                new BigDecimal("41.15"), null,
+                new BigDecimal("41.15"), null, null,
                 Instant.parse("2026-10-31T21:00:00Z"), null));
 
         mvc.perform(get("/ventas/{id}", ID).header("X-User-Id", "u").header("X-User-Role", "VENDEDOR"))
@@ -125,6 +129,7 @@ class VentaConsultaTest {
                 // señal que se busca: el cliente no debería tener que comprobar la existencia de cada
                 // campo antes de leerlo.
                 .andExpect(jsonPath("$.motivo").value(nullValue()))
+                .andExpect(jsonPath("$.productoIdRechazado").value(nullValue()))
                 .andExpect(jsonPath("$.fechaResolucion").value(nullValue()))
                 .andExpect(jsonPath("$.clienteId").value(nullValue()))
                 .andExpect(jsonPath("$.clienteNombre").value(nullValue()));

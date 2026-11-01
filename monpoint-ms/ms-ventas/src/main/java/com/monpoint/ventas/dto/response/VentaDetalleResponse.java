@@ -27,6 +27,11 @@ import java.util.List;
  * guardarla, de modo que aquí viaja algo como «existencia insuficiente de Tinta para sello, solicitado 3».
  * El cliente lo muestra tal cual; no tiene que traducir nada.
  *
+ * <p><b>{@code productoIdRechazado} acompaña al motivo en CANCELADA.</b> La frase ya nombra el
+ * producto, pero como texto; la pantalla de caja necesita señalar la línea exacta del carrito y
+ * analizar la frase para sacar el nombre sería frágil. Viene en {@code null} en las ventas canceladas
+ * antes de la actividad 5.5, así que el cliente debe tolerarlo.
+ *
  * <p>Los campos que no aplican viajan en {@code null} en lugar de omitirse: {@code motivo} salvo en
  * CANCELADA, {@code fechaResolucion} mientras está PENDIENTE, y los dos de cliente en una venta sin
  * cliente. Así la forma del objeto es siempre la misma y el cliente no necesita comprobar la existencia
@@ -40,6 +45,7 @@ public record VentaDetalleResponse(String id,
                                    List<LineaDetalle> lineas,
                                    BigDecimal total,
                                    String motivo,
+                                   String productoIdRechazado,
                                    Instant fechaCreacion,
                                    Instant fechaResolucion) {
 
@@ -58,6 +64,7 @@ public record VentaDetalleResponse(String id,
                 .toList();
         return new VentaDetalleResponse(venta.getId(), venta.getFolio(), venta.getEstado(),
                 venta.getClienteId(), venta.getClienteNombre(), lineas, venta.getTotal(),
-                venta.getMotivoCancelacion(), venta.getFechaCreacion(), venta.getFechaResolucion());
+                venta.getMotivoCancelacion(), venta.getProductoIdRechazado(),
+                venta.getFechaCreacion(), venta.getFechaResolucion());
     }
 }
