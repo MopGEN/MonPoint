@@ -119,6 +119,9 @@ Evidencia en nube del empaquetado y de los tres desenlaces desde nginx:
 
 ### Comprobar antes de la demostración
 
+[Guía completa para Windows y PowerShell](../../docs/aceptacion/GUIA-WINDOWS.md):
+preparación, producto de prueba, tres desenlaces, recuperación y evidencia.
+
 1. Con los nueve contenedores healthy, entrar en `http://localhost:3000/login`.
 2. Iniciar sesión, cargar catálogo y clientes y realizar una venta de prueba.
    Verificar el folio y el total confirmado, y que no haya error CORS.
