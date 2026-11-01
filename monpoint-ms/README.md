@@ -12,13 +12,18 @@ Migración de MonPointV2 (monolito JavaFX) a una arquitectura de microservicios.
 ```bash
 cd infra
 cp .env.example .env     # y cambiar los valores
-docker compose up -d
+docker compose up -d --build
 ```
+
+Si ya tienes `.env`, agrega `http://localhost:3000` a `CORS_ORIGENES` sin borrar
+los otros orígenes. La URL pública del Gateway se fija al compilar mediante
+`VITE_GATEWAY_URL`; ver [`cliente-web/README.md`](cliente-web/README.md).
 
 Verificar que arrancó:
 
 | Qué | Dónde |
 |---|---|
+| Cliente web (nginx) | http://localhost:3000 |
 | Panel de Eureka | http://localhost:8761 |
 | Consola de RabbitMQ | http://localhost:15672 |
 | API a través del Gateway | http://localhost:8080 |
@@ -95,7 +100,8 @@ resuelve registrando el `eventoId` ya procesado antes de aplicar el cambio.
 | ms-clientes | 8084 | No |
 | ms-reportes | 8085 | No |
 | ms-notificaciones | 8086 | No |
-| cliente-web | 5173 | Sí |
+| cliente-web (nginx) | 3000 | Sí — interfaz web |
+| cliente-web (Vite, desarrollo) | 5173 | Sí, solo al ejecutar npm run dev |
 
 Los microservicios no publican puertos: solo se alcanzan desde dentro de la
 red de Docker, a través del Gateway. No es una convención que haya que

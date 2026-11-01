@@ -395,23 +395,23 @@ services:
   # ===========================================================================
 
   # ===========================================================================
-  # PLANTILLA PARA EL CLIENTE WEB (tarea 5.6, semana 5)
+  # Cliente web — compilación Vite servida por nginx (5.6)
   # ===========================================================================
-  # cliente-web:
-  #   build:
-  #     context: ../cliente-web
-  #     args:
-  #       # La direccion del Gateway se fija al COMPILAR, no al ejecutar:
-  #       # Vite sustituye las variables de entorno dentro del codigo
-  #       # generado. Cambiarla despues exige recompilar.
-  #       VITE_API_URL: http://localhost:8080
-  #   container_name: monpoint-cliente
-  #   ports:
-  #     - "5173:80"
-  #   depends_on:
-  #     - api-gateway
-  #   networks:
-  #     - monpoint-red
+  cliente-web:
+    build:
+      context: ../cliente-web
+      args:
+        # URL alcanzable por el NAVEGADOR, no el nombre Docker api-gateway.
+        # Cambiarla exige recompilar; no es una variable de nginx en ejecución.
+        VITE_GATEWAY_URL: ${VITE_GATEWAY_URL:-http://localhost:8080}
+    container_name: monpoint-cliente
+    ports:
+      - "3000:80"
+    depends_on:
+      api-gateway:
+        condition: service_healthy
+    networks:
+      - monpoint-red
   # ===========================================================================
 
 # =============================================================================
