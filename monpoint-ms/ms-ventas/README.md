@@ -106,6 +106,42 @@ Las réplicas no almacenan stock ni correo, teléfono o dirección del cliente.
 ms-clientes todavía no publica bajas; los clientes eliminados pueden permanecer
 en la réplica hasta que se acuerde ese contrato entre servicios.
 
+## Consulta de una venta (5.2)
+
+`GET /ventas/{id}` devuelve el detalle: estado, folio, cliente, líneas congeladas
+con su subtotal, total, motivo y fechas. Es la única vía por la que el cliente
+web conoce el desenlace de la saga, porque el registro responde 202 con la venta
+en PENDIENTE y la resolución llega después por mensajería.
+
+Tres decisiones que conviene no revertir sin leer esto:
+
+- **El subtotal y el total se calculan en el servidor.** El Documento 04 prohíbe
+  persistir el subtotal para no tener dos fuentes de verdad, pero eso no obliga a
+  que lo calcule el navegador. JavaScript no tiene decimales exactos: `41.15 * 3`
+  da `123.44999999999999`. El cliente muestra lo que llega y nunca recalcula.
+- **`motivo` llega redactado, no como código.** `StockEventoListener` traduce
+  `EXISTENCIA_INSUFICIENTE` y los otros dos códigos a una frase de caja antes de
+  persistirla. El cliente no traduce nada.
+- **La respuesta lleva `Cache-Control: no-store`.** La caja consulta este recurso
+  repetidamente mientras la venta está PENDIENTE; sin la cabecera, una respuesta
+  cacheada dejaría el sondeo sin ver el cambio a CONFIRMADA.
+
+Los campos que no aplican viajan en `null` en lugar de omitirse, para que la forma
+del objeto sea siempre la misma: `motivo` salvo en CANCELADA, `fechaResolucion`
+mientras está PENDIENTE y los dos de cliente en una venta sin cliente.
+
+### Carencia conocida: la venta no guarda quién la registró
+
+Cualquier ADMIN o VENDEDOR puede consultar cualquier venta. No es una decisión de
+permisos, es una consecuencia del modelo: `Venta` no tiene campo de autor. El
+registro recibe `X-User-Id` del Gateway y no lo persiste, de modo que hoy no
+existe rastro de qué vendedor cobró cada venta.
+
+Esto no afecta a la 5.2 —nada que consultar se podría filtrar por un dato que no
+está—, pero sí limita a ms-reportes: cualquier corte por vendedor es imposible
+mientras el campo no exista, y agregarlo después no reconstruye el histórico.
+Decidirlo antes de la 4.6.
+
 ## Pruebas
 
 Desde este directorio, con Java 21 y Maven:

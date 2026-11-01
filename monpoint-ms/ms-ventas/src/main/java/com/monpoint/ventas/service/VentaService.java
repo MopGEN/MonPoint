@@ -2,11 +2,13 @@ package com.monpoint.ventas.service;
 
 import com.mongodb.MongoException;
 import com.monpoint.ventas.dto.request.VentaRequest;
+import com.monpoint.ventas.dto.response.VentaDetalleResponse;
 import com.monpoint.ventas.dto.response.VentaResponse;
 import com.monpoint.ventas.event.VentaEventPublisher;
 import com.monpoint.ventas.exception.AccesoDenegadoException;
 import com.monpoint.ventas.exception.NoAutenticadoException;
 import com.monpoint.ventas.exception.VentaInvalidaException;
+import com.monpoint.ventas.exception.VentaNoEncontradaException;
 import com.monpoint.ventas.model.ClienteReplica;
 import com.monpoint.ventas.model.LineaVenta;
 import com.monpoint.ventas.model.Venta;
@@ -57,13 +59,7 @@ public class VentaService {
     }
 
     public VentaResponse registrar(VentaRequest solicitud, UsuarioActual usuario) {
-        if (usuario == null || usuario.id() == null || usuario.id().isBlank()
-                || usuario.rol() == null || usuario.rol().isBlank()) {
-            throw new NoAutenticadoException();
-        }
-        if (!"ADMIN".equals(usuario.rol()) && !"VENDEDOR".equals(usuario.rol())) {
-            throw new AccesoDenegadoException("Solo ADMIN o VENDEDOR pueden registrar ventas");
-        }
+        exigirUsuarioAutorizado(usuario, "registrar ventas");
         if (solicitud == null || !validator.validate(solicitud).isEmpty()) {
             throw new VentaInvalidaException("La venta requiere líneas con producto y cantidad positiva");
         }
@@ -88,6 +84,45 @@ public class VentaService {
                     throw new IllegalStateException("Registro de venta interrumpido", interrupcion);
                 }
             }
+        }
+    }
+
+    /**
+     * Consulta una venta por su identificador (actividad 5.2).
+     *
+     * <p>Lectura simple, sin transacción: solo toca la colección {@code ventas} y lee un documento. Las
+     * transacciones de este servicio existen para que la venta, el folio y el evento se escriban como una
+     * unidad; aquí no hay nada que coordinar, y abrir una sesión de MongoDB para una lectura de un
+     * documento solo añadiría contención sobre el conjunto de réplicas.
+     *
+     * <p>Cualquier ADMIN o VENDEDOR autenticado puede consultar cualquier venta. No hay filtro por autor
+     * porque el modelo no lo permite: {@code Venta} no guarda quién la registró. Ver la nota del README
+     * sobre esa carencia.
+     *
+     * @throws VentaInvalidaException     si {@code ventaId} no tiene forma de ObjectId (400)
+     * @throws VentaNoEncontradaException si no existe esa venta (404)
+     */
+    public VentaDetalleResponse consultar(String ventaId, UsuarioActual usuario) {
+        exigirUsuarioAutorizado(usuario, "consultar ventas");
+        // Se valida el formato antes de ir a la base: findById con una cadena que no es ObjectId no
+        // "no encuentra", revienta al convertir. Sin esta guarda el cliente recibiría un 500 opaco en
+        // lugar del 400 que describe su error.
+        if (ventaId == null || !ObjectId.isValid(ventaId)) {
+            throw new VentaInvalidaException(
+                    "El formato del identificador de venta es inválido: debe contener 24 caracteres hexadecimales");
+        }
+        return ventas.findById(ventaId)
+                .map(VentaDetalleResponse::de)
+                .orElseThrow(() -> new VentaNoEncontradaException(ventaId));
+    }
+
+    private static void exigirUsuarioAutorizado(UsuarioActual usuario, String accion) {
+        if (usuario == null || usuario.id() == null || usuario.id().isBlank()
+                || usuario.rol() == null || usuario.rol().isBlank()) {
+            throw new NoAutenticadoException();
+        }
+        if (!"ADMIN".equals(usuario.rol()) && !"VENDEDOR".equals(usuario.rol())) {
+            throw new AccesoDenegadoException("Solo ADMIN o VENDEDOR pueden " + accion);
         }
     }
 

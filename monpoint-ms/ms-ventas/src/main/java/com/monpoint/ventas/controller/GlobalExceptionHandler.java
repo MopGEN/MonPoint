@@ -3,6 +3,7 @@ package com.monpoint.ventas.controller;
 import com.monpoint.ventas.audit.RequestIdFilter;
 import com.monpoint.ventas.exception.AccesoDenegadoException;
 import com.monpoint.ventas.exception.VentaInvalidaException;
+import com.monpoint.ventas.exception.VentaNoEncontradaException;
 import com.monpoint.ventas.exception.NoAutenticadoException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -78,6 +79,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(VentaInvalidaException.class)
     public ProblemDetail ventaInvalida(VentaInvalidaException ex, HttpServletRequest request) {
         return problema(HttpStatus.BAD_REQUEST, "Venta inválida", ex.getMessage(), request);
+    }
+
+    /** Petición bien formada contra una venta que no existe (actividad 5.2). */
+    @ExceptionHandler(VentaNoEncontradaException.class)
+    public ProblemDetail ventaNoEncontrada(VentaNoEncontradaException ex, HttpServletRequest request) {
+        return problema(HttpStatus.NOT_FOUND, "Venta no encontrada", ex.getMessage(), request);
     }
 
     @ExceptionHandler(NoAutenticadoException.class)
