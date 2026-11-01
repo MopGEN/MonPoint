@@ -61,9 +61,12 @@ export const useSesion = defineStore('sesion', {
     async iniciar (correo, contrasena) {
       this.entrando = true
       try {
+        // El campo del JSON se llama `password`, no `contrasena`: así lo declara
+        // LoginRequest en ms-auth. Enviar `contrasena` hace que el servidor reciba
+        // `password` en nulo y responda 400 «La contraseña no puede estar vacía».
         const r = await gateway.enviar(
           '/auth/login',
-          { correo, contrasena },
+          { correo, password: contrasena },
           { sinAutenticar: true },
         )
 

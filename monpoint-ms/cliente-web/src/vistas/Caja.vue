@@ -32,17 +32,31 @@
  *
  *     gateway.obtener(`/ventas/${id}`)
  *
- *   ⚠ ESE ENDPOINT NO EXISTE AUN. Es la tarea 5.2 y es prerrequisito de esta
- *   pantalla. Sin el, la caja puede registrar ventas pero no puede decirle al
- *   cajero si se confirmaron. Orden obligado: 5.2 antes de 5.5.
+ *   Ya implementado (tarea 5.2).
  *
- *   Al consultar, `estado` vale PENDIENTE, CONFIRMADA o CANCELADA. En
- *   CANCELADA, `motivo` trae un codigo del catalogo:
- *     PRODUCTO_NO_ENCONTRADO · PRODUCTO_INACTIVO · EXISTENCIA_INSUFICIENTE
- *   Hay que traducirlo a lenguaje de caja; mostrar el codigo crudo no sirve a
- *   quien esta cobrando. Para EXISTENCIA_INSUFICIENTE el mensaje acordado usa
- *   el nombre congelado del producto y la cantidad solicitada: la existencia
- *   disponible todavia no viaja en el evento (pendiente de ms-inventario).
+ *   Devuelve { id, folio, estado, clienteId, clienteNombre, lineas, total,
+ *   motivo, fechaCreacion, fechaResolucion }, y cada linea trae productoId,
+ *   nombreProducto, precioUnitario, cantidad y subtotal.
+ *
+ *   `estado` vale PENDIENTE, CONFIRMADA o CANCELADA.
+ *
+ *   En CANCELADA, `motivo` NO es un codigo: llega ya redactado para el cajero,
+ *   del tipo «existencia insuficiente de Tinta para sello, solicitado 3». Se
+ *   muestra tal cual. La traduccion de los tres codigos del catalogo ocurre en
+ *   ms-ventas, dentro de StockEventoListener, antes de persistir la venta; aqui
+ *   no hay nada que traducir. Falta el dato «disponible» hasta que
+ *   ms-inventario lo publique, y la frase se degrada sin el.
+ *
+ *   Los campos que no aplican llegan en null, no omitidos: `motivo` salvo en
+ *   CANCELADA, `fechaResolucion` mientras esta PENDIENTE, y los dos de cliente
+ *   en una venta sin cliente. La forma del objeto no cambia entre estados.
+ *
+ *   EL SERVIDOR YA CALCULA `subtotal` Y `total`. No los recalcules aqui:
+ *   en JavaScript 41.15 * 3 da 123.44999999999999, y el importe mostrado
+ *   diferiria del cobrado.
+ *
+ *   La respuesta viaja con Cache-Control: no-store, de modo que el sondeo no
+ *   recibira una version cacheada.
  *
  * ── DECISIONES QUE LA 5.5 TIENE QUE TOMAR ──────────────────────────────────
  *   1. Como se espera la resolucion: sondeo con intervalo y tope, o accion
@@ -71,6 +85,8 @@ const sondeando = ref(false)
  *             un 404 solo dice que esa ruta concreta no existe en el servicio.
  *   401     → el token NO esta llegando. Revisar el filtro del Gateway o la
  *             inyeccion de configurarGateway en main.js.
+ *   503     → el Gateway enruto pero no hay instancias del servicio en Eureka.
+ *             Es lo normal durante los ~20 s posteriores a levantarlo.
  *   0       → no hay contacto: infraestructura caida, VITE_GATEWAY_URL mal, o
  *             CORS rechazado por el Gateway (mirar la consola del navegador).
  */
@@ -93,6 +109,13 @@ async function probarConexion () {
         texto:
           'El andamiaje funciona: el Gateway enruto y acepto el token. La ruta ' +
           '/inventario/productos no existe con ese nombre; ajustar al endpoint real.',
+      }
+    } else if (estado === 503) {
+      sonda.value = {
+        clase: 'pendiente',
+        texto:
+          'El Gateway responde pero no encuentra instancias del servicio en Eureka. ' +
+          'Si acaba de levantar la infraestructura, espere unos 20 segundos y repita.',
       }
     } else if (estado === 401 || estado === 403) {
       sonda.value = {
