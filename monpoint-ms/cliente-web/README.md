@@ -114,6 +114,9 @@ HTML exige revalidación. Un asset inexistente devuelve 404, no HTML.
 healthcheck del Gateway al arrancar; el registro de los servicios en Eureka puede
 tardar unos segundos más. Un nginx healthy no garantiza disponibilidad del backend.
 
+Evidencia en nube del empaquetado y de los tres desenlaces desde nginx:
+[aceptación 5.6](../../docs/aceptacion/5.6-nginx-2026-11-01/README.md).
+
 ### Comprobar antes de la demostración
 
 1. Con los nueve contenedores healthy, entrar en `http://localhost:3000/login`.

@@ -1,0 +1,19 @@
+{
+  "resultado": "PASS",
+  "origen": "http://localhost:3000",
+  "api": "http://localhost:8080",
+  "rutas": [
+    "/",
+    "/login",
+    "/caja"
+  ],
+  "loginReal": true,
+  "catalogoReal": true,
+  "clientesReales": true,
+  "recargaSubruta": true,
+  "corsPermitido": true,
+  "corsAjenoRechazado": true,
+  "assetsCompilados": true,
+  "assetInexistente": 404,
+  "errores": []
+}
