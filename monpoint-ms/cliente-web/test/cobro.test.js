@@ -188,7 +188,7 @@ test('POST ambiguo se archiva y no ofrece repetir el mismo carrito', async () =>
   assert.equal(s.lineas.length, 0)
   assert.equal(s.pendientes.length, 1)
 })
-test('POST colgado vence a 30 segundos y aborta', async () => {
+test('POST colgado vence a 10 segundos y aborta', async () => {
   let signal
   const { s, caja, reloj } = preparar({
     enviar: (_, __, o) => {
@@ -197,7 +197,7 @@ test('POST colgado vence a 30 segundos y aborta', async () => {
     },
   })
   void caja.cobrar()
-  await reloj.avanzar(30000)
+  await reloj.avanzar(10000)
   assert.equal(s.estado, 'sinRespuesta')
   assert.equal(signal.aborted, true)
 })
@@ -239,4 +239,48 @@ test('desmontar aborta, guarda el folio y elimina temporizadores', async () => {
   responder(terminal('CANCELADA'))
   await flush()
   assert.equal(s.estado, 'sinRespuesta')
+})
+
+test('precios de tres decimales: suma exacta y redondeo solo del estimado', () => {
+  assert.equal(centavos('41.155'), 4116n)
+  assert.equal(estimado([{ precio: '41.155', cantidad: 3 }]), '123.47')
+  assert.equal(dinero('41.155'), '$41.155')
+  for (const p of [null, undefined, 'incorrecto', -1, Infinity]) {
+    assert.equal(centavos(p), null)
+    assert.equal(dinero(p), 'Importe no disponible')
+    assert.equal(estimado([{ precio: p, cantidad: 1 }]), null)
+  }
+})
+
+test('401 tras limpiar sesión conserva identidad y folio aun si el desmontaje ocurre primero', async () => {
+  const { createPinia, setActivePinia } = await import('pinia')
+  const { useCaja } = await import('../src/stores/caja.js')
+  for (const desmontarPrimero of [false, true]) {
+    setActivePinia(createPinia())
+    const store = useCaja(),
+      s = store.cobro
+    s.lineas = [{ productoId: 'p1', precio: '41.15', cantidad: 3 }]
+    let caja
+    caja = crearCobro(
+      s,
+      {
+        enviar,
+        obtener: async () => {
+          store.limpiarSesion()
+          assert.equal(store.cobro, s)
+          if (desmontarPrimero) caja.detener()
+          throw Object.assign(new Error('Sesión terminada'), { estado: 401 })
+        },
+      },
+      relojFalso(),
+    )
+    await caja.cobrar()
+    await flush()
+    assert.equal(store.cobro.pendientes.length, 1)
+    assert.equal(store.cobro.pendientes[0].folio, 1042)
+    assert.equal(store.cobro.pendientes[0].id, 'v1')
+    caja.detener()
+    store.limpiarSesion()
+    assert.equal(store.cobro.pendientes.length, 1)
+  }
 })

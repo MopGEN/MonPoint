@@ -7,7 +7,15 @@ const browser = await chromium.launch({
   args: ['--no-sandbox'],
 })
 try {
-  for (const escenario of ['CONFIRMADA', 'CANCELADA', 'SIN_RESPUESTA', 'CANCELADA_HISTORICA']) {
+  for (const escenario of [
+    'CONFIRMADA',
+    'CANCELADA',
+    'SIN_RESPUESTA',
+    'CANCELADA_HISTORICA',
+    'SESION_401',
+    'PRECIO_TRES_DECIMALES',
+    'PRECIO_INVALIDO',
+  ]) {
     const page = await browser.newPage({ viewport: { width: 1280, height: 900 } })
     const errores = []
     page.on('pageerror', (e) => errores.push(e.message))
@@ -28,7 +36,18 @@ try {
         }
       else if (ruta === '/inventario/productos')
         body = [
-          { id: 'p1', nombre: 'Tinta para sello', precio: 41.15, existencia: 2, activo: true },
+          {
+            id: 'p1',
+            nombre: 'Tinta para sello',
+            precio:
+              escenario === 'PRECIO_TRES_DECIMALES'
+                ? '41.155'
+                : escenario === 'PRECIO_INVALIDO'
+                  ? 'inválido'
+                  : 41.15,
+            existencia: 2,
+            activo: true,
+          },
         ]
       else if (ruta === '/clientes') body = [{ id: 'c1', nombre: 'Cliente de prueba' }]
       else if (ruta === '/ventas' && req.method() === 'POST') {
@@ -40,6 +59,7 @@ try {
         })
         body = { id: 'v1', folio: 1042, estado: 'PENDIENTE' }
       } else if (ruta === '/ventas/v1') {
+        if (escenario === 'SESION_401' && !resolver) status = 401
         body = {
           id: 'v1',
           folio: 1042,
@@ -72,17 +92,42 @@ try {
     await page.getByLabel('Correo', { exact: true }).fill('admin@example.test')
     await page.getByLabel('Contrasena', { exact: true }).fill('prueba')
     await page.getByRole('button', { name: 'Entrar', exact: true }).click()
+    if (escenario === 'PRECIO_INVALIDO') {
+      await page.getByText('Importe no disponible', { exact: true }).waitFor()
+      assert.equal(
+        await page.getByRole('button', { name: 'Agregar Tinta para sello' }).isDisabled(),
+        true,
+      )
+      assert.deepEqual(errores, [])
+      console.log('PRECIO_INVALIDO: render estable y producto no cobrable')
+      await page.close()
+      continue
+    }
     await page.getByRole('button', { name: 'Agregar Tinta para sello' }).click()
     await page.getByLabel('Cantidad', { exact: true }).fill('3')
     await page.getByLabel('Cliente (opcional)').selectOption('c1')
-    assert.equal(await page.locator('.total').textContent(), '$123.45')
+    assert.equal(
+      await page.locator('.total').textContent(),
+      escenario === 'PRECIO_TRES_DECIMALES' ? '$123.47' : '$123.45',
+    )
     if (escenario === 'SIN_RESPUESTA') await page.clock.install()
     // Dos eventos antes de que Vue actualice disabled.
     await page.getByRole('button', { name: 'Cobrar', exact: true }).evaluate((b) => {
       b.click()
       b.click()
     })
-    if (escenario === 'SIN_RESPUESTA') {
+    if (escenario === 'SESION_401') {
+      await page.waitForURL('**/login?expirada=1')
+      resolver = true
+      await page.getByLabel('Correo', { exact: true }).fill('admin@example.test')
+      await page.getByLabel('Contrasena', { exact: true }).fill('prueba')
+      await page.getByRole('button', { name: 'Entrar', exact: true }).click()
+      await page.getByRole('heading', { name: 'Seguimiento de operaciones' }).waitFor()
+      assert.equal(await page.locator('.operacion').count(), 1)
+      assert.equal(await page.locator('.operacion strong').textContent(), 'Folio 1042')
+      await page.getByRole('button', { name: 'Consultar de nuevo' }).click()
+      await page.getByText('✓ Venta confirmada · Total cobrado: $123.45', { exact: true }).waitFor()
+    } else if (escenario === 'SIN_RESPUESTA') {
       await page.getByRole('heading', { name: 'Venta en proceso' }).waitFor()
       await page.clock.fastForward(10001)
       await page.getByRole('heading', { name: 'Seguimiento de operaciones' }).waitFor()

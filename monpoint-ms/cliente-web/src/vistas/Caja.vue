@@ -2,7 +2,7 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { gateway } from '@/api/gateway'
 import { useCaja } from '@/stores/caja'
-import { crearCobro, editable, cantidadValida, dinero, estimado } from '@/caja/cobro'
+import { crearCobro, editable, cantidadValida, precioValido, dinero, estimado } from '@/caja/cobro'
 const s = useCaja().cobro
 const cobro = crearCobro(s, gateway)
 const productos = ref([]),
@@ -14,7 +14,9 @@ const cargando = ref(false),
 let carga,
   desmontado = false
 const puedeEditar = computed(() => editable(s))
-const validas = computed(() => s.lineas.every((l) => cantidadValida(l.cantidad)))
+const validas = computed(() =>
+  s.lineas.every((l) => cantidadValida(l.cantidad) && precioValido(l.precio)),
+)
 const total = computed(() => (validas.value ? dinero(estimado(s.lineas)) : '—'))
 const visibles = computed(() =>
   productos.value.filter(
@@ -44,7 +46,7 @@ async function cargar() {
   cargando.value = false
 }
 function agregar(p) {
-  if (!puedeEditar.value) return
+  if (!puedeEditar.value || !precioValido(p.precio)) return
   const l = s.lineas.find((l) => l.productoId === p.id)
   if (l) {
     if (cantidadValida(l.cantidad + 1)) l.cantidad++
@@ -112,7 +114,7 @@ onUnmounted(() => {
             <button
               class="mp-boton mp-boton--secundario"
               :aria-label="`Agregar ${p.nombre}`"
-              :disabled="!puedeEditar"
+              :disabled="!puedeEditar || !precioValido(p.precio)"
               @click="agregar(p)"
             >
               Agregar
@@ -173,7 +175,7 @@ onUnmounted(() => {
           </li>
         </ul>
         <p v-if="!validas" role="alert" class="mp-aviso mp-aviso--error">
-          Use cantidades enteras positivas.
+          Revise las cantidades y los precios del carrito.
         </p>
         <p v-if="s.error" role="alert" class="mp-aviso mp-aviso--error">{{ s.error }}</p>
         <div v-if="s.estado === 'enviando'" class="resultado proceso" role="status">

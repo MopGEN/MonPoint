@@ -92,7 +92,7 @@ export const useSesion = defineStore('sesion', {
 
     /** Borra todo rastro de la sesion. Es sincrono y no falla. */
     cerrar () {
-      useCaja().$reset()
+      useCaja().limpiarSesion()
       this.token = null
       this.caducaEn = null
       this.usuario = null

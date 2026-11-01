@@ -10,18 +10,43 @@ export const estadoInicial = () => ({
 export const editable = (s) => ['inactivo', 'cancelada', 'sinRespuesta'].includes(s.estado)
 export const cantidadValida = (n) => Number.isInteger(n) && n > 0 && n <= 2147483647
 
-// Aritmética decimal exacta para el estimado; el resultado final siempre viene del servidor.
+// Conserva la precisión del catálogo. Solo el estimado agregado se redondea a centavos.
+function decimal(importe) {
+  const m = /^(\d+)(?:\.(\d+))?$/.exec(String(importe))
+  if (!m) return null
+  return {
+    entero: m[1],
+    fraccion: m[2] ?? '',
+    valor: BigInt(m[1] + (m[2] ?? '')),
+    escala: (m[2] ?? '').length,
+  }
+}
+export const precioValido = (importe) => decimal(importe) !== null
+function redondear(valor, escala) {
+  if (escala <= 2) return valor * 10n ** BigInt(2 - escala)
+  const divisor = 10n ** BigInt(escala - 2)
+  return (valor + divisor / 2n) / divisor
+}
 export function centavos(importe) {
-  const m = /^(\d+)(?:\.(\d{1,2}))?$/.exec(String(importe))
-  if (!m) throw new Error('Precio inválido')
-  return BigInt(m[1]) * 100n + BigInt((m[2] ?? '').padEnd(2, '0'))
+  const d = decimal(importe)
+  return d ? redondear(d.valor, d.escala) : null
 }
 export function dinero(importe) {
-  const n = centavos(importe)
-  return `$${(n / 100n).toLocaleString('es-MX')}.${String(n % 100n).padStart(2, '0')}`
+  const d = decimal(importe)
+  // Un dato inválido no puede apagar el render ni convertirse en un importe cero.
+  return d
+    ? `$${BigInt(d.entero).toLocaleString('es-MX')}.${d.fraccion.padEnd(2, '0')}`
+    : 'Importe no disponible'
 }
 export function estimado(lineas) {
-  const n = lineas.reduce((s, l) => s + centavos(l.precio) * BigInt(l.cantidad), 0n)
+  const datos = lineas.map((l) => ({ d: decimal(l.precio), cantidad: l.cantidad }))
+  if (datos.some(({ d, cantidad }) => !d || !cantidadValida(cantidad))) return null
+  const escala = Math.max(2, ...datos.map(({ d }) => d.escala))
+  const suma = datos.reduce(
+    (s, { d, cantidad }) => s + d.valor * BigInt(cantidad) * 10n ** BigInt(escala - d.escala),
+    0n,
+  )
+  const n = redondear(suma, escala)
   return `${n / 100n}.${String(n % 100n).padStart(2, '0')}`
 }
 
@@ -40,6 +65,7 @@ export function crearCobro(
     consulta,
     plazo,
     control
+  let enVuelo = null
   const manuales = new Set()
   function limpiar() {
     reloj.quitar(consulta)
@@ -49,8 +75,9 @@ export function crearCobro(
     control = null
   }
   function archivar(mensaje) {
-    const venta = s.venta ?? {}
+    const venta = s.venta ?? enVuelo ?? {}
     s.pendientes.push({ ...venta, mensaje, consultando: false, detalle: null })
+    enVuelo = null
     s.lineas = []
     s.clienteId = ''
     s.venta = null
@@ -62,6 +89,7 @@ export function crearCobro(
   function resolver(v) {
     if (!['CONFIRMADA', 'CANCELADA'].includes(v?.estado)) return false
     s.venta = v
+    enVuelo = null
     s.estado = v.estado === 'CONFIRMADA' ? 'confirmada' : 'cancelada'
     if (v.estado === 'CONFIRMADA') {
       s.lineas = []
@@ -102,6 +130,11 @@ export function crearCobro(
       s.error = 'Use cantidades enteras positivas.'
       return
     }
+    if (s.lineas.some((l) => !precioValido(l.precio))) {
+      s.error = 'Hay un precio no disponible. Actualice el catálogo o quite el producto.'
+      return
+    }
+    enVuelo = {}
     s.estado = 'enviando'
     s.error = ''
     s.venta = null
@@ -113,7 +146,7 @@ export function crearCobro(
         archivar(
           'No recibimos el folio. El cobro pudo registrarse: verifique la operación antes de repetirla.',
         )
-    }, 30000)
+    }, 10000)
     try {
       const v = await api.enviar(
         '/ventas',
@@ -130,6 +163,7 @@ export function crearCobro(
         return
       }
       s.venta = v
+      enVuelo = { id: v.id, folio: v.folio }
       s.estado = 'enProceso'
       const limite = reloj.ahora() + 10000
       plazo = reloj.poner(() => {
@@ -141,6 +175,7 @@ export function crearCobro(
       if (cerrado || turno !== ciclo) return
       limpiar()
       if (e.estado >= 400 && e.estado < 500 && e.estado !== 408) {
+        enVuelo = null
         s.estado = 'inactivo'
         s.error = e.message
       } else {
@@ -184,7 +219,7 @@ export function crearCobro(
     s.estado = 'inactivo'
   }
   function detener() {
-    if (['enviando', 'enProceso'].includes(s.estado))
+    if (enVuelo !== null)
       archivar('Consulta interrumpida. Verifique esta operación antes de repetirla.')
     cerrado = true
     ciclo++
