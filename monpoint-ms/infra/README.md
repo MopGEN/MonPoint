@@ -37,3 +37,19 @@ proyecto y no se reutilizan automáticamente como `monpoint-ms`. `-p` y
 Para recrear los datos de desarrollo del proyecto actual, después de configurar
 el `.env`, se puede ejecutar `docker compose down -v` y luego `docker compose up
 -d`. **`down -v` borra los datos locales de MongoDB y RabbitMQ de ese proyecto.**
+
+
+## Cliente nginx (5.6)
+
+`docker compose up -d --build` incluye `cliente-web` en `http://localhost:3000`.
+El conjunto actual tiene nueve contenedores. Vite en `:5173` es opcional y solo
+para desarrollo. Añadir `http://localhost:3000` a `CORS_ORIGENES` en `.env` si se
+conserva una configuración anterior y recrear Gateway con `docker compose up -d
+api-gateway`. No hace falta borrar datos ni reiniciar MongoDB.
+
+`VITE_GATEWAY_URL` se pasa como argumento de compilación; por omisión es
+`http://localhost:8080`. Cambiarlo requiere reconstruir cliente-web. La dirección
+debe resolver desde el navegador, no desde la red de Docker.
+
+Ver [cliente-web/README.md](../cliente-web/README.md#cliente-empaquetado-con-nginx-56)
+para la comprobación de login, CORS y recarga de subrutas en Windows.

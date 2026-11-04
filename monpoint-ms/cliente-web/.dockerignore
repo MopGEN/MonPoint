@@ -1,0 +1,10 @@
+node_modules
+dist
+dist-ssr
+.vite
+.git
+.env
+.env.*
+*.local
+*.log
+test

@@ -1,0 +1,27 @@
+{
+  "result": "PASS",
+  "gatewayRunning": false,
+  "clientNotRestarted": true,
+  "clientHealthy": true,
+  "responses": [
+    {
+      "path": "/login",
+      "status": 200,
+      "nosniff": "nosniff",
+      "cache": "no-cache"
+    },
+    {
+      "path": "/caja",
+      "status": 200,
+      "nosniff": "nosniff",
+      "cache": "no-cache"
+    },
+    {
+      "path": "/healthz",
+      "status": 200,
+      "nosniff": "nosniff",
+      "cache": null
+    }
+  ],
+  "checkedAt": "2026-11-04T22:17:41.512728+00:00"
+}

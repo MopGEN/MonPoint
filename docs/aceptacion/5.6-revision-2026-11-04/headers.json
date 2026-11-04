@@ -1,0 +1,49 @@
+{
+  "result": "PASS",
+  "revision": "8ad3238c5b51dec44fb66b812513375ef2385aa8",
+  "checkedAt": "2026-11-04T22:17:36.348005+00:00",
+  "responses": [
+    {
+      "path": "/",
+      "status": 200,
+      "nosniff": "nosniff",
+      "cache": "no-cache"
+    },
+    {
+      "path": "/login",
+      "status": 200,
+      "nosniff": "nosniff",
+      "cache": "no-cache"
+    },
+    {
+      "path": "/caja",
+      "status": 200,
+      "nosniff": "nosniff",
+      "cache": "no-cache"
+    },
+    {
+      "path": "/index.html",
+      "status": 200,
+      "nosniff": "nosniff",
+      "cache": "no-cache"
+    },
+    {
+      "path": "/healthz",
+      "status": 200,
+      "nosniff": "nosniff",
+      "cache": null
+    },
+    {
+      "path": "/assets/no-existe.js",
+      "status": 404,
+      "nosniff": "nosniff",
+      "cache": null
+    },
+    {
+      "path": "/assets/index-CiSWmWT2.js",
+      "status": 200,
+      "nosniff": "nosniff",
+      "cache": "public, max-age=31536000, immutable"
+    }
+  ]
+}

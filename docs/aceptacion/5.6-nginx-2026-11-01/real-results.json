@@ -1,0 +1,309 @@
+{
+  "commit": "360baf11255b17c0648050ab1bd335a360e54e1c",
+  "origin": "http://localhost:3000",
+  "api": "http://localhost:8080",
+  "startedAt": "2026-11-01T22:56:09.567Z",
+  "cases": [
+    {
+      "case": "CONFIRMADA",
+      "id": "6ae7c38b47dc5efac5d4d60c",
+      "folio": 25,
+      "total": 123.45,
+      "ms": 1313,
+      "stock": 7,
+      "proceso": [
+        {
+          "at": 1793573771106,
+          "text": "◷\nEnviando el cobro…\n\nEspera la respuesta antes de iniciar otra operación."
+        },
+        {
+          "at": 1793573771130,
+          "text": "◷\nVenta en proceso\n\nFolio 25 · Estamos confirmando la operación."
+        }
+      ]
+    },
+    {
+      "case": "CANCELADA",
+      "id": "6ae7c38c47dc5efac5d4d60e",
+      "folio": 26,
+      "productoIdRechazado": "6ae7c38aaba40385250d5036",
+      "motivo": "existencia insuficiente de Aceptación 5.5 1793573769990, solicitado 20",
+      "stock": 7,
+      "ms": 1364
+    },
+    {
+      "case": "SIN_RESPUESTA",
+      "id": "6ae7c39147dc5efac5d4d610",
+      "folio": 27,
+      "estadoServidor": "PENDIENTE",
+      "ms": 10328
+    }
+  ],
+  "cors": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/inventario/productos",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/clientes",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "POST",
+      "path": "/inventario/productos",
+      "status": 201,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/clientes",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/inventario/productos",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "POST",
+      "path": "/ventas",
+      "status": 202,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c38b47dc5efac5d4d60c",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c38b47dc5efac5d4d60c",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c38b47dc5efac5d4d60c",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/inventario/productos/6ae7c38aaba40385250d5036",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "POST",
+      "path": "/ventas",
+      "status": 202,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c38c47dc5efac5d4d60e",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c38c47dc5efac5d4d60e",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c38c47dc5efac5d4d60e",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/inventario/productos/6ae7c38aaba40385250d5036",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "POST",
+      "path": "/ventas",
+      "status": 202,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c39147dc5efac5d4d610",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c39147dc5efac5d4d610",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c39147dc5efac5d4d610",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c39147dc5efac5d4d610",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c39147dc5efac5d4d610",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c39147dc5efac5d4d610",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c39147dc5efac5d4d610",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c39147dc5efac5d4d610",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c39147dc5efac5d4d610",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c39147dc5efac5d4d610",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c39147dc5efac5d4d610",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c39147dc5efac5d4d610",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c39147dc5efac5d4d610",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c39147dc5efac5d4d610",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c39147dc5efac5d4d610",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c39147dc5efac5d4d610",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c39147dc5efac5d4d610",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c39147dc5efac5d4d610",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c39147dc5efac5d4d610",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c39147dc5efac5d4d610",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c39147dc5efac5d4d610",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c39147dc5efac5d4d610",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c39147dc5efac5d4d610",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/ventas/6ae7c39147dc5efac5d4d610",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    },
+    {
+      "method": "GET",
+      "path": "/inventario/productos/6ae7c38aaba40385250d5036",
+      "status": 200,
+      "origin": "http://localhost:3000"
+    }
+  ],
+  "errors": [],
+  "consoleErrors": [],
+  "httpErrors": [],
+  "productoId": "6ae7c38aaba40385250d5036",
+  "recovery": {
+    "id": "6ae7c39147dc5efac5d4d610",
+    "estado": "CONFIRMADA",
+    "stock": 5
+  },
+  "postCount": 3,
+  "maxConcurrentSaleQueries": 1,
+  "result": "PASS",
+  "finishedAt": "2026-11-01T22:56:32.554Z"
+}
