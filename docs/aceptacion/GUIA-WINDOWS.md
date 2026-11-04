@@ -124,6 +124,13 @@ No uses `docker compose down -v`: borraría los datos y no es parte de la prueba
 
 ## 4. Entrar desde el navegador y probar una recarga
 
+Para la demostración usa un **perfil limpio de Chrome o una ventana de invitado
+sin extensiones**. Un gestor de contraseñas puede modificar el DOM y producir
+errores ajenos al código del cliente. En el recorrido previo apareció un
+`NotFoundError` de `bootstrap-autofill-overlay.js`, identificado por el revisor
+como el guion de autocompletado de Bitwarden. Comprobar que su URL comienza con
+`chrome-extension://` permite confirmar la atribución en ese equipo.
+
 1. Abre **http://localhost:3000/caja**. Debe aparecer el inicio de sesión, sin 404
    de nginx. La dirección puede cambiar a `/login?regresarA=/caja`.
 2. Pulsa F12. Abre **Network/Red**, selecciona Fetch/XHR y activa **Preserve log /

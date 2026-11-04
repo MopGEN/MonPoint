@@ -110,9 +110,18 @@ con el Gateway y su política CORS. `try_files` entrega `index.html` en `/login`
 memoria, pero no devuelve un 404 de nginx. Los assets con hash se cachean; el
 HTML exige revalidación. Un asset inexistente devuelve 404, no HTML.
 
-`/healthz` y el healthcheck prueban el servidor estático. El cliente espera al
-healthcheck del Gateway al arrancar; el registro de los servicios en Eureka puede
-tardar unos segundos más. Un nginx healthy no garantiza disponibilidad del backend.
+`/healthz` y el healthcheck prueban el servidor estático. La condición
+`depends_on: service_healthy` espera al Gateway cuando Compose arranca el conjunto, para evitar
+presentar un login antes de que la API esté lista. No vigila ni detiene nginx
+cuando el Gateway se cae o reinicia después: el cliente ya iniciado sigue
+sirviendo la interfaz y muestra los fallos de comunicación del backend. Con el
+Gateway caído desde el principio, Compose sí retrasa el arranque del cliente.
+El registro de los servicios en Eureka puede tardar unos segundos más. Un nginx
+healthy no garantiza disponibilidad del backend.
+
+Nginx entrega `X-Content-Type-Options: nosniff` en HTML, assets y errores. Las
+ubicaciones con `add_header Cache-Control` repiten el encabezado porque nginx
+1.28 no hereda los `add_header` del servidor si hay alguno declarado localmente.
 
 Evidencia en nube del empaquetado y de los tres desenlaces desde nginx:
 [aceptación 5.6](../../docs/aceptacion/5.6-nginx-2026-11-01/README.md).

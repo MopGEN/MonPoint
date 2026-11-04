@@ -17,11 +17,23 @@ try {
   for (const ruta of ['/', '/login', '/caja']) {
     const r = await page.request.get(origen + ruta)
     assert.equal(r.status(), 200, ruta)
+    assert.equal(r.headers()['x-content-type-options'], 'nosniff', ruta)
     assert.match(r.headers()['content-type'], /text\/html/)
     assert.match(r.headers()['cache-control'], /no-cache/)
     assert.match(await r.text(), /\/assets\/.*\.js/)
   }
-  assert.equal((await page.request.get(origen + '/assets/no-existe.js')).status(), 404)
+  const html = await (await page.request.get(origen + '/')).text()
+  const asset = html.match(/src="(\/assets\/[^\"]+\.js)"/)[1]
+  const compilado = await page.request.get(origen + asset)
+  assert.equal(compilado.status(), 200)
+  assert.equal(compilado.headers()['x-content-type-options'], 'nosniff')
+  assert.match(compilado.headers()['cache-control'], /immutable/)
+  const inexistente = await page.request.get(origen + '/assets/no-existe.js')
+  assert.equal(inexistente.status(), 404)
+  assert.equal(inexistente.headers()['x-content-type-options'], 'nosniff')
+  const salud = await page.request.get(origen + '/healthz')
+  assert.equal(salud.status(), 200)
+  assert.equal(salud.headers()['x-content-type-options'], 'nosniff')
   const headers = {
     Origin: origen,
     'Access-Control-Request-Method': 'POST',
@@ -62,7 +74,8 @@ try {
     resultado: 'PASS', origen, api, rutas: ['/', '/login', '/caja'],
     loginReal: true, catalogoReal: true, clientesReales: true,
     recargaSubruta: true, corsPermitido: true, corsAjenoRechazado: true,
-    assetsCompilados: true, assetInexistente: 404, errores,
+    assetsCompilados: true, assetInexistente: 404,
+    nosniff: { html: true, asset: true, error404: true, salud: true }, errores,
   }, null, 2))
 } finally {
   await browser.close()
