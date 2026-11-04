@@ -132,6 +132,10 @@ preparación, producto de prueba, tres desenlaces, recuperación y evidencia.
 
 La verificación en Linux no sustituye este recorrido en Windows/Docker Desktop.
 
+[Resultado del recorrido manual en Windows del 4 de noviembre](../../docs/aceptacion/windows-2026-11-04/RESULTADOS.md):
+folios 44, 45 y 46, recuperación de inventario y existencia final 5, documentados
+a partir de las capturas compartidas por el usuario.
+
 Prueba automatizada de empaquetado contra los servicios reales, con Playwright
 instalado como se indica más abajo:
 
