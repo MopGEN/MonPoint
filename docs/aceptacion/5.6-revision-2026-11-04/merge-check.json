@@ -1,0 +1,25 @@
+{
+  "main": "0caf3e8417860296155e5fc895d4a3ee1992a0fd",
+  "docs": "5ab112620f0bf33035acfd093f18a62879506325",
+  "cliente": "8ad3238c5b51dec44fb66b812513375ef2385aa8",
+  "orders": [
+    {
+      "first": "5ab112620f0bf33035acfd093f18a62879506325",
+      "second": "8ad3238c5b51dec44fb66b812513375ef2385aa8",
+      "tree": "090a4dfe05fb33285b0d10129257dafacb2a034d",
+      "conflicts": false,
+      "acceptanceFiles": 32,
+      "rootReadmeCount": 1
+    },
+    {
+      "first": "8ad3238c5b51dec44fb66b812513375ef2385aa8",
+      "second": "5ab112620f0bf33035acfd093f18a62879506325",
+      "tree": "090a4dfe05fb33285b0d10129257dafacb2a034d",
+      "conflicts": false,
+      "acceptanceFiles": 32,
+      "rootReadmeCount": 1
+    }
+  ],
+  "sameResultBothOrders": true,
+  "remoteMainModified": false
+}

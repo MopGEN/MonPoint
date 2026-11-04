@@ -1,0 +1,30 @@
+{
+  "containers": {
+    "monpoint-cliente": "Up About a minute (healthy)",
+    "monpoint-gateway": "Up 15 seconds (healthy)",
+    "monpoint-eureka": "Up About a minute (healthy)",
+    "monpoint-ventas": "Up About a minute (healthy)",
+    "monpoint-inventario": "Up About a minute (healthy)",
+    "monpoint-clientes": "Up About a minute (healthy)",
+    "monpoint-auth": "Up About a minute (healthy)",
+    "monpoint-rabbitmq": "Up About a minute (healthy)",
+    "monpoint-mongodb": "Up About a minute (healthy)"
+  },
+  "eureka": {
+    "API-GATEWAY": [
+      "UP"
+    ],
+    "MS-INVENTARIO": [
+      "UP"
+    ],
+    "MS-AUTH": [
+      "UP"
+    ],
+    "MS-CLIENTES": [
+      "UP"
+    ],
+    "MS-VENTAS": [
+      "UP"
+    ]
+  }
+}
