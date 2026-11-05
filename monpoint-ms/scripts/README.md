@@ -61,9 +61,11 @@ Para estas variables usar valores literales; Node no expande referencias como
 Las claves por omisión son de desarrollo. Definir las elegidas en `infra/.env`
 antes de inicializar una base nueva. **Cambiar ADMIN_DEFAULT_PASSWORD después
 no cambia la contraseña de una cuenta existente.** Tampoco el guion cambia la
-del vendedor existente: si no coincide, falla antes de crear catálogos. Una
-variable definida como cadena vacía se rechaza, no se sustituye por la clave
-por omisión. Cada petición tiene un plazo de 10 segundos.
+del vendedor existente: si no coincide, falla antes de crear catálogos.
+`ADMIN_DEFAULT_PASSWORD` ausente o vacía usa `Admin123!` en Compose,
+DataInitializer y este guion. No se recortan espacios de las contraseñas.
+`SEMILLA_VENDEDOR_PASSWORD` vacía se rechaza por la política del vendedor.
+Cada petición tiene un plazo de 10 segundos.
 
 Compose ahora pasa `ADMIN_DEFAULT_PASSWORD` al contenedor ms-auth. Para aplicar
 el cambio de configuración a un contenedor anterior se usa `docker compose up
@@ -79,6 +81,9 @@ todo reutilizado con los mismos ids. **No se repone stock consumido**: el valor
 Una coincidencia con campos de catálogo distintos o más de un registro con el
 mismo nombre produce error antes de empezar las altas. No se corrigen datos
 ajenos ni se sobrescribe una edición hecha a mano.
+Los precios se comparan por su valor decimal: `41.15`, `"41.1500"` y
+`"4.115e1"` coinciden. Las cadenas no se convierten a doble ni se redondean;
+`"41.150000000000000001"` sigue siendo un conflicto.
 
 Un fallo imprime `INTERRUMPIDA`, la operación y el resumen de las respuestas
 confirmadas, y termina con código 1. La ejecución no es una transacción global:
@@ -101,6 +106,10 @@ Condiciones para repetir sin duplicados:
 - No borrar ni renombrar los registros esperando que el guion reconozca su
   identidad anterior. Tampoco recupera réplicas borradas o publicaciones perdidas
   al reutilizar un recurso: no vuelve a publicar sus eventos.
+
+Una base nueva tampoco garantiza por sí sola la recepción de todos los eventos:
+los publicadores actuales no tienen outbox. La disponibilidad de las réplicas
+deberá verificarse al registrar las ventas de la fase 2.
 
 ## Fase 2 pendiente: ventas
 

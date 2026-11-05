@@ -5,6 +5,8 @@
 [Carga por API sobre una base nueva y repetición sin altas](3.1-fase1-2026-11-04/RESULTADOS.md).
 Incluye usuarios, clientes y productos. Las ventas y sus consumidores quedan
 pendientes; esta evidencia no declara cerrada toda la 3.1 ni CONTROL 1.
+La [revisión posterior](3.1-fase1-2026-11-04/REVISION.md) documenta la contraseña
+vacía y la comparación decimal, sin reemplazar la evidencia original.
 
 ## Caja 5.5 — aceptada
 

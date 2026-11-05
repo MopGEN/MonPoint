@@ -6,8 +6,7 @@ import { spawn } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import { sembrar, productos, clientes, vendedor } from './semilla.mjs'
 
-async function servicio(t) {
-  const adminPassword = 'PruebaAdmin987!'
+async function servicio(t, { adminPassword = 'PruebaAdmin987!' } = {}) {
   const vendedorPassword = 'PruebaVendedor987!'
   const admin = { id: 'admin-1', correo: 'admin@monpoint.com', nombre: 'Administrador', rol: 'ADMIN', activo: true }
   const estado = { usuarios: [admin], clientes: [], productos: [], peticiones: [], fallo: null }
@@ -177,4 +176,37 @@ test('un POST colgado agota el plazo, no se reintenta y deja la operación ident
     return true
   })
   assert.equal(altas(estado).length, 1)
+})
+
+test('ADMIN_DEFAULT_PASSWORD ausente o vacía autentica con el mismo valor por omisión', async t => {
+  const { estado, env } = await servicio(t, { adminPassword: 'Admin123!' })
+  const sinVariable = { ...env }
+  delete sinVariable.ADMIN_DEFAULT_PASSWORD
+  const primera = await sembrar({ env: sinVariable })
+  estado.peticiones.length = 0
+  const segunda = await sembrar({ env: { ...env, ADMIN_DEFAULT_PASSWORD: '' } })
+  assert.equal(primera.estado, 'COMPLETADA')
+  assert.equal(segunda.estado, 'COMPLETADA')
+  assert.equal(altas(estado).length, 0)
+})
+
+test('precios como cadenas decimales, con ceros o exponentes, reutilizan el mismo producto', async t => {
+  const { estado, env } = await servicio(t)
+  const primera = await sembrar({ env })
+  for (const precio of ['41.15', '0041.1500', '4.115e1', '4115E-2']) {
+    estado.productos[0].precio = precio
+    estado.peticiones.length = 0
+    const r = await sembrar({ env })
+    assert.equal(r.productos[0].id, primera.productos[0].id)
+    assert.equal(altas(estado).length, 0)
+  }
+})
+
+test('la comparación decimal no oculta diferencias menores que la precisión del doble ni acepta valores inválidos', async t => {
+  const { estado, env } = await servicio(t)
+  for (const precio of ['41.150000000000000001', '', ' ', 'NaN', 'Infinity', null, true, [], '-41.15']) {
+    estado.productos = [{ ...productos[0], id: 'p1', activo: true, precio }]
+    await assert.rejects(sembrar({ env }), /precio difiere/)
+    assert.equal(altas(estado).length, 0)
+  }
 })
