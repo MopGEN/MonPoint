@@ -1,0 +1,337 @@
+{
+  "revisionBase": "4ab860d",
+  "fechaUTC": "2026-11-05T01:50:15.770Z",
+  "node": "v24.19.0",
+  "entorno": "Linux, proyecto Docker monpoint-semilla31, volúmenes nuevos, Gateway :18080",
+  "adminPasswordPersonalizada": true,
+  "vendedorPasswordPersonalizada": true,
+  "conteosAntes": {
+    "usuarios": 1,
+    "clientes": 0,
+    "productos": 0
+  },
+  "conteosDespues": {
+    "usuarios": 2,
+    "clientes": 2,
+    "productos": 3
+  },
+  "primera": {
+    "fase": 1,
+    "estado": "COMPLETADA",
+    "usuarios": [
+      {
+        "id": "6aebe0aaa53bca6545c5cd1d",
+        "correo": "admin@monpoint.com",
+        "rol": "ADMIN",
+        "accion": "REUTILIZADO"
+      },
+      {
+        "id": "6aebe0d5a53bca6545c5cd1e",
+        "correo": "vendedor.semilla@monpoint.test",
+        "rol": "VENDEDOR",
+        "accion": "CREADO"
+      }
+    ],
+    "clientes": [
+      {
+        "id": "6aebe0d6aace45ca135fff7c",
+        "nombre": "Semilla 3.1 - Ana",
+        "accion": "CREADO"
+      },
+      {
+        "id": "6aebe0d6aace45ca135fff7d",
+        "nombre": "Semilla 3.1 - Luis",
+        "accion": "CREADO"
+      }
+    ],
+    "productos": [
+      {
+        "id": "6aebe0d60ee4cba22c1a7870",
+        "nombre": "Semilla 3.1 - Tinta",
+        "precio": 41.15,
+        "existencia": 10,
+        "umbralStock": 5,
+        "accion": "CREADO"
+      },
+      {
+        "id": "6aebe0d60ee4cba22c1a7871",
+        "nombre": "Semilla 3.1 - Papel",
+        "precio": 75.5,
+        "existencia": 10,
+        "umbralStock": 5,
+        "accion": "CREADO"
+      },
+      {
+        "id": "6aebe0d60ee4cba22c1a7872",
+        "nombre": "Semilla 3.1 - Sello",
+        "precio": 120,
+        "existencia": 10,
+        "umbralStock": 5,
+        "accion": "CREADO"
+      }
+    ],
+    "ventasCreadas": 0
+  },
+  "segunda": {
+    "fase": 1,
+    "estado": "COMPLETADA",
+    "usuarios": [
+      {
+        "id": "6aebe0aaa53bca6545c5cd1d",
+        "correo": "admin@monpoint.com",
+        "rol": "ADMIN",
+        "accion": "REUTILIZADO"
+      },
+      {
+        "id": "6aebe0d5a53bca6545c5cd1e",
+        "correo": "vendedor.semilla@monpoint.test",
+        "rol": "VENDEDOR",
+        "accion": "REUTILIZADO"
+      }
+    ],
+    "clientes": [
+      {
+        "id": "6aebe0d6aace45ca135fff7c",
+        "nombre": "Semilla 3.1 - Ana",
+        "accion": "REUTILIZADO"
+      },
+      {
+        "id": "6aebe0d6aace45ca135fff7d",
+        "nombre": "Semilla 3.1 - Luis",
+        "accion": "REUTILIZADO"
+      }
+    ],
+    "productos": [
+      {
+        "id": "6aebe0d60ee4cba22c1a7870",
+        "nombre": "Semilla 3.1 - Tinta",
+        "precio": 41.15,
+        "existencia": 10,
+        "umbralStock": 5,
+        "accion": "REUTILIZADO"
+      },
+      {
+        "id": "6aebe0d60ee4cba22c1a7871",
+        "nombre": "Semilla 3.1 - Papel",
+        "precio": 75.5,
+        "existencia": 10,
+        "umbralStock": 5,
+        "accion": "REUTILIZADO"
+      },
+      {
+        "id": "6aebe0d60ee4cba22c1a7872",
+        "nombre": "Semilla 3.1 - Sello",
+        "precio": 120,
+        "existencia": 10,
+        "umbralStock": 5,
+        "accion": "REUTILIZADO"
+      }
+    ],
+    "ventasCreadas": 0
+  },
+  "terceraStockModificado": {
+    "fase": 1,
+    "estado": "COMPLETADA",
+    "usuarios": [
+      {
+        "id": "6aebe0aaa53bca6545c5cd1d",
+        "correo": "admin@monpoint.com",
+        "rol": "ADMIN",
+        "accion": "REUTILIZADO"
+      },
+      {
+        "id": "6aebe0d5a53bca6545c5cd1e",
+        "correo": "vendedor.semilla@monpoint.test",
+        "rol": "VENDEDOR",
+        "accion": "REUTILIZADO"
+      }
+    ],
+    "clientes": [
+      {
+        "id": "6aebe0d6aace45ca135fff7c",
+        "nombre": "Semilla 3.1 - Ana",
+        "accion": "REUTILIZADO"
+      },
+      {
+        "id": "6aebe0d6aace45ca135fff7d",
+        "nombre": "Semilla 3.1 - Luis",
+        "accion": "REUTILIZADO"
+      }
+    ],
+    "productos": [
+      {
+        "id": "6aebe0d60ee4cba22c1a7870",
+        "nombre": "Semilla 3.1 - Tinta",
+        "precio": 41.15,
+        "existencia": 7,
+        "umbralStock": 5,
+        "accion": "REUTILIZADO"
+      },
+      {
+        "id": "6aebe0d60ee4cba22c1a7871",
+        "nombre": "Semilla 3.1 - Papel",
+        "precio": 75.5,
+        "existencia": 10,
+        "umbralStock": 5,
+        "accion": "REUTILIZADO"
+      },
+      {
+        "id": "6aebe0d60ee4cba22c1a7872",
+        "nombre": "Semilla 3.1 - Sello",
+        "precio": 120,
+        "existencia": 10,
+        "umbralStock": 5,
+        "accion": "REUTILIZADO"
+      }
+    ],
+    "ventasCreadas": 0
+  },
+  "autenticacionFallida": {
+    "error": "POST /auth/login: HTTP 401. Autenticación o permisos inválidos; revisar la contraseña de la cuenta existente y su rol.",
+    "resumen": {
+      "fase": 1,
+      "estado": "INTERRUMPIDA",
+      "usuarios": [],
+      "clientes": [],
+      "productos": [],
+      "ventasCreadas": 0,
+      "operacion": "POST /auth/login"
+    }
+  },
+  "peticiones": {
+    "primera": [
+      {
+        "metodo": "POST",
+        "ruta": "/auth/login",
+        "status": 200
+      },
+      {
+        "metodo": "GET",
+        "ruta": "/auth/me",
+        "status": 200
+      },
+      {
+        "metodo": "GET",
+        "ruta": "/auth/usuarios",
+        "status": 200
+      },
+      {
+        "metodo": "GET",
+        "ruta": "/clientes",
+        "status": 200
+      },
+      {
+        "metodo": "GET",
+        "ruta": "/inventario/productos",
+        "status": 200
+      },
+      {
+        "metodo": "POST",
+        "ruta": "/auth/register",
+        "status": 201
+      },
+      {
+        "metodo": "POST",
+        "ruta": "/auth/login",
+        "status": 200
+      },
+      {
+        "metodo": "POST",
+        "ruta": "/clientes",
+        "status": 201
+      },
+      {
+        "metodo": "POST",
+        "ruta": "/clientes",
+        "status": 201
+      },
+      {
+        "metodo": "POST",
+        "ruta": "/inventario/productos",
+        "status": 201
+      },
+      {
+        "metodo": "POST",
+        "ruta": "/inventario/productos",
+        "status": 201
+      },
+      {
+        "metodo": "POST",
+        "ruta": "/inventario/productos",
+        "status": 201
+      }
+    ],
+    "segunda": [
+      {
+        "metodo": "POST",
+        "ruta": "/auth/login",
+        "status": 200
+      },
+      {
+        "metodo": "GET",
+        "ruta": "/auth/me",
+        "status": 200
+      },
+      {
+        "metodo": "GET",
+        "ruta": "/auth/usuarios",
+        "status": 200
+      },
+      {
+        "metodo": "GET",
+        "ruta": "/clientes",
+        "status": 200
+      },
+      {
+        "metodo": "GET",
+        "ruta": "/inventario/productos",
+        "status": 200
+      },
+      {
+        "metodo": "POST",
+        "ruta": "/auth/login",
+        "status": 200
+      }
+    ],
+    "tercera": [
+      {
+        "metodo": "POST",
+        "ruta": "/auth/login",
+        "status": 200
+      },
+      {
+        "metodo": "GET",
+        "ruta": "/auth/me",
+        "status": 200
+      },
+      {
+        "metodo": "GET",
+        "ruta": "/auth/usuarios",
+        "status": 200
+      },
+      {
+        "metodo": "GET",
+        "ruta": "/clientes",
+        "status": 200
+      },
+      {
+        "metodo": "GET",
+        "ruta": "/inventario/productos",
+        "status": 200
+      },
+      {
+        "metodo": "POST",
+        "ruta": "/auth/login",
+        "status": 200
+      }
+    ],
+    "fallo": [
+      {
+        "metodo": "POST",
+        "ruta": "/auth/login",
+        "status": 401
+      }
+    ]
+  },
+  "ventasCreadas": 0
+}
