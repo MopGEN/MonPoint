@@ -1,0 +1,8 @@
+{
+  "monpoint-ms/scripts/semilla.mjs": "0f600888fdca2ed115db7dfc9c7356d4d82e151f32f400ebce635c718c8efa7f",
+  "monpoint-ms/scripts/semilla.test.mjs": "3435ae89a92a8a4f2f696516241ced8ce431c6514de1d1d23acc65b1cc04e69b",
+  "monpoint-ms/ms-auth/src/main/java/com/monpoint/auth/config/DataInitializer.java": "fb50a92240c86f7a6fff4e072e986df306dbdcb3f38f65cafebecaa1ab1ed443",
+  "monpoint-ms/ms-auth/src/test/java/com/monpoint/auth/config/DataInitializerTest.java": "6a2bbf2f6e894bd1968ab4dddea55ac38cf45810cdf83d34b77cfb96915d32b3",
+  "monpoint-ms/infra/docker-compose.yml": "5f88688fc4757cce8090f10745b7896fab34780890641027dce65f02ba8769f1",
+  "docs/aceptacion/3.1-fase1-2026-11-04/REVISION.md": "52ce7669dccb2a0a993c8a14afc5d9ecd2485b91ba78cd1714972d8b77a89c09"
+}

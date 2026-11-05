@@ -39,6 +39,13 @@ el `.env`, se puede ejecutar `docker compose down -v` y luego `docker compose up
 -d`. **`down -v` borra los datos locales de MongoDB y RabbitMQ de ese proyecto.**
 
 
+## Datos de prueba (3.1)
+
+Para crear datos de prueba con el conjunto levantado, seguir la
+[semilla por API (3.1)](../scripts/README.md). La fase 1 crea o reutiliza el
+VENDEDOR, clientes y productos; verifica el ADMIN inicial. No usar mongo-init
+para los catálogos: escribir directamente en la base no publica sus eventos.
+
 ## Cliente nginx (5.6)
 
 `docker compose up -d --build` incluye `cliente-web` en `http://localhost:3000`.

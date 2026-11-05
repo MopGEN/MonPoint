@@ -37,6 +37,12 @@ docker compose up -d
 
 ---
 
+## Datos de prueba
+
+La [semilla por API de la 3.1](scripts/README.md) carga usuarios, clientes y
+productos con el conjunto levantado. La fase de ventas queda pendiente de los
+consumidores de reportes y notificaciones.
+
 ## Estructura del repositorio
 
 ```
