@@ -53,9 +53,15 @@ pueda recuperar retroactivamente.
 
 Para la colección prevista por 5.4, mapear explícitamente **datos.nombre →
 productoNombre**. No renombrar el campo del evento al escribir el consumidor.
-La identidad de deduplicación prevista es eventoId, no productoId: dos ventas
-pueden producir dos avisos válidos para el mismo producto. El evento no tiene
-ventaId, por lo que ese vínculo no se puede reconstruir solo con esta carga.
+La 5.4 requiere dos mecanismos complementarios: **idempotencia por eventoId**
+en `eventos_procesados`, para que la reentrega del mismo evento no produzca un
+efecto adicional, y **deduplicación por productoId con activa = true**, para
+que eventos distintos del mismo producto actualicen `existenciaResultante` de
+la notificación activa existente en lugar de crear otra. Si no existe una
+notificación activa para ese producto, se crea una nueva. Dos ventas pueden
+producir dos eventos válidos sin acumular dos notificaciones activas.
+El evento no tiene ventaId, por lo que ese vínculo no se puede reconstruir solo
+con esta carga.
 
 ## Sobre y transporte
 
