@@ -1,0 +1,186 @@
+{
+  "inicio": "2026-11-05T18:38:56.210Z",
+  "productoAntes": {
+    "id": "6aebe0094ced4caee15ce519",
+    "nombre": "Semilla 3.1 - Tinta",
+    "descripcion": "Producto de prueba",
+    "precio": 41.15,
+    "existencia": 10,
+    "umbralStock": 5,
+    "activo": true,
+    "fechaRegistro": "2026-11-05T01:46:49.115Z",
+    "fechaActualizacion": "2026-11-05T01:46:49.115Z"
+  },
+  "modo": "Consola web RabbitMQ operada con Playwright; venta desde Caja",
+  "colas": [
+    "captura.venta-creada",
+    "captura.stock-reservado"
+  ],
+  "aceptada": {
+    "id": "6aeccd409548df5c96ce23bf",
+    "folio": 28,
+    "estado": "PENDIENTE"
+  },
+  "ventaAntes": {
+    "id": "6aeccd409548df5c96ce23bf",
+    "folio": 28,
+    "estado": "CONFIRMADA",
+    "clienteId": null,
+    "clienteNombre": null,
+    "lineas": [
+      {
+        "productoId": "6aebe0094ced4caee15ce519",
+        "nombreProducto": "Semilla 3.1 - Tinta",
+        "precioUnitario": 41.15,
+        "cantidad": 1,
+        "subtotal": 41.15
+      }
+    ],
+    "total": 41.15,
+    "motivo": null,
+    "productoIdRechazado": null,
+    "fechaCreacion": "2026-11-05T18:38:56.500Z",
+    "fechaResolucion": "2026-11-05T18:38:56.666Z"
+  },
+  "productoTrasVenta": {
+    "id": "6aebe0094ced4caee15ce519",
+    "nombre": "Semilla 3.1 - Tinta",
+    "descripcion": "Producto de prueba",
+    "precio": 41.15,
+    "existencia": 9,
+    "umbralStock": 5,
+    "activo": true,
+    "fechaRegistro": "2026-11-05T01:46:49.115Z",
+    "fechaActualizacion": "2026-11-05T18:38:56.605Z"
+  },
+  "ventaCreadaCapturada": [
+    {
+      "payload_bytes": 427,
+      "redelivered": false,
+      "exchange": "ventas.eventos",
+      "routing_key": "venta.creada",
+      "message_count": 0,
+      "properties": {
+        "message_id": "03d3f3b0-84fa-46d0-8f70-e297e8d898bd",
+        "priority": 0,
+        "delivery_mode": 2,
+        "headers": {
+          "spring_listener_return_correlation": "2c53bad4-c8cd-4762-9ced-2bab8f525a4c"
+        },
+        "content_encoding": "UTF-8",
+        "content_type": "application/json"
+      },
+      "payload": "{\"eventoId\":\"03d3f3b0-84fa-46d0-8f70-e297e8d898bd\",\"tipo\":\"VentaCreada\",\"version\":\"1\",\"fecha\":\"2026-11-05T18:38:56.531373172Z\",\"origen\":\"ms-ventas\",\"datos\":{\"ventaId\":\"6aeccd409548df5c96ce23bf\",\"folio\":28,\"clienteId\":null,\"clienteNombre\":null,\"total\":41.15,\"fecha\":\"2026-11-05T18:38:56.500341699Z\",\"lineas\":[{\"productoId\":\"6aebe0094ced4caee15ce519\",\"nombreProducto\":\"Semilla 3.1 - Tinta\",\"cantidad\":1,\"precioUnitario\":41.15}]}}",
+      "payload_encoding": "string"
+    }
+  ],
+  "stockReservadoInicial": [
+    {
+      "payload_bytes": 293,
+      "redelivered": false,
+      "exchange": "inventario.eventos",
+      "routing_key": "stock.reservado",
+      "message_count": 0,
+      "properties": {
+        "message_id": "c78a59e4-99dc-4918-999c-7f99fc69ec8a",
+        "priority": 0,
+        "delivery_mode": 2,
+        "headers": {},
+        "content_type": "application/json"
+      },
+      "payload": "{\"eventoId\":\"c78a59e4-99dc-4918-999c-7f99fc69ec8a\",\"tipo\":\"StockReservado\",\"version\":\"1\",\"fecha\":\"2026-11-05T18:38:56.619315348Z\",\"origen\":\"ms-inventario\",\"datos\":{\"ventaId\":\"6aeccd409548df5c96ce23bf\",\"lineas\":[{\"productoId\":\"6aebe0094ced4caee15ce519\",\"cantidad\":1,\"existenciaResultante\":9}]}}",
+      "payload_encoding": "string"
+    }
+  ],
+  "eventoId": "03d3f3b0-84fa-46d0-8f70-e297e8d898bd",
+  "republicacionInicio": "2026-11-05T18:40:18.729Z",
+  "republicacion": {
+    "instante": "2026-11-05T18:40:18.782Z",
+    "respuesta": {
+      "routed": true
+    },
+    "enviado": {
+      "vhost": "/",
+      "name": "ventas.eventos",
+      "properties": {
+        "delivery_mode": 2,
+        "headers": {},
+        "content_type": "application/json",
+        "message_id": "03d3f3b0-84fa-46d0-8f70-e297e8d898bd"
+      },
+      "routing_key": "venta.creada",
+      "delivery_mode": "2",
+      "payload": "{\"eventoId\":\"03d3f3b0-84fa-46d0-8f70-e297e8d898bd\",\"tipo\":\"VentaCreada\",\"version\":\"1\",\"fecha\":\"2026-11-05T18:38:56.531373172Z\",\"origen\":\"ms-ventas\",\"datos\":{\"ventaId\":\"6aeccd409548df5c96ce23bf\",\"folio\":28,\"clienteId\":null,\"clienteNombre\":null,\"total\":41.15,\"fecha\":\"2026-11-05T18:38:56.500341699Z\",\"lineas\":[{\"productoId\":\"6aebe0094ced4caee15ce519\",\"nombreProducto\":\"Semilla 3.1 - Tinta\",\"cantidad\":1,\"precioUnitario\":41.15}]}}",
+      "payload_encoding": "string",
+      "headers": {},
+      "props": {
+        "message_id": "03d3f3b0-84fa-46d0-8f70-e297e8d898bd",
+        "content_type": "application/json"
+      }
+    },
+    "sha256Payload": "06bbd0b4658d66c3d17723a3cf7cfaa98f5f4df8dd08c35396931c31f30a6dfe"
+  },
+  "limpieza": [
+    {
+      "cola": "captura.venta-creada",
+      "status": 204,
+      "fecha": "2026-11-05T18:42:08.241Z"
+    },
+    {
+      "cola": "captura.stock-reservado",
+      "status": 204,
+      "fecha": "2026-11-05T18:42:08.352Z"
+    }
+  ],
+  "fin": "2026-11-05T18:42:08.429Z",
+  "productoTrasReentrega": {
+    "id": "6aebe0094ced4caee15ce519",
+    "nombre": "Semilla 3.1 - Tinta",
+    "descripcion": "Producto de prueba",
+    "precio": 41.15,
+    "existencia": 9,
+    "umbralStock": 5,
+    "activo": true,
+    "fechaRegistro": "2026-11-05T01:46:49.115Z",
+    "fechaActualizacion": "2026-11-05T18:38:56.605Z"
+  },
+  "ventaTrasReentrega": {
+    "id": "6aeccd409548df5c96ce23bf",
+    "folio": 28,
+    "estado": "CONFIRMADA",
+    "clienteId": null,
+    "clienteNombre": null,
+    "lineas": [
+      {
+        "productoId": "6aebe0094ced4caee15ce519",
+        "nombreProducto": "Semilla 3.1 - Tinta",
+        "precioUnitario": 41.15,
+        "cantidad": 1,
+        "subtotal": 41.15
+      }
+    ],
+    "total": 41.15,
+    "motivo": null,
+    "productoIdRechazado": null,
+    "fechaCreacion": "2026-11-05T18:38:56.500Z",
+    "fechaResolucion": "2026-11-05T18:38:56.666Z"
+  },
+  "logDescarte": [
+    "2026-11-05T18:40:18.773Z  INFO [] 1 --- [ms-inventario] [ntContainer#0-1] c.m.i.service.ReservaStockService        : evento=VENTA_CREADA_DESCARTADO eventoId=03d3f3b0-84fa-46d0-8f70-e297e8d898bd motivo=ya_procesado"
+  ],
+  "stockPosteriorEvidencia": {
+    "imagenes": [
+      {
+        "archivo": "08-sin-segundo-stock-reservado.png",
+        "fechaArchivo": "2026-11-05T18:41:19.058Z"
+      },
+      {
+        "archivo": "09-stock-vacio-segunda-consulta.png",
+        "fechaArchivo": "2026-11-05T18:41:29.214Z"
+      }
+    ],
+    "nota": "Ambas consultas Get Message(s) devolvieron [] y se capturó Queue is empty. El guion comprobar.mjs falló después al buscar la pestaña de Caja, antes de persistir esas respuestas JSON. Se conservan las capturas, no se presentan como respuestas JSON archivadas."
+  },
+  "incidencia": "Tras comprobar el descarte, dos lecturas vacías y las APIs, comprobar.mjs no encontró Caja porque los pasos anteriores seleccionaban pestañas por índice. Se completó la captura en un contexto nuevo y se repitieron únicamente GET de producto/venta. No hubo otra venta ni republicación.",
+  "finComprobacion": "2026-11-05T18:43:56.438Z"
+}

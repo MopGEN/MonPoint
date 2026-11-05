@@ -1,0 +1,1 @@
+2026-11-05T18:40:18.773Z  INFO [] 1 --- [ms-inventario] [ntContainer#0-1] c.m.i.service.ReservaStockService        : evento=VENTA_CREADA_DESCARTADO eventoId=03d3f3b0-84fa-46d0-8f70-e297e8d898bd motivo=ya_procesado

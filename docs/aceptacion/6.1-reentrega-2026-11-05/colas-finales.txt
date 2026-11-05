@@ -1,0 +1,9 @@
+name	durable	consumers	messages_ready	messages_unacknowledged
+ventas.stock.fallidos	true	0	0	0
+ventas.stock	true	1	0	0
+inventario.venta-creada.fallidos	true	0	0	0
+ventas.productos.fallidos	true	0	0	0
+ventas.clientes	true	1	0	0
+ventas.clientes.fallidos	true	0	0	0
+ventas.productos	true	1	0	0
+inventario.venta-creada	true	1	0	0
