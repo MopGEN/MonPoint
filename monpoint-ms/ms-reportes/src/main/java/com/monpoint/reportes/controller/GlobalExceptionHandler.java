@@ -2,6 +2,7 @@ package com.monpoint.reportes.controller;
 
 import com.monpoint.reportes.audit.RequestIdFilter;
 import com.monpoint.reportes.exception.AccesoDenegadoException;
+import com.monpoint.reportes.exception.RangoInvalidoException;
 import com.monpoint.reportes.exception.RecursoNoEncontradoException;
 import com.monpoint.reportes.exception.VentaCanceladaException;
 import com.monpoint.reportes.exception.VentaNoDisponibleException;
@@ -16,6 +17,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -64,6 +66,17 @@ public class GlobalExceptionHandler {
     public ProblemDetail tipoInvalido(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
         return problema(HttpStatus.BAD_REQUEST, "Parámetro inválido",
                 "El valor de '" + ex.getName() + "' no tiene el formato esperado", request);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ProblemDetail parametroFaltante(MissingServletRequestParameterException ex, HttpServletRequest request) {
+        return problema(HttpStatus.BAD_REQUEST, "Parámetro faltante",
+                "Falta el parámetro '" + ex.getParameterName() + "'", request);
+    }
+
+    @ExceptionHandler(RangoInvalidoException.class)
+    public ProblemDetail rangoInvalido(RangoInvalidoException ex, HttpServletRequest request) {
+        return problema(HttpStatus.BAD_REQUEST, "Rango inválido", ex.getMessage(), request);
     }
 
     @ExceptionHandler(AccesoDenegadoException.class)
