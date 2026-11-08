@@ -29,6 +29,8 @@
 	<properties>
 		<java.version>21</java.version>
 		<spring-cloud.version>2025.1.3</spring-cloud.version>
+		<!-- Misma versión que MonPointV2 (Doc 02, 3.1). iText 9 es AGPL: válido aquí porque el repo es público. -->
+		<itext.version>9.1.0</itext.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -58,6 +60,23 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
+
+		<!-- PDF (H-051 a H-053): kernel escribe el archivo, layout arma párrafos y tablas, io trae las fuentes. -->
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>kernel</artifactId>
+			<version>${itext.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>layout</artifactId>
+			<version>${itext.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>io</artifactId>
+			<version>${itext.version}</version>
 		</dependency>
 
 		<dependency>
