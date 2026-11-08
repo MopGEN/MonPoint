@@ -351,6 +351,36 @@ services:
       - monpoint-red
 
   # ===========================================================================
+  # ms-reportes — configuracion, graficas y PDF (puerto 8085, reportes_db)
+  # ===========================================================================
+  # Consume VentaConfirmada/VentaCancelada, producto.* y cliente.* para armar
+  # sus propias proyecciones; no publica eventos.
+  # NO publica puertos: se llega a el por el Gateway (/reportes/**).
+  # ===========================================================================
+  ms-reportes:
+    build: ../ms-reportes
+    container_name: monpoint-reportes
+    environment:
+      SERVER_PORT: 8085
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      # Dentro de la red Docker "mongodb" si resuelve: sin directConnection=true.
+      MONGO_URI: mongodb://reportes_user:reportes_pass@mongodb:27017/reportes_db?replicaSet=rs0&authSource=reportes_db
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: ${RABBITMQ_USER}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+    # Sin este margen Docker lo mata antes de que mande su baja a Eureka (ver ms-auth).
+    stop_grace_period: 15s
+    networks:
+      - monpoint-red
+
+  # ===========================================================================
   # PLANTILLA PARA LOS MICROSERVICIOS
   # ===========================================================================
   # Copiar este bloque para cada servicio conforme se construya, cambiando
