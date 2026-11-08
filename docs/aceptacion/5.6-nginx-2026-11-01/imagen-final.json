@@ -1,0 +1,45 @@
+{
+  "commit": "3518475a0c170878f138c04c2b79426aa1e65558",
+  "imageId": "sha256:499c8959577c8807ef5dfd86f81e5f3fb3b2428c57ad77b9269df984e5df2dd2",
+  "health": {
+    "Status": "healthy",
+    "FailingStreak": 0,
+    "Log": [
+      {
+        "Start": "2026-11-01T22:57:53.63623882Z",
+        "End": "2026-11-01T22:57:53.683413392Z",
+        "ExitCode": 0,
+        "Output": ""
+      },
+      {
+        "Start": "2026-11-01T22:58:03.684756785Z",
+        "End": "2026-11-01T22:58:03.719324275Z",
+        "ExitCode": 0,
+        "Output": ""
+      },
+      {
+        "Start": "2026-11-01T22:58:13.720003124Z",
+        "End": "2026-11-01T22:58:13.753915956Z",
+        "ExitCode": 0,
+        "Output": ""
+      },
+      {
+        "Start": "2026-11-01T22:58:23.754504427Z",
+        "End": "2026-11-01T22:58:23.791588198Z",
+        "ExitCode": 0,
+        "Output": ""
+      },
+      {
+        "Start": "2026-11-01T22:58:33.792350385Z",
+        "End": "2026-11-01T22:58:33.833706698Z",
+        "ExitCode": 0,
+        "Output": ""
+      }
+    ]
+  },
+  "checkedAt": "2026-11-01T22:58:38.353022+00:00",
+  "nginxConfig": "PASS",
+  "nodePresent": false,
+  "buildCertificatePresent": false,
+  "nonDefaultGatewayCompiled": "http://gateway-ejemplo.invalid:8080"
+}

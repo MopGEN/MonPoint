@@ -30,7 +30,9 @@ public class DataInitializer implements CommandLineRunner {
                            @Value("${ADMIN_DEFAULT_PASSWORD:Admin123!}") String adminPassword) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
-        this.adminPassword = adminPassword;
+        // Igual que ${ADMIN_DEFAULT_PASSWORD:-Admin123!} en Compose: ausente o vacía.
+        // No recortar espacios: una contraseña personalizada se conserva exactamente.
+        this.adminPassword = adminPassword == null || adminPassword.isEmpty() ? "Admin123!" : adminPassword;
     }
 
     @Override

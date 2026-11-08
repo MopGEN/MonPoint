@@ -1,7 +1,7 @@
 # =============================================================================
 # MonPoint MS — Orquestacion del sistema completo
 # =============================================================================
-# Levanta todo con:   docker compose up -d
+# Levanta todo con:   docker compose up -d --build
 # Detiene y limpia:   docker compose down -v
 #
 # Contiene la infraestructura compartida (MongoDB, RabbitMQ, Eureka, Gateway).
@@ -187,7 +187,7 @@ services:
   # ===========================================================================
   # API Gateway — punto unico de entrada
   # ===========================================================================
-  # ES EL UNICO COMPONENTE QUE PUBLICA UN PUERTO AL EXTERIOR.
+  # ES EL UNICO PUNTO DE ENTRADA A LA API. Nginx sirve la interfaz en :3000.
   #
   # Los servicios de dominio no exponen puertos: solo son alcanzables desde
   # dentro de la red monpoint-red. Quien quiera hablar con ellos pasa por el
@@ -203,7 +203,7 @@ services:
     build: ../api-gateway
     container_name: monpoint-gateway
     ports:
-      - "8080:8080"    # Unica puerta de entrada al sistema
+      - "8080:8080"    # Unica puerta de entrada a la API
     environment:
       SERVER_PORT: 8080
       EUREKA_URL: http://eureka-server:8761/eureka/
@@ -276,6 +276,7 @@ services:
       # falta directConnection=true (solo se usa al correr ms-auth fuera de Docker).
       MONGO_URI: mongodb://auth_user:auth_pass@mongodb:27017/auth_db?replicaSet=rs0&authSource=auth_db
       JWT_SECRET: ${JWT_SECRET}
+      ADMIN_DEFAULT_PASSWORD: ${ADMIN_DEFAULT_PASSWORD:-Admin123!}
     depends_on:
       mongodb:
         condition: service_healthy
@@ -395,23 +396,23 @@ services:
   # ===========================================================================
 
   # ===========================================================================
-  # PLANTILLA PARA EL CLIENTE WEB (tarea 5.6, semana 5)
+  # Cliente web — compilación Vite servida por nginx (5.6)
   # ===========================================================================
-  # cliente-web:
-  #   build:
-  #     context: ../cliente-web
-  #     args:
-  #       # La direccion del Gateway se fija al COMPILAR, no al ejecutar:
-  #       # Vite sustituye las variables de entorno dentro del codigo
-  #       # generado. Cambiarla despues exige recompilar.
-  #       VITE_API_URL: http://localhost:8080
-  #   container_name: monpoint-cliente
-  #   ports:
-  #     - "5173:80"
-  #   depends_on:
-  #     - api-gateway
-  #   networks:
-  #     - monpoint-red
+  cliente-web:
+    build:
+      context: ../cliente-web
+      args:
+        # URL alcanzable por el NAVEGADOR, no el nombre Docker api-gateway.
+        # Cambiarla exige recompilar; no es una variable de nginx en ejecución.
+        VITE_GATEWAY_URL: ${VITE_GATEWAY_URL:-http://localhost:8080}
+    container_name: monpoint-cliente
+    ports:
+      - "3000:80"
+    depends_on:
+      api-gateway:
+        condition: service_healthy
+    networks:
+      - monpoint-red
   # ===========================================================================
 
 # =============================================================================
@@ -423,7 +424,7 @@ services:
 # direcciones IP.
 #
 # Desde fuera de la red solo se alcanza lo que publica puertos: el Gateway
-# (abierto, es la puerta de entrada) y, SOLO desde la propia maquina
+# (API), nginx (interfaz web) y, SOLO desde la propia maquina
 # (127.0.0.1), MongoDB, RabbitMQ y Eureka para inspeccion durante el desarrollo.
 # =============================================================================
 networks:

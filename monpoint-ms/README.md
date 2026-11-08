@@ -12,13 +12,18 @@ Migración de MonPointV2 (monolito JavaFX) a una arquitectura de microservicios.
 ```bash
 cd infra
 cp .env.example .env     # y cambiar los valores
-docker compose up -d
+docker compose up -d --build
 ```
+
+Si ya tienes `.env`, agrega `http://localhost:3000` a `CORS_ORIGENES` sin borrar
+los otros orígenes. La URL pública del Gateway se fija al compilar mediante
+`VITE_GATEWAY_URL`; ver [`cliente-web/README.md`](cliente-web/README.md).
 
 Verificar que arrancó:
 
 | Qué | Dónde |
 |---|---|
+| Cliente web (nginx) | http://localhost:3000 |
 | Panel de Eureka | http://localhost:8761 |
 | Consola de RabbitMQ | http://localhost:15672 |
 | API a través del Gateway | http://localhost:8080 |
@@ -31,6 +36,12 @@ docker compose up -d
 ```
 
 ---
+
+## Datos de prueba
+
+La [semilla por API de la 3.1](scripts/README.md) carga usuarios, clientes y
+productos con el conjunto levantado. La fase de ventas queda pendiente de los
+consumidores de reportes y notificaciones.
 
 ## Estructura del repositorio
 
@@ -84,7 +95,7 @@ resuelve registrando el `eventoId` ya procesado antes de aplicar el cambio.
 
 | Componente | Puerto | ¿Expuesto al exterior? |
 |---|---|---|
-| API Gateway | 8080 | Sí — única puerta de entrada |
+| API Gateway | 8080 | Sí — única puerta de entrada a la API |
 | Eureka | 8761 | Solo desde tu máquina (`127.0.0.1`), para inspección |
 | MongoDB | 27017 | Solo desde tu máquina (`127.0.0.1`), para inspección |
 | RabbitMQ (AMQP) | 5672 | Solo desde tu máquina (`127.0.0.1`), para inspección |
@@ -95,7 +106,8 @@ resuelve registrando el `eventoId` ya procesado antes de aplicar el cambio.
 | ms-clientes | 8084 | No |
 | ms-reportes | 8085 | No |
 | ms-notificaciones | 8086 | No |
-| cliente-web | 5173 | Sí |
+| cliente-web (nginx) | 3000 | Sí — interfaz web |
+| cliente-web (Vite, desarrollo) | 5173 | Sí, solo al ejecutar npm run dev |
 
 Los microservicios no publican puertos: solo se alcanzan desde dentro de la
 red de Docker, a través del Gateway. No es una convención que haya que

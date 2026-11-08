@@ -1,0 +1,50 @@
+[
+  {
+    "contenedor": "semilla31-ms-clientes",
+    "imagenId": "sha256:fc156712f74c52cfa4a7254b913505b6e4cc4073a55035352cf8ee04aa38eae8",
+    "estado": "running",
+    "salud": "healthy"
+  },
+  {
+    "contenedor": "semilla31-api-gateway",
+    "imagenId": "sha256:7a8d7f4bda071e30d2c1fb783dd830b65bedc2d025bd147e35b4410eafb13848",
+    "estado": "running",
+    "salud": "healthy"
+  },
+  {
+    "contenedor": "semilla31-ms-inventario",
+    "imagenId": "sha256:b8be20ea6ca73b327e51a8c6fb9675e955f8999d7aeeb28ead01baa9ab437f0e",
+    "estado": "running",
+    "salud": "healthy"
+  },
+  {
+    "contenedor": "semilla31-ms-auth",
+    "imagenId": "sha256:ccbf618f944b54dfc4bb124be7bbccde9d06e92d98775cd68f49ad55d2337b6c",
+    "estado": "running",
+    "salud": "healthy"
+  },
+  {
+    "contenedor": "semilla31-ms-ventas",
+    "imagenId": "sha256:fb96f7e9cee258e9b0798a13106a27c40fdcbe16e48cb8da1868d494fbb9bfcd",
+    "estado": "running",
+    "salud": "healthy"
+  },
+  {
+    "contenedor": "semilla31-mongodb",
+    "imagenId": "sha256:bf46c3fd4f186a3569a6c8d180ee6f55e46cc81e98c0cadaee2f56718c84979f",
+    "estado": "running",
+    "salud": "healthy"
+  },
+  {
+    "contenedor": "semilla31-rabbitmq",
+    "imagenId": "sha256:de912cbbf07f938bb8aaa5682464a73a00c6a996efdf0880423aeb4eae006c34",
+    "estado": "running",
+    "salud": "healthy"
+  },
+  {
+    "contenedor": "semilla31-eureka-server",
+    "imagenId": "sha256:c919a12734d1945cac671b009c2a3cdd240bcfd1f91e1e21cb84962a8c5b9c70",
+    "estado": "running",
+    "salud": "healthy"
+  }
+]
