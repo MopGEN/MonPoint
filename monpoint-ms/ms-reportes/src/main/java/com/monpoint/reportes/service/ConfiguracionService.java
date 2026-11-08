@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 /**
  * Configuración de la empresa (H-050): un solo documento. Leer lo pueden ambos roles; modificar, solo ADMIN.
@@ -37,7 +38,8 @@ public class ConfiguracionService {
         if (!ejecutor.esAdmin()) {
             throw new AccesoDenegadoException("Solo un ADMIN puede modificar la configuración de la empresa");
         }
-        Instant ahora = clock.instant();
+        // Mongo guarda milisegundos: truncar aquí hace que el PUT responda la misma fecha que leerá el GET.
+        Instant ahora = clock.instant().truncatedTo(ChronoUnit.MILLIS);
         Configuracion configuracion = configuracionRepository.findById(Configuracion.ID_UNICO)
                 .map(existente -> {
                     existente.actualizar(request.nombreEmpresa(), request.rfc(), request.direccion(),

@@ -47,6 +47,18 @@ class ConfiguracionServiceTest {
     }
 
     @Test
+    void guardar_TruncaLaFechaAMilisegundosComoLaGuardaMongo() {
+        Clock conNanos = Clock.fixed(Instant.parse("2026-11-08T16:25:25.583839676Z"), ZoneOffset.UTC);
+        servicio = new ConfiguracionService(configuracionRepository, conNanos);
+        when(configuracionRepository.findById(Configuracion.ID_UNICO)).thenReturn(Optional.empty());
+        when(configuracionRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        ConfiguracionResponse respuesta = servicio.guardar(PETICION, ADMIN);
+
+        assertThat(respuesta.fechaActualizacion()).isEqualTo(Instant.parse("2026-11-08T16:25:25.583Z"));
+    }
+
+    @Test
     void obtener_SinConfiguracion_Lanza404() {
         when(configuracionRepository.findById(Configuracion.ID_UNICO)).thenReturn(Optional.empty());
 
