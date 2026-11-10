@@ -1,5 +1,12 @@
 # Evidencia de aceptación
 
+## Reentrega de VentaCreada — criterio de CONTROL 2
+
+[Recorrido por la consola de RabbitMQ del 5 de noviembre](6.1-reentrega-2026-11-05/RESULTADOS.md):
+mensaje original republicado, stock 10 → 9 → 9, descarte por eventoId y limpieza
+de las colas de captura. Incluye el método de automatización y sus límites;
+aporta evidencia a la 6.1, que sigue parcial.
+
 ## Semilla 3.1 — fase 1
 
 [Carga por API sobre una base nueva y repetición sin altas](3.1-fase1-2026-11-04/RESULTADOS.md).
