@@ -1,0 +1,67 @@
+{
+  "indices": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "productoId": 1
+      },
+      "name": "producto_activo_unico",
+      "unique": true,
+      "partialFilterExpression": {
+        "activa": true
+      }
+    },
+    {
+      "v": 2,
+      "key": {
+        "productoId": 1,
+        "activa": 1
+      },
+      "name": "producto_activa"
+    },
+    {
+      "v": 2,
+      "key": {
+        "leida": 1
+      },
+      "name": "leida"
+    }
+  ],
+  "indicesEventos": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "eventoId": 1
+      },
+      "name": "eventoId",
+      "unique": true
+    }
+  ],
+  "marcadorReentregado": {
+    "_id": {
+      "$oid": "6af34e1082150c2ad61e934e"
+    },
+    "eventoId": "cb5e8fc7-7e92-4ac1-b63f-7d7734e7c7f3",
+    "tipo": "StockBajo",
+    "fechaProcesado": {
+      "$date": "2026-11-10T17:02:08.950Z"
+    },
+    "_class": "com.monpoint.notificaciones.model.EventoProcesado"
+  },
+  "marcadoresInvalidos": 0,
+  "avisosInvalidos": 0
+}

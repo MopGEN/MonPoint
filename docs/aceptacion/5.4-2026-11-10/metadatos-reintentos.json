@@ -1,0 +1,23 @@
+{
+  "artefacto": "spring-boot-amqp-4.1.1.jar",
+  "sha256": "99f7c26619cbc82ec5a6635bfc827afc3d8bae187101e8c52a666cbbbfbfe04e",
+  "metadatos": [
+    {
+      "name": "spring.rabbitmq.listener.simple.retry.max-retries",
+      "type": "java.lang.Long",
+      "description": "Maximum number of retry attempts to deliver a message.",
+      "sourceType": "org.springframework.boot.amqp.autoconfigure.RabbitProperties$ListenerRetry",
+      "defaultValue": 3
+    },
+    {
+      "name": "spring.rabbitmq.listener.simple.retry.max-attempts",
+      "type": "java.lang.Long",
+      "deprecated": true,
+      "deprecation": {
+        "level": "error",
+        "replacement": "spring.rabbitmq.listener.simple.retry.max-retries",
+        "since": "4.0.0"
+      }
+    }
+  ]
+}

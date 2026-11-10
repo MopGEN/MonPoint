@@ -1,0 +1,103 @@
+{
+  "inicio": "2026-11-10T16:57:02.841Z",
+  "colaTemporal": "captura.5.4.f82e782b-b918-4fe3-b2f4-9bb1c91adbce",
+  "comprobaciones": [
+    "StockBajo real crea aviso no leído con producto, existencia y fecha",
+    "Evento distinto actualiza la misma activa sin duplicarla",
+    "PUT 204 repetible, fecha estable, filtros de lectura y 404",
+    "Gateway real: sin token 401; VENDEDOR 403 en ambas rutas",
+    "Payload original reentregado no modifica ni reabre la leída",
+    "Un evento nuevo después de leer abre otro aviso y conserva el histórico"
+  ],
+  "ventas": [
+    {
+      "id": "6af34ce07fb0a867b5c17431",
+      "folio": 29,
+      "estado": "CONFIRMADA",
+      "clienteId": null,
+      "clienteNombre": null,
+      "lineas": [
+        {
+          "productoId": "6af34ce057cdec548cbc939c",
+          "nombreProducto": "Aceptación 5.4 f09a51cb-74a1-4a77-a926-6cba61b5af56",
+          "precioUnitario": 41.15,
+          "cantidad": 5,
+          "subtotal": 205.75
+        }
+      ],
+      "total": 205.75,
+      "motivo": null,
+      "productoIdRechazado": null,
+      "fechaCreacion": "2026-11-10T16:57:04.766Z",
+      "fechaResolucion": "2026-11-10T16:57:04.929Z"
+    },
+    {
+      "id": "6af34ce17fb0a867b5c17433",
+      "folio": 30,
+      "estado": "CONFIRMADA",
+      "clienteId": null,
+      "clienteNombre": null,
+      "lineas": [
+        {
+          "productoId": "6af34ce057cdec548cbc939c",
+          "nombreProducto": "Aceptación 5.4 f09a51cb-74a1-4a77-a926-6cba61b5af56",
+          "precioUnitario": 41.15,
+          "cantidad": 1,
+          "subtotal": 41.15
+        }
+      ],
+      "total": 41.15,
+      "motivo": null,
+      "productoIdRechazado": null,
+      "fechaCreacion": "2026-11-10T16:57:05.212Z",
+      "fechaResolucion": "2026-11-10T16:57:05.351Z"
+    },
+    {
+      "id": "6af34ce37fb0a867b5c17435",
+      "folio": 31,
+      "estado": "CONFIRMADA",
+      "clienteId": null,
+      "clienteNombre": null,
+      "lineas": [
+        {
+          "productoId": "6af34ce057cdec548cbc939c",
+          "nombreProducto": "Aceptación 5.4 f09a51cb-74a1-4a77-a926-6cba61b5af56",
+          "precioUnitario": 41.15,
+          "cantidad": 1,
+          "subtotal": 41.15
+        }
+      ],
+      "total": 41.15,
+      "motivo": null,
+      "productoIdRechazado": null,
+      "fechaCreacion": "2026-11-10T16:57:07.297Z",
+      "fechaResolucion": "2026-11-10T16:57:07.341Z"
+    }
+  ],
+  "productoInicial": {
+    "id": "6af34ce057cdec548cbc939c",
+    "nombre": "Aceptación 5.4 f09a51cb-74a1-4a77-a926-6cba61b5af56",
+    "descripcion": "Recorrido aislado de alertas",
+    "precio": 41.15,
+    "existencia": 10,
+    "umbralStock": 5,
+    "activo": true,
+    "fechaRegistro": "2026-11-10T16:57:04.164798933Z",
+    "fechaActualizacion": "2026-11-10T16:57:04.164798933Z"
+  },
+  "eventoReentregado": "beebdb80-8d7e-410e-9288-7894462f4256",
+  "productoFinal": {
+    "id": "6af34ce057cdec548cbc939c",
+    "nombre": "Aceptación 5.4 f09a51cb-74a1-4a77-a926-6cba61b5af56",
+    "descripcion": "Recorrido aislado de alertas",
+    "precio": 41.15,
+    "existencia": 3,
+    "umbralStock": 5,
+    "activo": true,
+    "fechaRegistro": "2026-11-10T16:57:04.164Z",
+    "fechaActualizacion": "2026-11-10T16:57:07.316Z"
+  },
+  "estado": "COMPLETADA",
+  "colaTemporalEliminada": true,
+  "fin": "2026-11-10T16:57:07.688Z"
+}

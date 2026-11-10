@@ -1,0 +1,42 @@
+{
+  "fecha": "2026-11-10T17:02:25.496Z",
+  "eventoId": "c85ba9d0-622d-4883-93e5-0d100afd1325",
+  "publicado": {
+    "routed": true
+  },
+  "mensaje": {
+    "payload_bytes": 253,
+    "redelivered": false,
+    "exchange": "",
+    "routing_key": "notificaciones.stock-bajo.fallidos",
+    "message_count": 0,
+    "properties": {
+      "message_id": "c85ba9d0-622d-4883-93e5-0d100afd1325",
+      "headers": {
+        "x-death": [
+          {
+            "count": 1,
+            "exchange": "inventario.eventos",
+            "queue": "notificaciones.stock-bajo",
+            "reason": "rejected",
+            "routing-keys": [
+              "stock.bajo"
+            ],
+            "time": 1794330145
+          }
+        ],
+        "x-first-death-exchange": "inventario.eventos",
+        "x-first-death-queue": "notificaciones.stock-bajo",
+        "x-first-death-reason": "rejected",
+        "x-last-death-exchange": "inventario.eventos",
+        "x-last-death-queue": "notificaciones.stock-bajo",
+        "x-last-death-reason": "rejected"
+      },
+      "content_type": "application/json"
+    },
+    "payload": "{\"eventoId\":\"c85ba9d0-622d-4883-93e5-0d100afd1325\",\"tipo\":\"StockBajo\",\"version\":\"1\",\"fecha\":\"2026-11-10T17:02:23.367Z\",\"origen\":\"ms-inventario\",\"datos\":{\"productoId\":\"000000000000000000000054\",\"nombre\":\"Prueba de rechazo 5.4\",\"existenciaResultante\":-1}}",
+    "payload_encoding": "string"
+  },
+  "milisegundosHastaObservarRechazo": 2129,
+  "mensajeDePruebaRetirado": true
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "6af34e1099e4723b5175af58",
+    "tipo": "STOCK_BAJO",
+    "productoId": "6af34e1057cdec548cbc93a0",
+    "productoNombre": "Aceptación 5.4 ae97134d-40d3-4425-b80f-fdd9c7b542f3",
+    "existenciaResultante": 4,
+    "mensaje": "Existencia baja de Aceptación 5.4 ae97134d-40d3-4425-b80f-fdd9c7b542f3: 4",
+    "activa": false,
+    "leida": true,
+    "fechaCreacion": "2026-11-10T17:02:08.972Z",
+    "fechaLectura": "2026-11-10T17:02:09.598Z"
+  },
+  {
+    "id": "6af34e1399e4723b5175af99",
+    "tipo": "STOCK_BAJO",
+    "productoId": "6af34e1057cdec548cbc93a0",
+    "productoNombre": "Aceptación 5.4 ae97134d-40d3-4425-b80f-fdd9c7b542f3",
+    "existenciaResultante": 3,
+    "mensaje": "Existencia baja de Aceptación 5.4 ae97134d-40d3-4425-b80f-fdd9c7b542f3: 3",
+    "activa": true,
+    "leida": false,
+    "fechaCreacion": "2026-11-10T17:02:11.318Z",
+    "fechaLectura": null
+  }
+]

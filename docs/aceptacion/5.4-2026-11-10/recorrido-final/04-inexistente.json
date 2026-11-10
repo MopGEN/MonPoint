@@ -1,0 +1,10 @@
+{
+  "status": 404,
+  "body": {
+    "detail": "La notificación no existe",
+    "instance": "/notificaciones/000000000000000000000000/leida",
+    "status": 404,
+    "title": "Recurso no encontrado",
+    "requestId": "e17d02b6-2ed2-4c8c-9c39-1c87cc41b355"
+  }
+}

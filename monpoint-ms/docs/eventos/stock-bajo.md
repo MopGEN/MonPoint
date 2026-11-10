@@ -2,8 +2,7 @@
 
 Actividad 2.5. Contrato implementado, pendiente de revisión. Versión del sobre: `"1"`.
 
-Publica **ms-inventario**. **Consumidores implementados: ninguno** en la revisión
-contrastada. Destino previsto: ms-notificaciones, actividad 5.4.
+Publica **ms-inventario**. Consume **ms-notificaciones**, actividad 5.4.
 Exchange `inventario.eventos`: topic, durable, sin borrado automático.
 Routing key `stock.bajo`. ms-ventas no tiene binding para esta clave.
 
@@ -41,18 +40,16 @@ se emite por una reserva rechazada. El umbral por defecto del modelo es 5. Con u
 en 0, el aviso se produce al quedar sin existencia. Para demostrar el aviso con stock todavía disponible, la futura semilla por API
 puede crear existencia 10 y umbral 5; reservar 5 deja 5 y dispara el evento.
 
-## Consumidor pendiente de 5.4
+## Consumidor de 5.4
 
-La cola propuesta es `notificaciones.stock-bajo`, durable, con binding exacto
-`stock.bajo` y su `notificaciones.stock-bajo.fallidos`. **No está declarada en el
-código actual**: ms-notificaciones debe crear su propia topología, reintentos e
-idempotencia, sin reutilizar ventas.stock. No hay consumidor que garantice hoy
-persistencia o deduplicación de estos avisos. Un exchange durable no conserva
-mensajes por sí solo: sin una cola enlazada no hay historial que la futura cola
-pueda recuperar retroactivamente.
+La cola es `notificaciones.stock-bajo`, durable, con binding exacto
+`stock.bajo` y su `notificaciones.stock-bajo.fallidos`. ms-notificaciones declara
+su propia topología y configura tres intentos totales (`max-retries=2` en Boot 4.1.1), sin
+reutilizar ventas.stock. Un exchange durable no conserva mensajes por sí solo:
+sin una cola enlazada no hay historial que se pueda recuperar retroactivamente.
 
-Para la colección prevista por 5.4, mapear explícitamente **datos.nombre →
-productoNombre**. No renombrar el campo del evento al escribir el consumidor.
+El consumidor mapea explícitamente **datos.nombre → productoNombre**.
+No cambia el campo del evento.
 La 5.4 requiere dos mecanismos complementarios: **idempotencia por eventoId**
 en `eventos_procesados`, para que la reentrega del mismo evento no produzca un
 efecto adicional, y **deduplicación por productoId con activa = true**, para
@@ -60,6 +57,12 @@ que eventos distintos del mismo producto actualicen `existenciaResultante` de
 la notificación activa existente en lugar de crear otra. Si no existe una
 notificación activa para ese producto, se crea una nueva. Dos ventas pueden
 producir dos eventos válidos sin acumular dos notificaciones activas.
+La implementación usa una transacción para marcador y aviso, actualización
+atómica e índice único parcial por producto activo. Leer pone `leida=true` y
+`activa=false`; un evento distinto posterior puede abrir otro aviso. La fecha
+del sobre no se usa como versión: ante eventos fuera de orden, queda la
+existencia del último procesado, que puede ser antigua. Véanse las
+[decisiones, índices y API de 5.4](../../ms-notificaciones/README.md).
 El evento no tiene ventaId, por lo que ese vínculo no se puede reconstruir solo
 con esta carga.
 
@@ -87,7 +90,9 @@ y devolución que sí tiene ms-ventas; no se les atribuye esa garantía.
 
 ## Fuentes contrastadas
 
-Revisión `674ee3599d519980c6595284df03a278018211e1`. Los archivos examinados coinciden con esta revisión de main.
+Publicador contrastado en `674ee3599d519980c6595284df03a278018211e1`.
+La sección del consumidor se actualiza con la implementación de 5.4; no altera
+la carga emitida por ese publicador.
 
 - [Carga exacta](https://github.com/MopGEN/MonPoint/blob/674ee3599d519980c6595284df03a278018211e1/monpoint-ms/ms-inventario/src/main/java/com/monpoint/inventario/event/impl/RabbitInventarioEventPublisher.java)
 - [Condición y momento de emisión](https://github.com/MopGEN/MonPoint/blob/674ee3599d519980c6595284df03a278018211e1/monpoint-ms/ms-inventario/src/main/java/com/monpoint/inventario/service/ReservaStockService.java)
