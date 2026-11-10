@@ -53,8 +53,11 @@ Estos listeners no validan `version` ni discriminan `tipo`; la selección actual
 parte del binding y la forma del DTO. No se documenta una validación inexistente.
 
 En ms-ventas la aplicación del cambio y el registro de evento procesado
-comparten transacción. La configuración actual habilita **3 intentos totales**,
-intervalo inicial de 1 segundo y `default-requeue-rejected=false`. Tras agotar
+comparten transacción. En Spring Boot 4.1.1, `max-retries=2` configura **3 intentos
+totales** (entrega inicial más dos reintentos), intervalo inicial de 1 segundo
+y `default-requeue-rejected=false`. `max-attempts` se retiró en Boot 4 y no
+configura ese límite. La [prueba del interceptor real](../../ms-ventas/src/test/java/com/monpoint/ventas/config/ReintentosRabbitTest.java)
+cuenta las tres entregas y verifica el rechazo sin reencolado. Tras agotar
 los intentos, el rechazo se enruta por el exchange por omisión `""` a la cola
 `.fallidos` indicada arriba. No hay garantía de entrega exactamente una vez ni
 recuperación automática de mensajes publicados que no alcanzaron una cola.
