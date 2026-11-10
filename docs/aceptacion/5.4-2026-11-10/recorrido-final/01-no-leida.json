@@ -1,0 +1,12 @@
+{
+  "id": "6af34e1099e4723b5175af58",
+  "tipo": "STOCK_BAJO",
+  "productoId": "6af34e1057cdec548cbc93a0",
+  "productoNombre": "Aceptación 5.4 ae97134d-40d3-4425-b80f-fdd9c7b542f3",
+  "existenciaResultante": 5,
+  "mensaje": "Existencia baja de Aceptación 5.4 ae97134d-40d3-4425-b80f-fdd9c7b542f3: 5",
+  "activa": true,
+  "leida": false,
+  "fechaCreacion": "2026-11-10T17:02:08.972Z",
+  "fechaLectura": null
+}

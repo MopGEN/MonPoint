@@ -1,0 +1,4 @@
+2026-11-10T16:57:04.988Z  INFO [] 1 --- [ms-notificaciones] [ntContainer#0-1] c.m.n.service.NotificacionService        : evento=STOCK_BAJO_APLICADO eventoId=beebdb80-8d7e-410e-9288-7894462f4256
+2026-11-10T16:57:05.405Z  INFO [] 1 --- [ms-notificaciones] [ntContainer#0-1] c.m.n.service.NotificacionService        : evento=STOCK_BAJO_APLICADO eventoId=4a9d3bb4-c2c4-4dda-9dc9-47926fb6e33f
+2026-11-10T16:57:05.752Z  INFO [] 1 --- [ms-notificaciones] [ntContainer#0-1] c.m.n.service.NotificacionService        : evento=STOCK_BAJO_DESCARTADO eventoId=beebdb80-8d7e-410e-9288-7894462f4256
+2026-11-10T16:57:07.339Z  INFO [] 1 --- [ms-notificaciones] [ntContainer#0-1] c.m.n.service.NotificacionService        : evento=STOCK_BAJO_APLICADO eventoId=e75613f4-2cae-4dd3-860a-8b9d9b750eed

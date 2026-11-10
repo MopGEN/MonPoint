@@ -1,0 +1,54 @@
+[
+  {
+    "rol": "sin-token",
+    "method": "GET",
+    "ruta": "/notificaciones",
+    "status": 401,
+    "body": {
+      "detail": "Se requiere un token válido. Inicia sesión para obtener uno.",
+      "instance": "/notificaciones",
+      "status": 401,
+      "title": "No autenticado",
+      "requestId": "91953606-8667-4efb-84a9-228ed05c060a"
+    }
+  },
+  {
+    "rol": "sin-token",
+    "method": "PUT",
+    "ruta": "/notificaciones/6af34e1099e4723b5175af58/leida",
+    "status": 401,
+    "body": {
+      "detail": "Se requiere un token válido. Inicia sesión para obtener uno.",
+      "instance": "/notificaciones/6af34e1099e4723b5175af58/leida",
+      "status": 401,
+      "title": "No autenticado",
+      "requestId": "df088d22-0a91-4fc9-ac85-8f4247f5242a"
+    }
+  },
+  {
+    "rol": "VENDEDOR",
+    "method": "GET",
+    "ruta": "/notificaciones",
+    "status": 403,
+    "body": {
+      "detail": "Solo un ADMIN puede consultar o leer notificaciones",
+      "instance": "/notificaciones",
+      "status": 403,
+      "title": "Acceso denegado",
+      "requestId": "8a05ad3d-39fb-4c8d-9a30-1bd29838c53c"
+    }
+  },
+  {
+    "rol": "VENDEDOR",
+    "method": "PUT",
+    "ruta": "/notificaciones/6af34e1099e4723b5175af58/leida",
+    "status": 403,
+    "body": {
+      "detail": "Solo un ADMIN puede consultar o leer notificaciones",
+      "instance": "/notificaciones/6af34e1099e4723b5175af58/leida",
+      "status": 403,
+      "title": "Acceso denegado",
+      "requestId": "e6abd1f8-32b0-4063-8d48-47ba1ac9c324"
+    }
+  }
+]

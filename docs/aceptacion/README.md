@@ -7,6 +7,13 @@ mensaje original republicado, stock 10 → 9 → 9, descarte por eventoId y limp
 de las colas de captura. Incluye el método de automatización y sus límites;
 aporta evidencia a la 6.1, que sigue parcial.
 
+## Notificaciones 5.4 — para revisión
+
+[Cinco criterios por Gateway y RabbitMQ reales](5.4-2026-11-10/RESULTADOS.md).
+Incluye concurrencia con MongoDB, lectura, reentrega y rechazo a la cola de
+fallidos. Documenta las decisiones de deduplicación y la configuración efectiva
+de reintentos en Spring Boot 4.1.1; no declara cerrada la 6.1.
+
 ## Semilla 3.1 — fase 1
 
 [Carga por API sobre una base nueva y repetición sin altas](3.1-fase1-2026-11-04/RESULTADOS.md).

@@ -1,0 +1,54 @@
+{
+  "jdk": "21",
+  "maven": "3.9.16",
+  "springBoot": "4.1.1",
+  "suites": [
+    {
+      "name": "com.monpoint.notificaciones.StockBajoListenerTest",
+      "tests": "14",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.964",
+      "casos": [
+        "datosIncompletosNoAbrenTransaccion(String)[1]",
+        "datosIncompletosNoAbrenTransaccion(String)[2]",
+        "datosIncompletosNoAbrenTransaccion(String)[3]",
+        "sobreIncompletoNoAbreTransaccion(String)[1]",
+        "sobreIncompletoNoAbreTransaccion(String)[2]",
+        "sobreIncompletoNoAbreTransaccion(String)[3]",
+        "sobreIncompletoNoAbreTransaccion(String)[4]",
+        "sobreIncompletoNoAbreTransaccion(String)[5]",
+        "sobreIncompletoNoAbreTransaccion(String)[6]",
+        "leeElNombreRealDelContratoYConservaIdentidad",
+        "mensajeIlegibleNoLlegaAlServicio(String)[1]",
+        "mensajeIlegibleNoLlegaAlServicio(String)[2]",
+        "mensajeIlegibleNoLlegaAlServicio(String)[3]",
+        "messageIdDiscordanteSeRechazaAntesDePersistir"
+      ]
+    },
+    {
+      "name": "com.monpoint.notificaciones.NotificacionesIntegracionTest",
+      "tests": "13",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "5.044",
+      "casos": [
+        "apiFiltraLecturaYLeerDevuelve204ConFechaEstable",
+        "reentregaDespuesDeLeerNoReabreNiCambiaFechaDeLectura",
+        "eventosDistintosActualizanLaActivaYConservanIdentidadYFechaCreacion",
+        "apiExigeAdminEnAmbasRutasYDevuelveErroresConRequestId",
+        "indiceParcialEsLaGarantiaYElCompuestoNoImpideHistoricos",
+        "lecturaConcurrenteConEventoNoPierdeElEventoNiCreaDosActivas",
+        "permiteVariasInactivasYUnaNuevaActivaDelMismoProducto",
+        "configuracionRealDeBootEntregaTresVecesYRechazaSinReencolar",
+        "creaNoLeidaConNombreExistenciaYFechaSinCambiarElContrato",
+        "fechaDelSobreNoSeInterpretaComoVersionCausal",
+        "doceEventosConcurrentesDelMismoProductoDejanUnaActivaYSusDoceMarcadores",
+        "falloAlGuardarAvisoRevierteMarcadorYPermiteReentregar",
+        "doceReentregasConcurrentesTienenUnSoloEfecto"
+      ]
+    }
+  ]
+}

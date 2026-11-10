@@ -1,0 +1,16 @@
+{
+  "payload_bytes": 289,
+  "redelivered": false,
+  "exchange": "inventario.eventos",
+  "routing_key": "stock.bajo",
+  "message_count": 0,
+  "properties": {
+    "message_id": "beebdb80-8d7e-410e-9288-7894462f4256",
+    "priority": 0,
+    "delivery_mode": 2,
+    "headers": {},
+    "content_type": "application/json"
+  },
+  "payload": "{\"eventoId\":\"beebdb80-8d7e-410e-9288-7894462f4256\",\"tipo\":\"StockBajo\",\"version\":\"1\",\"fecha\":\"2026-11-10T16:57:04.898517355Z\",\"origen\":\"ms-inventario\",\"datos\":{\"productoId\":\"6af34ce057cdec548cbc939c\",\"nombre\":\"Aceptación 5.4 f09a51cb-74a1-4a77-a926-6cba61b5af56\",\"existenciaResultante\":5}}",
+  "payload_encoding": "string"
+}

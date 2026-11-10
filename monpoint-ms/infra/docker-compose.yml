@@ -380,6 +380,30 @@ services:
     networks:
       - monpoint-red
 
+  # 5.4 — consumidor de StockBajo; cola e índices propios.
+  ms-notificaciones:
+    build: ../ms-notificaciones
+    container_name: monpoint-notificaciones
+    environment:
+      SERVER_PORT: 8086
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      # Dentro de la red Docker "mongodb" si resuelve: sin directConnection=true.
+      MONGO_URI: mongodb://notificaciones_user:notificaciones_pass@mongodb:27017/notificaciones_db?replicaSet=rs0&authSource=notificaciones_db
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: ${RABBITMQ_USER}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+    # Sin este margen Docker lo mata antes de que mande su baja a Eureka (ver ms-auth).
+    stop_grace_period: 15s
+    networks:
+      - monpoint-red
+
   # ===========================================================================
   # PLANTILLA PARA LOS MICROSERVICIOS
   # ===========================================================================

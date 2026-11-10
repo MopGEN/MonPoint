@@ -1,0 +1,110 @@
+{
+  "cola": {
+    "consumer_details": [
+      {
+        "arguments": {},
+        "channel_details": {
+          "connection_name": "172.18.0.11:54680 -> 172.18.0.3:5672",
+          "name": "172.18.0.11:54680 -> 172.18.0.3:5672 (1)",
+          "node": "rabbit@d465111c2ab7",
+          "number": 1,
+          "peer_host": "172.18.0.11",
+          "peer_port": 54680,
+          "user": "monpoint"
+        },
+        "ack_required": true,
+        "active": true,
+        "activity_status": "up",
+        "consumer_tag": "amq.ctag-pO7Jh8nu0Riul_arV_Fonw",
+        "consumer_timeout": 1800000,
+        "exclusive": false,
+        "prefetch_count": 250,
+        "queue": {
+          "name": "notificaciones.stock-bajo",
+          "vhost": "/"
+        }
+      }
+    ],
+    "arguments": {
+      "x-dead-letter-exchange": "",
+      "x-dead-letter-routing-key": "notificaciones.stock-bajo.fallidos"
+    },
+    "auto_delete": false,
+    "consumer_capacity": 1,
+    "consumer_utilisation": 1,
+    "consumers": 1,
+    "deliveries": [],
+    "durable": true,
+    "effective_policy_definition": {},
+    "exclusive": false,
+    "exclusive_consumer_tag": null,
+    "garbage_collection": {
+      "fullsweep_after": 65535,
+      "max_heap_size": 0,
+      "min_bin_vheap_size": 46422,
+      "min_heap_size": 233,
+      "minor_gcs": 2
+    },
+    "head_message_timestamp": null,
+    "idle_since": "2026-11-10T16:55:48.174+00:00",
+    "incoming": [],
+    "memory": 7568,
+    "message_bytes": 0,
+    "message_bytes_paged_out": 0,
+    "message_bytes_persistent": 0,
+    "message_bytes_ram": 0,
+    "message_bytes_ready": 0,
+    "message_bytes_unacknowledged": 0,
+    "messages": 0,
+    "messages_details": {
+      "rate": 0
+    },
+    "messages_paged_out": 0,
+    "messages_persistent": 0,
+    "messages_ram": 0,
+    "messages_ready": 0,
+    "messages_ready_details": {
+      "rate": 0
+    },
+    "messages_ready_ram": 0,
+    "messages_unacknowledged": 0,
+    "messages_unacknowledged_details": {
+      "rate": 0
+    },
+    "messages_unacknowledged_ram": 0,
+    "name": "notificaciones.stock-bajo",
+    "node": "rabbit@d465111c2ab7",
+    "operator_policy": null,
+    "policy": null,
+    "recoverable_slaves": null,
+    "reductions": 8423,
+    "reductions_details": {
+      "rate": 0
+    },
+    "single_active_consumer_tag": null,
+    "state": "running",
+    "storage_version": 1,
+    "type": "classic",
+    "vhost": "/"
+  },
+  "bindings": [
+    {
+      "source": "",
+      "vhost": "/",
+      "destination": "notificaciones.stock-bajo",
+      "destination_type": "queue",
+      "routing_key": "notificaciones.stock-bajo",
+      "arguments": {},
+      "properties_key": "notificaciones.stock-bajo"
+    },
+    {
+      "source": "inventario.eventos",
+      "vhost": "/",
+      "destination": "notificaciones.stock-bajo",
+      "destination_type": "queue",
+      "routing_key": "stock.bajo",
+      "arguments": {},
+      "properties_key": "stock.bajo"
+    }
+  ]
+}
