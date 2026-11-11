@@ -164,6 +164,65 @@ textarea {
   color: var(--mp-texto-suave);
 }
 
+/* Tabla de datos. Vive aqui y no en el componente porque cuatro pantallas
+   muestran listados y todas deben verse iguales. */
+.mp-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.mp-tabla th,
+.mp-tabla td {
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--mp-borde);
+  vertical-align: middle;
+}
+
+.mp-tabla thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--mp-superficie);
+  font-size: 0.8125rem;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--mp-texto-suave);
+}
+
+.mp-tabla tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.mp-tabla tbody tr:hover {
+  background: var(--mp-fondo);
+}
+
+/* Insignia de estado. Nunca va sola: el texto que contiene nombra el estado,
+   de modo que el color solo refuerza. */
+.mp-insignia {
+  display: inline-block;
+  padding: 0.1rem 0.55rem;
+  border: 1px solid var(--mp-borde);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.mp-insignia--aviso {
+  border-color: var(--mp-ambar);
+  color: var(--mp-ambar);
+  background: rgb(183 121 31 / 10%);
+}
+
+.mp-insignia--apagada {
+  color: var(--mp-texto-suave);
+}
+
 /* Avisos. El color NO es el unico portador del significado: cada variante
    lleva texto que lo nombra, por accesibilidad. */
 .mp-aviso {

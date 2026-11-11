@@ -18,6 +18,22 @@ import { useSesion } from '@/stores/sesion'
  */
 const RUTA_REFUGIO = 'caja'
 
+/**
+ * Unica regla de rol del cliente. La usan la guarda y la navegacion lateral.
+ *
+ * Compartirla no es ahorro de lineas: si la barra decidiera por su cuenta,
+ * acabaria ofreciendo una pantalla que la guarda rechaza, y el usuario veria
+ * un enlace que al pulsarlo lo devuelve al refugio sin explicacion. Un enlace
+ * visible es una promesa; esta funcion es lo que impide romperla.
+ *
+ * Sin `meta.roles` la ruta no restringe por rol.
+ */
+export function rolPermitido (meta, rol) {
+  const permitidos = meta?.roles
+  if (!Array.isArray(permitidos)) return true
+  return permitidos.includes(rol)
+}
+
 const rutas = [
   {
     path: '/',
@@ -33,10 +49,25 @@ const rutas = [
     path: '/caja',
     name: 'caja',
     component: () => import('@/vistas/Caja.vue'),
-    meta: { titulo: 'Caja', roles: ['ADMIN', 'VENDEDOR'] },
+    meta: {
+      titulo: 'Caja',
+      roles: ['ADMIN', 'VENDEDOR'],
+      // `nav` es lo unico que hace aparecer una entrada en la barra lateral.
+      // Una ruta sin `nav` existe pero no se anuncia: asi las rutas tecnicas y
+      // las que aun no estan listas no se ofrecen por descuido.
+      nav: { orden: 10, icono: '▤' },
+    },
   },
-  // Pantalla de reportes: se agrega cuando ms-reportes exponga la proyeccion
-  // (tareas 4.2 y 4.6). Quedara con meta.roles = ['ADMIN'].
+  {
+    path: '/notificaciones',
+    name: 'notificaciones',
+    component: () => import('@/vistas/Notificaciones.vue'),
+    meta: {
+      titulo: 'Notificaciones',
+      roles: ['ADMIN'],
+      nav: { orden: 60, icono: '◔' },
+    },
+  },
   {
     path: '/:ruta(.*)*',
     name: 'no-encontrada',
@@ -76,8 +107,7 @@ router.beforeEach((destino) => {
     return { name: RUTA_REFUGIO }
   }
 
-  const rolesPermitidos = destino.meta.roles
-  if (Array.isArray(rolesPermitidos) && !rolesPermitidos.includes(sesion.rol)) {
+  if (!rolPermitido(destino.meta, sesion.rol)) {
     // Redirigir siempre al refugio provocaria un bucle infinito si el refugio
     // fuera justo la ruta denegada (rol desconocido o fuera del catalogo). En
     // ese caso la sesion no es utilizable: se cierra y se manda a iniciar

@@ -1,6 +1,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { useSesion } from '@/stores/sesion'
+import NavegacionLateral from '@/componentes/NavegacionLateral.vue'
 
 const sesion = useSesion()
 const router = useRouter()
@@ -28,9 +29,18 @@ function salir () {
       </button>
     </header>
 
-    <main class="contenido">
-      <RouterView />
-    </main>
+    <!-- Con sesion abierta la pagina se parte en barra lateral y contenido.
+         Sin ella no hay nada que navegar, asi que el inicio de sesion ocupa el
+         ancho completo. -->
+    <div class="cuerpo" :class="{ 'con-barra': sesion.autenticado }">
+      <aside v-if="sesion.autenticado" class="lateral">
+        <NavegacionLateral />
+      </aside>
+
+      <main class="contenido">
+        <RouterView />
+      </main>
+    </div>
   </div>
 </template>
 
@@ -81,9 +91,39 @@ function salir () {
   background: rgb(255 255 255 / 12%);
 }
 
+.cuerpo {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.lateral {
+  flex: 0 0 13.5rem;
+  border-right: 1px solid var(--mp-borde);
+  background: var(--mp-superficie);
+}
+
 .contenido {
   flex: 1;
+  /* min-width: 0 permite que una tabla ancha se desplace dentro de su
+     envoltura en vez de ensanchar la pagina entera y sacar la barra lateral
+     de la pantalla. Sin esto, un nombre de producto largo rompe el diseno. */
+  min-width: 0;
   padding: 1.25rem 1rem;
+}
+
+/* Por debajo de 720px la barra deja de ser columna y pasa a ser una fila bajo
+   la cabecera, que es lo que hace la propia barra en su media query. */
+@media (max-width: 720px) {
+  .cuerpo.con-barra {
+    flex-direction: column;
+  }
+
+  .lateral {
+    flex: none;
+    border-right: 0;
+    border-bottom: 1px solid var(--mp-borde);
+  }
 }
 
 @media (max-width: 480px) {
