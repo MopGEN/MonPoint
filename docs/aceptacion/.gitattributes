@@ -1,0 +1,3 @@
+# El manifiesto se calcula sobre los bytes recolectados en Windows.
+# Conservarlos al anadir, extraer o clonar, aunque core.autocrlf este activo.
+6.1-windows-2026-11-11/** -text
