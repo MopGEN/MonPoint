@@ -1,6 +1,7 @@
 # Recorrido de aceptación 6.1 — ejecución única sobre volúmenes nuevos
 
 11 de noviembre de 2026, 01:05–02:35 hora local (`America/Mexico_City`, UTC−06).
+Instantáneas de cierre recolectadas a las 03:08:04–03:08:12 de ese mismo día.
 Windows 11 con Docker Desktop, PowerShell 5.1 y Chrome, operado por una persona.
 Referencia de código declarada por el operador: `main` en `1244393` — *3.1 Agrega la fase de ventas
 confirmadas a la semilla (#22)*.
@@ -30,11 +31,25 @@ mano, desde Windows, en la consola web de RabbitMQ.
 | `Semilla 3.1 - Sello` | 9 | 8 |
 | Folios emitidos | 1, 2, 3 (CONFIRMADAS) | 1–6; folio 5 CANCELADA |
 | Agregación del día | **476.75** | **672.25** |
-| Notificaciones sin leer | 1 (Tinta) | Pendiente de instantánea de cierre |
-| Contenedores saludables | 11 | Pendiente de instantánea de cierre |
+| Notificaciones sin leer | 1 (Tinta) | 1 (Tinta), activa y sin leer |
+| Contenedores saludables | 11 | 11, todos running/healthy |
 
 476.75 + 75.50 (folio 4) + 120.00 (folio 6) = 672.25. El folio 5, cancelado, no
 aporta: la agregación filtra por `estado: CONFIRMADA`.
+
+La [recolección de cierre](entorno/20261111T090804848Z/recoleccion.json), en
+PowerShell `5.1.26100.9711`, confirma esos valores por API y Docker. Conserva las
+seis ventas: cinco CONFIRMADAS (folios 1, 2, 3, 4 y 6), cuya suma exacta es
+672.25, y la CANCELADA del folio 5 por 4073.85, excluida de la agregación.
+Las reservas confirmadas suman 5 unidades de Tinta, 3 de Papel y 2 de Sello;
+partiendo de 10 por producto resultan 5/7/8. La alerta sigue siendo la original,
+con el mismo identificador, fecha y existencia 5.
+
+El broker tiene dieciséis colas, todas vacías: ocho de trabajo con un consumidor
+cada una y ocho de fallidos sin consumidores. No quedan colas `captura.6-1.*`.
+Los bindings conservan los enlaces exactos de reserva/rechazo, alerta y cierre
+de ventas hacia sus consumidores. Los cuatro registros de inventario se
+archivaron como texto además de las capturas.
 
 ## Resultado por escenario
 
@@ -130,8 +145,9 @@ fidelidad, pero el consumidor no lo lee.
 | `04-autorizacion/` | Vendedor con 200 y 403; petición sin token con 401 |
 | `incidencias/` | Tabla de PowerShell, purga de la cola equivocada, intento no enrutado y consola sin variables; la incidencia de puertos se conserva en `00-arranque/` |
 | `venta-creada.payload.json` | Texto exacto del evento procesado y republicado, 422 bytes |
-| `entorno/<instante-UTC>/` | Contenedores, bindings, metadatos de revisión y volúmenes, logs e instantáneas de API de una recolección posterior; no incluidos en el tarball recibido |
-| `SHA256.json` | Generado solo tras completar la recolección; no incluido en el tarball recibido |
+| `entorno/20261111T090229047Z/` | Primer intento, INCOMPLETA por el fallo del recolector; se conserva sin presentarlo como éxito |
+| `entorno/20261111T090804848Z/` | Recolección COMPLETADA: contenedores, colas, bindings, revisión, montajes/volúmenes, cuatro líneas de log y las instantáneas de productos, notificaciones, agregación y seis ventas |
+| `SHA256.json` | Integridad de los 59 archivos del recorrido, incluidos ambos intentos; excluye el propio manifiesto |
 
 Las capturas se conservan sin editar, incluidas las que muestran errores.
 
@@ -190,26 +206,27 @@ Las capturas se conservan sin editar, incluidas las que muestran errores.
   índice parcial ante una segunda alerta del mismo producto.
 - Las colas de captura eran transitorias y se eliminaron al terminar. El listado
   final vuelve a mostrar las dieciséis colas del sistema.
-- La destrucción de volúmenes, la revisión ejecutada y las condiciones finales
-  de salud/notificaciones necesitan distinguir la declaración del operador de
-  los archivos conservados. La recolección posterior registra el estado de ese
-  momento y no reconstruye una salida histórica de `down -v` ni certifica por
-  sí sola qué fuentes se usaron para construir las imágenes.
+- Los metadatos de MongoDB registran el volumen de datos creado a las
+  `06:58:01Z` (00:58:01 local) y el anónimo de configuración a las `06:58:02Z`.
+  Son compatibles con el arranque nuevo declarado, pero no reconstruyen la
+  salida histórica de `down -v` ni documentan la creación del volumen RabbitMQ.
+  `revision.txt` registra `54a75f5` al recolectar; el cambio posterior del HEAD
+  corresponde a documentación y pruebas. No certifica por sí solo las fuentes
+  usadas para construir las imágenes del recorrido declarado en `1244393`.
 - Solo hay una captura de la lectura vacía posterior a republicar. La segunda
   fue confirmada por el operador. El enlace previo y consumidores en cero hacen
   útil esa observación, pero no se conservó un StockReservado original que
   probara antes el funcionamiento de la cola de captura.
 
-## Integridad y recolección pendiente
+## Integridad y revisión de cierre
 
 El archivo `venta-creada.payload.json` tiene 422 bytes y SHA-256
 `afdf2ed67a9adf577f503df0cea874442fd26d19f76f31985fd38a698091bb8e`.
 El tarball recibido contiene 36 PNG y tres archivos adicionales dentro de esta
-carpeta, más el README de aceptación externo; no incluye instantáneas `entorno/`
-ni manifiesto. Ejecutar `recolectar.ps1` contra el conjunto Windows original
-antes de versionar el paquete completo. Cada ejecución conserva su propia
-carpeta fechada; un fallo deja la recolección incompleta y no genera manifiesto.
-No repetir la semilla ni destruir volúmenes para completar estos archivos.
+carpeta, más el README de aceptación externo; no incluía instantáneas `entorno/`
+ni manifiesto. El commit `ff4cbb0` añadió los dos intentos de recolección y el
+manifiesto de 59 archivos desde el Windows original, sin repetir la semilla.
+Los archivos de cada intento están fechados y se conservan por separado.
 
 Revisión del paquete recibido: 39 archivos dentro del directorio del recorrido
 y el README externo. SHA-256 del tarball original:
@@ -219,12 +236,26 @@ recolector; permanecen idénticos. La revisión inicial fue sintáctica y estát
 el primer intento real en Windows falló al enumerar los montajes: el bucle
 recibía el arreglo JSON completo como un montaje y no encontraba `Name`.
 La corrección asigna el resultado de `ConvertFrom-Json` antes de recorrerlo.
-El intento fallido se conserva como INCOMPLETA y sin manifiesto.
+El intento fallido se conserva como INCOMPLETA; no generó un manifiesto de éxito.
 Las [pruebas del recolector](../pruebas/recolectar.test.ps1) ejercitan seis casos
 con respuestas simuladas y arreglos no enumerados: éxito, montajes vacíos,
 fallos nativos/HTTP, ausencia de descarte y folio discordante. Comprueban además
 la integridad del manifiesto y que no se guarden credenciales. Pasaron en
-PowerShell 7.4.6 sobre Linux; no equivalen a ejecutar contra el conjunto Windows
-ni a probar PowerShell 5.1. Esa ejecución completa sigue pendiente.
-Las instantáneas se obtienen secuencialmente, sin una transacción global: evitar
-otras operaciones mientras se recolecta y revisar los archivos antes de cerrar.
+PowerShell 7.4.6 sobre Linux. Después, la recolección completa sí se ejecutó en
+PowerShell 5.1 contra el conjunto Windows, como registra el intento COMPLETADA;
+no se afirma que las seis pruebas simuladas se ejecutaran también en Windows.
+Las instantáneas se obtienen secuencialmente, sin una transacción global.
+
+En la revisión de `ff4cbb0`, 57 archivos coincidieron exactamente con sus hashes.
+`RESULTADOS.md` y `recolectar.ps1` estaban versionados con LF, mientras que el
+manifiesto describía sus bytes CRLF de Windows. Convertir únicamente sus saltos
+de línea a CRLF reprodujo exactamente los dos tamaños y hashes declarados.
+La regla `-text` ya estaba añadida, pero esos archivos previamente seguidos no
+habían quedado incorporados con los bytes de Windows.
+
+Se restauró CRLF en el recolector y se actualizó esta acta con las instantáneas
+revisadas, conservando CRLF. El manifiesto final se recalculó sobre los archivos
+efectivamente versionados. Las 36 capturas, el payload y las veinte instantáneas
+de ambos intentos permanecen byte a byte como se recibieron. La verificación
+final comprende el conjunto exacto de rutas, tamaño y SHA-256 de los 59 archivos,
+además de las sumas monetarias, existencias, estados, colas y salud de cierre.

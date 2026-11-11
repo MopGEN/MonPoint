@@ -7,9 +7,12 @@ sobre volúmenes destruidos y reconstruidos, con `main` en `1244393`. Cubre los
 siete escenarios y la reentrega de CONTROL 2 en una única ejecución declarada: venta
 confirmada desde la caja, descuento, agregación, rechazo sin descuento, alerta
 bajo umbral, reentrega descartada por `eventoId` y 403 por rol. Incluye las
-incidencias del recorrido y los límites de lo que acredita. La recolección de
-instantáneas finales y del manifiesto en Windows sigue pendiente; no acredita
-por sí solo todos los criterios de CONTROL 3.
+incidencias del recorrido y los límites de lo que acredita. Las instantáneas de
+cierre recolectadas en PowerShell 5.1 confirman 11 contenedores saludables,
+existencias 5/7/8, cinco ventas confirmadas por 672.25, una cancelada y una alerta
+sin leer. El manifiesto cubre 59 archivos; se conservan tanto el intento fallido
+del recolector como el completo. No acredita por sí solo todos los criterios de
+CONTROL 3: siguen los límites sobre el arranque y el estado visual En proceso.
 
 ## Semilla 3.1 — fase 2, para revisión
 
