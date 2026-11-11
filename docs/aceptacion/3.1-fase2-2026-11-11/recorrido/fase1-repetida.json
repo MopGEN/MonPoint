@@ -1,0 +1,60 @@
+{
+  "codigo": 0,
+  "salida": {
+    "fase": 1,
+    "estado": "COMPLETADA",
+    "usuarios": [
+      {
+        "id": "6af40c2599d749af7870252f",
+        "correo": "admin@monpoint.com",
+        "rol": "ADMIN",
+        "accion": "REUTILIZADO"
+      },
+      {
+        "id": "6af40ca999d749af78702530",
+        "correo": "vendedor.semilla@monpoint.test",
+        "rol": "VENDEDOR",
+        "accion": "REUTILIZADO"
+      }
+    ],
+    "clientes": [
+      {
+        "id": "6af40ca96b05d1493d2ca2b1",
+        "nombre": "Semilla 3.1 - Ana",
+        "accion": "REUTILIZADO"
+      },
+      {
+        "id": "6af40ca96b05d1493d2ca2b2",
+        "nombre": "Semilla 3.1 - Luis",
+        "accion": "REUTILIZADO"
+      }
+    ],
+    "productos": [
+      {
+        "id": "6af40ca9a4b0c9b91329f627",
+        "nombre": "Semilla 3.1 - Tinta",
+        "precio": 41.15,
+        "existencia": 5,
+        "umbralStock": 5,
+        "accion": "REUTILIZADO"
+      },
+      {
+        "id": "6af40ca9a4b0c9b91329f628",
+        "nombre": "Semilla 3.1 - Papel",
+        "precio": 75.5,
+        "existencia": 8,
+        "umbralStock": 5,
+        "accion": "REUTILIZADO"
+      },
+      {
+        "id": "6af40ca9a4b0c9b91329f629",
+        "nombre": "Semilla 3.1 - Sello",
+        "precio": 120,
+        "existencia": 9,
+        "umbralStock": 5,
+        "accion": "REUTILIZADO"
+      }
+    ],
+    "ventasCreadas": 0
+  }
+}

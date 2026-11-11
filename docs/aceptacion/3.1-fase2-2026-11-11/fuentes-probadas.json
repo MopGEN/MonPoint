@@ -1,0 +1,11 @@
+{
+  "base": "884aa00d78adcc6dd396fa9a055ab0601914d1cf",
+  "node": "v24.19.0",
+  "sha256": {
+    "monpoint-ms/scripts/semilla-comun.mjs": "8fb2bcdb648b05e82eefacc670b9dcd8cd7336de2f61bb3dab83abb9eeeb410f",
+    "monpoint-ms/scripts/semilla-ventas.mjs": "63fe7047203f2f79aefd8a49830be83fd138dce60374a45cfd9a53313ddaa5f1",
+    "monpoint-ms/scripts/semilla-ventas.test.mjs": "fb713c3cdb75d45f45d440f2a68d4876758d785d08d549b012b156c9a507fa14",
+    "monpoint-ms/scripts/semilla.mjs": "3d2ac8ce13ebe692c8700bf3b3b4136414eea76dcc3e8172f8188eae50d121d3",
+    "monpoint-ms/scripts/semilla.test.mjs": "3435ae89a92a8a4f2f696516241ced8ce431c6514de1d1d23acc65b1cc04e69b"
+  }
+}

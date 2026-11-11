@@ -1,0 +1,18 @@
+{
+  "inicio": "2026-11-11T06:35:19.981Z",
+  "fechaNegocio": "2026-11-11",
+  "comprobaciones": [
+    "Sin datos de negocio y con las ocho colas consumidoras declaradas antes de la fase 1",
+    "Tres ventas CONFIRMADAS consultadas por id; clientes Ana, Luis y sin cliente; existencias 5, 8 y 9",
+    "Agregación real de reportes: total 476.75 en el día de negocio",
+    "StockBajo real: un aviso no leído de tinta, existencia 5",
+    "Repetición de fase 2 rechazada por stock consumido; fase 1 reutiliza ids sin reponerlo"
+  ],
+  "folios": [
+    1,
+    2,
+    3
+  ],
+  "estado": "COMPLETADA",
+  "fin": "2026-11-11T06:35:25.129Z"
+}

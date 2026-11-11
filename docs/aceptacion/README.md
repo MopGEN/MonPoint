@@ -1,5 +1,12 @@
 # Evidencia de aceptación
 
+## Semilla 3.1 — fase 2, para revisión
+
+[Tres ventas confirmadas sobre volúmenes nuevos](3.1-fase2-2026-11-11/RESULTADOS.md),
+con clientes, agregación real de reportes por 476.75 y aviso de tinta en el umbral.
+Incluye las pruebas de fallos y el resumen parcial. Es una prueba de la semilla,
+separada del recorrido de siete escenarios de 6.1 y de CONTROL 3.
+
 ## Reentrega de VentaCreada — criterio de CONTROL 2
 
 [Recorrido por la consola de RabbitMQ del 5 de noviembre](6.1-reentrega-2026-11-05/RESULTADOS.md):

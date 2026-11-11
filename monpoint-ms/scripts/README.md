@@ -111,42 +111,125 @@ Una base nueva tampoco garantiza por sí sola la recepción de todos los eventos
 los publicadores actuales no tienen outbox. La disponibilidad de las réplicas
 deberá verificarse al registrar las ventas de la fase 2.
 
-## Fase 2 pendiente: ventas
+## Fase 2: tres ventas confirmadas (`--ventas`)
 
-Se implementará después de desplegar **ms-reportes y ms-notificaciones**, con
-sus colas y bindings declarados **antes** de vender. Un exchange durable no
-guarda eventos sin una cola enlazada. Ventas anteriores no poblarán por sí solas
-las futuras proyecciones de reportes ni los avisos de stock bajo. La fase 1
-terminada no equivale a acreditar toda la 3.1 ni a marcar CONTROL 1.
+Desde `monpoint-ms`, después de la fase 1:
 
-La espera de réplica y el alta de venta serán una sola operación: intentar la
-venta prevista por `POST /ventas`. Reintentar, con plazo total acotado, solo el
-400 conocido de producto no disponible/inactivo mientras se propaga el catálogo;
-si se incluye cliente, también el 400 específico de cliente no disponible.
-Ambas comprobaciones preceden a la asignación de folio en `VentaService`.
-No reintentar indiscriminadamente
-otros 400, red, timeout ni 5xx. Al recibir 202 se conserva el id y se consulta
-`GET /ventas/{id}`; no se vuelve a emitir el POST.
+```powershell
+node --env-file=infra/.env scripts/semilla.mjs --ventas
+if ($LASTEXITCODE -ne 0) { throw 'Fase 2 interrumpida. Conservar el resumen y verificar las ventas antes de repetir cualquier operación.' }
+```
 
-Con umbral 5 y existencia inicial 10, una reserva de cinco unidades alcanza el
-umbral y emite StockBajo. Antes de vender se revisará el stock real: repetir
-la fase 1 no lo restaura. Las ventas usarán los ids descubiertos en la fase 1,
-no ids escritos de memoria. Si usan cliente, también depende de su réplica.
+Esta opción ejecuta **solo la fase 2**. Descubre los ids por los nombres estables
+de la fase 1 y no crea ni repone usuarios, productos o clientes. Las tres ventas
+son secuenciales: no envía la siguiente hasta confirmar la anterior.
 
-**Separar las fases no vuelve idempotentes las ventas.** La API actual carece
-de clave de idempotencia, referencia externa y listado consultable de ventas.
-Un POST cuyo resultado se pierde no se puede repetir con garantía. La futura
-fase 2 debe documentarse como ejecución controlada sobre datos nuevos o resolver
-antes esa limitación de API; un archivo local no garantiza recuperación si se
-pierde. Este guion no ofrece todavía una opción de fase 2.
+| Venta | Cliente | Producto y cantidad | Total previsto con el catálogo de la semilla |
+|---|---|---|---|
+| 1 | Ana | Tinta × 5 | 205.75 |
+| 2 | Luis | Papel × 2 | 151.00 |
+| 3 | Sin cliente | Sello × 1 | 120.00 |
+
+El total guardado en el resumen procede del servidor. En una base nueva las
+existencias quedan en 5, 8 y 9. La primera reserva alcanza el umbral 5 y el
+publicador de inventario emite `StockBajo`.
+
+### Preparación y comprobaciones antes de vender
+
+Levantar los **seis servicios**, con ms-reportes y ms-notificaciones sanos y
+sus colas declaradas **antes de ejecutar la fase 1**. Un exchange durable no
+conserva eventos sin cola: arrancar reportes después de crear el catálogo no
+reconstruye sus proyecciones. La fase 2 tampoco las repara.
+
+El guion autentica al ADMIN y comprueba su perfil, consulta notificaciones y
+una agregación vacía del día 2000-01-01 como comprobación de disponibilidad HTTP.
+Después lee productos y clientes y valida todo el lote antes del primer POST:
+identidades no ambiguas, datos de catálogo coincidentes, recursos presentes y
+activos, y **existencia inicial 10 en los tres productos**. Si una existencia ya
+cambió, se detiene. No repone stock ni interpreta esa diferencia como una venta
+conocida. Esta fase está pensada para datos nuevos y una sola ejecución controlada.
+
+Los GET de comprobación pueden esperar ante red, timeout y 5xx. Cada comprobación
+tiene un plazo acotado. Un 401, 403, 404 u otro rechazo no transitorio detiene el
+guion. Que ambas APIs respondan **no demuestra** que sus colas estén enlazadas
+ni garantiza que vayan a recibir cada evento: esa preparación se comprueba en
+Compose/RabbitMQ. La semilla usa únicamente las APIs del Gateway, sin credenciales
+de MongoDB ni RabbitMQ.
+
+### Espera de réplicas y resolución de la saga
+
+Se intenta la venta real con `POST /ventas`. **Solo** se repite un HTTP 400 cuyo
+`detail` sea exactamente uno de estos dos rechazos de `VentaService`:
+
+- `El producto no está disponible o está inactivo: <productoId>`, con uno de los
+  ids de la solicitud actual.
+- `el cliente no está disponible; si acaba de darlo de alta, inténtelo de nuevo en unos segundos`,
+  únicamente cuando esa solicitud incluye cliente.
+
+Ambas validaciones ocurren antes de asignar el folio y de insertar la venta.
+Otro 400, un 5xx, un fallo de red, un timeout o un 202 incompleto **no** provocan
+otro POST. Un producto inactivo y una réplica que aún no llegó comparten el primer
+mensaje; el plazo impide reintentar indefinidamente.
+
+Un 202 completo solo deja la venta **PENDIENTE**. Se conserva su id y folio y se
+consulta `GET /ventas/{id}` hasta CONFIRMADA o CANCELADA. Los fallos transitorios
+del GET permiten consultar otra vez, siempre sin reenviar el POST. CANCELADA
+interrumpe el lote, conserva su identidad y pide consultar el motivo por API.
+Una respuesta de identidad discordante o estado desconocido también lo interrumpe.
+
+`SEMILLA_VENTAS_PLAZO_MS` vale **30000** por omisión (entero de 1 a 300000 ms).
+Cada venta tiene **un único plazo**, compartido entre reintentos por réplica y
+sondeo de la saga: recibir el 202 no reinicia el reloj. Cada petición se limita
+además a 10 segundos o al tiempo restante, lo que sea menor. Las consultas y los
+reintentos se programan tras terminar la petición anterior, con pausas de 500 ms;
+no hay peticiones solapadas del guion.
+
+### Resumen parcial y repetición
+
+Éxito significa **tres ventas CONFIRMADAS**, no tres respuestas 202. La salida
+JSON incluye `fase: 2`, `estado`, `ventasPrevistas`, `ventasConfirmadas` (ids,
+folios, clientes, líneas y totales del servidor), `ventaEnCurso` y
+`rechazosReplica` (cantidad de los dos rechazos conocidos que se observaron).
+
+Ante un fallo, termina con código 1 y conserva esa misma estructura dentro de
+`resumen`, además de la última operación. `ventaEnCurso` delimita la frontera:
+
+| Estado conocido | Qué hacer |
+|---|---|
+| `NO_ENVIADA` o `RECHAZADA_HTTP` | No hay aceptación conocida para esa solicitud. Revisar la causa; las anteriores pueden estar confirmadas. |
+| `PENDIENTE` | Consultar el id guardado; el plazo del guion no cancela la saga. |
+| `CANCELADA` | Consultar el motivo; no se continúa automáticamente con otra venta. |
+| `INCIERTA` | El POST pudo haberse persistido. No repetirlo ni volver a ejecutar el lote. Conservar cualquier id/folio recuperable. |
+| `CONFIRMADA` en `ventaEnCurso` | El servidor informó confirmación, pero devolvió datos incompletos o discordantes; verificar esa venta. |
+
+**Las ventas no son idempotentes.** No hay clave de idempotencia, referencia
+externa ni listado de ventas en la API. El guion no puede recuperar un POST sin
+identidad ni reconocer con certeza una ejecución anterior. La comprobación de
+existencia inicial detecta una repetición normal, pero no protege de ejecuciones
+concurrentes, reposiciones manuales ni una saga que todavía no descontó. No usa
+un archivo local como falsa garantía de recuperación. Después de una interrupción,
+conservar el resumen, consultar los ids conocidos y resolver manualmente los
+resultados inciertos; para otra demostración usar datos nuevos en un entorno
+separado, sin borrar evidencia ni reponer stock para forzar la ejecución.
+
+`COMPLETADA` acredita las confirmaciones de ventas. **No acredita por sí sola**
+la proyección de reportes ni la alerta: los publicadores sin outbox aún pueden
+perder eventos entre commit y envío. La prueba real de esta fase comprueba
+ambas recepciones por separado; el recorrido de siete escenarios de 6.1 y los
+controles conservan sus propios criterios.
 
 ## Verificación
 
 ```bash
-node --test scripts/semilla.test.mjs
+node --test scripts/semilla.test.mjs scripts/semilla-ventas.test.mjs
 ```
 
-Las pruebas HTTP locales cubren primera carga, repetición, credenciales, conflicto
-de datos, listados inaccesibles, recuperación tras respuesta perdida y timeout
-sin repetición automática. Son distintas de la comprobación contra el conjunto
+Las pruebas HTTP locales cubren ambas fases: primera carga y repetición del
+catálogo, credenciales, conflictos, los dos rechazos reintentables, 202 pendiente,
+cancelación, POST incierto sin repetición, conservación de folios, errores del
+GET y el plazo compartido entre réplicas y saga. Son distintas de la comprobación contra el conjunto
 real; sus resultados se documentan por separado en `docs/aceptacion/` de la raíz.
+
+[Prueba real de la fase 2 sobre volúmenes nuevos](../../docs/aceptacion/3.1-fase2-2026-11-11/RESULTADOS.md):
+tres confirmadas, agregación 476.75 y aviso de tinta con existencia 5. No declara
+cerrados el recorrido 6.1 ni los controles.
