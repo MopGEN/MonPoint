@@ -1,0 +1,26 @@
+{
+  "01-vendedor.png": {
+    "sha256": "bd3c80de4d2bb7db0a7eaa08293324a8305ee047c1846ad6efbdc134b6d212f9",
+    "bytes": 46104
+  },
+  "02-admin-movil.png": {
+    "sha256": "1d34db9ff3caee9e0e528783278047e9f9b9e53ce9fda1181c0c809ba3bec35c",
+    "bytes": 48011
+  },
+  "03-eliminados.png": {
+    "sha256": "1b78197a1da2175c01958a9c03c2c6533255c171b65cba112227da7570667e01",
+    "bytes": 34426
+  },
+  "RESULTADOS.md": {
+    "sha256": "f29742f3cfee48f7f655344509ee2d5627f39c907258013ef5ca72613e47dadf",
+    "bytes": 6035
+  },
+  "fuentes.json": {
+    "sha256": "68c582bea4108ff46e3f321bced286a399b0db761752f815938942d3033f845e",
+    "bytes": 1420
+  },
+  "resultado.json": {
+    "sha256": "c4bb77f4dee3e4be66f0d663ac4bbba3cec26c0d8e58947f2497dcf59b48e517",
+    "bytes": 2571
+  }
+}

@@ -1,4 +1,5 @@
 import { decimal } from '../comun/importe.js'
+import { filtrarPor } from '../comun/filtro.js'
 
 /**
  * Reglas del formulario de producto, sin Vue, para poder probarlas solas.
@@ -116,20 +117,10 @@ export const bajoUmbral = (p) =>
   Number.isFinite(p?.existencia) && Number.isFinite(p?.umbralStock) && p.existencia <= p.umbralStock
 
 /**
- * Filtro por nombre y descripcion, sin acentos ni mayusculas.
+ * Filtro por nombre y descripcion.
  *
- * El servicio no ofrece busqueda, asi que se filtra el listado ya cargado. Con
- * un catalogo grande habria que pedirla al servidor; se deja anotado en vez de
- * fingir que esto escala.
+ * La mecanica vive en comun/filtro.js, que la comparten las demas pantallas;
+ * aqui solo se fijan los campos del catalogo.
  */
-const plano = (s) =>
-  String(s ?? '')
-    .normalize('NFD')
-    .replace(/\p{Diacritic}/gu, '')
-    .toLowerCase()
-
-export function filtrar (productos, consulta) {
-  const q = plano(consulta).trim()
-  if (q === '') return productos
-  return productos.filter((p) => plano(p.nombre).includes(q) || plano(p.descripcion).includes(q))
-}
+export const filtrar = (productos, consulta) =>
+  filtrarPor(productos, consulta, ['nombre', 'descripcion'])
