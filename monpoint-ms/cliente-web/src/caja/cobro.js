@@ -10,34 +10,11 @@ export const estadoInicial = () => ({
 export const editable = (s) => ['inactivo', 'cancelada', 'sinRespuesta'].includes(s.estado)
 export const cantidadValida = (n) => Number.isInteger(n) && n > 0 && n <= 2147483647
 
-// Conserva la precisión del catálogo. Solo el estimado agregado se redondea a centavos.
-function decimal(importe) {
-  const m = /^(\d+)(?:\.(\d+))?$/.exec(String(importe))
-  if (!m) return null
-  return {
-    entero: m[1],
-    fraccion: m[2] ?? '',
-    valor: BigInt(m[1] + (m[2] ?? '')),
-    escala: (m[2] ?? '').length,
-  }
-}
-export const precioValido = (importe) => decimal(importe) !== null
-function redondear(valor, escala) {
-  if (escala <= 2) return valor * 10n ** BigInt(2 - escala)
-  const divisor = 10n ** BigInt(escala - 2)
-  return (valor + divisor / 2n) / divisor
-}
-export function centavos(importe) {
-  const d = decimal(importe)
-  return d ? redondear(d.valor, d.escala) : null
-}
-export function dinero(importe) {
-  const d = decimal(importe)
-  // Un dato inválido no puede apagar el render ni convertirse en un importe cero.
-  return d
-    ? `$${BigInt(d.entero).toLocaleString('es-MX')}.${d.fraccion.padEnd(2, '0')}`
-    : 'Importe no disponible'
-}
+// La aritmetica decimal vive en comun/importe.js. Se reexporta para no romper
+// a quien ya la importaba desde aqui (Caja.vue y cobro.test.js).
+import { decimal, redondear, precioValido, centavos, dinero } from '../comun/importe.js'
+
+export { precioValido, centavos, dinero }
 export function estimado(lineas) {
   const datos = lineas.map((l) => ({ d: decimal(l.precio), cantidad: l.cantidad }))
   if (datos.some(({ d, cantidad }) => !d || !cantidadValida(cantidad))) return null

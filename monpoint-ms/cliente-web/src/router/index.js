@@ -59,6 +59,19 @@ const rutas = [
     },
   },
   {
+    path: '/productos',
+    name: 'productos',
+    component: () => import('@/vistas/Productos.vue'),
+    // Los dos roles entran: el listado es legible para VENDEDOR. Las altas,
+    // cambios y bajas los restringe ms-inventario, y la pantalla oculta esas
+    // acciones a quien no es ADMIN.
+    meta: {
+      titulo: 'Productos',
+      roles: ['ADMIN', 'VENDEDOR'],
+      nav: { orden: 20, icono: '▦' },
+    },
+  },
+  {
     path: '/notificaciones',
     name: 'notificaciones',
     component: () => import('@/vistas/Notificaciones.vue'),
