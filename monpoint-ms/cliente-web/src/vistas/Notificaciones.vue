@@ -10,11 +10,11 @@ import TablaDatos from '@/componentes/TablaDatos.vue'
  *
  * Hasta ahora el sistema generaba estas alertas y nadie podia verlas: el unico
  * modo de comprobarlas era consultar la API. Esta pantalla las hace visibles,
- * que es la mitad que faltaba de esa tarea.
+ * como una ampliacion del cliente sobre el servicio ya terminado.
  *
  * Solo ADMIN. El enrutador ya lo impide, pero la pantalla tambien trata el 403
  * por si alguien llega por URL con un token de otro rol: la guarda es
- * comodidad, el Gateway es la seguridad.
+ * comodidad; el Gateway autentica y el servicio exige ADMIN.
  *
  * El servicio devuelve la entidad, no un DTO. Se consume tal cual y se anota
  * como deuda en la 6.2: si manana se envuelve en un DTO, esta vista cambia.
@@ -56,7 +56,7 @@ const errorAccion = ref(null)
 
 async function marcarLeida (notificacion) {
   if (marcando.value.has(notificacion.id)) return
-  // Un Set mutado en sitio no dispara la reactividad de Vue: se reemplaza.
+  // Reemplazar el conjunto expresa cada cambio como una asignacion.
   marcando.value = new Set(marcando.value).add(notificacion.id)
   errorAccion.value = null
   try {
@@ -142,7 +142,7 @@ function fecha (valor) {
         :error="recurso.error.value"
         :denegado="recurso.denegado.value"
         :vacio="recurso.resuelto.value && filas.length === 0"
-        mensaje-vacio="No hay alertas con este filtro. El inventario está por encima de sus umbrales."
+        mensaje-vacio="No hay alertas con este filtro."
         @reintentar="recurso.recargar()"
       >
         <TablaDatos

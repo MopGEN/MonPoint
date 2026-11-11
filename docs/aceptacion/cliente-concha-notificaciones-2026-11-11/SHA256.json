@@ -1,0 +1,26 @@
+{
+  "01-alerta-real.png": {
+    "sha256": "3c7ef86e240ccb602693cc833de50b10dc1335c9c9f88088952664e5b92343a8",
+    "bytes": 90461
+  },
+  "02-leida-movil.png": {
+    "sha256": "c932d1c7b1212fd42ca81b7cb8278975137054830d18d1f4e64392f164717c1d",
+    "bytes": 75564
+  },
+  "03-vendedor.png": {
+    "sha256": "71365715dfb35565880c16c3f5900c040a56ded0c92ef3089faf5bcc04f51ea9",
+    "bytes": 84161
+  },
+  "RESULTADOS.md": {
+    "sha256": "9eac0fb24b2d6504630d40f09d3ed0c9ba3130412b44fe94df1d2be35f52fe6f",
+    "bytes": 5529
+  },
+  "fuentes.json": {
+    "sha256": "41bcb60fbbec9de825e7290a04afd45abd9c1282eb4c8a331b3faf15cd4fcfa9",
+    "bytes": 1577
+  },
+  "resultado.json": {
+    "sha256": "7f0d568a98d30b181aef6c5d2fb0fc95d1d18168334e6435b1f04b0c5105cfcb",
+    "bytes": 2372
+  }
+}

@@ -1,3 +1,4 @@
-# El manifiesto se calcula sobre los bytes recolectados en Windows.
+# Los manifiestos describen los bytes originales de cada expediente.
 # Conservarlos al anadir, extraer o clonar, aunque core.autocrlf este activo.
 6.1-windows-2026-11-11/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+cliente-concha-notificaciones-2026-11-11/** -text

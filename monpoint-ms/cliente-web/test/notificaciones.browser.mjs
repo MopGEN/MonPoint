@@ -53,12 +53,19 @@ const NOTIFICACIONES = [
   },
 ]
 
-const navegador = await chromium.launch()
+const navegador = await chromium.launch({
+  ...(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}),
+  args: process.env.CHROMIUM_NO_SANDBOX === '1' ? ['--no-sandbox'] : [],
+})
 const contexto = await navegador.newContext({ viewport: { width: 1280, height: 800 } })
 const pagina = await contexto.newPage()
 
 let rolActual = 'ADMIN'
 let marcadas = 0
+let denegarLectura = false
+let rechazos = 0
+const errores = []
+pagina.on('pageerror', (error) => errores.push(error.message))
 
 await pagina.route(`${API}/auth/login`, (ruta) =>
   ruta.fulfill({
@@ -81,9 +88,16 @@ await pagina.route(`${API}/notificaciones**`, (ruta) => {
   const url = new URL(ruta.request().url())
   if (ruta.request().method() === 'PUT') {
     marcadas++
+    const id = url.pathname.split('/')[2]
+    const aviso = NOTIFICACIONES.find((n) => n.id === id)
+    assert.ok(aviso, 'el PUT identifica una notificacion existente')
+    aviso.leida = true
+    aviso.activa = false
+    aviso.fechaLectura = '2026-11-11T08:00:00.000Z'
     return ruta.fulfill({ status: 204, body: '' })
   }
-  if (rolActual !== 'ADMIN') {
+  if (rolActual !== 'ADMIN' || denegarLectura) {
+    rechazos++
     return ruta.fulfill({
       status: 403,
       contentType: 'application/problem+json',
@@ -97,7 +111,7 @@ await pagina.route(`${API}/notificaciones**`, (ruta) => {
   const lista =
     leida === null
       ? NOTIFICACIONES
-      : NOTIFICACIONES.filter((n) => String(n.leida) === leida && !(marcadas > 0 && !n.leida))
+      : NOTIFICACIONES.filter((n) => String(n.leida) === leida)
   return ruta.fulfill({
     status: 200,
     contentType: 'application/json',
@@ -115,7 +129,7 @@ await pagina.route(`${API}/clientes**`, (r) =>
 )
 
 async function entrar () {
-  await pagina.goto(`${BASE}/login`)
+  if (new URL(pagina.url()).pathname !== '/login') await pagina.goto(`${BASE}/login`)
   await pagina.fill('#correo', 'admin@monpoint.com')
   await pagina.fill('#contrasena', 'Admin123!')
   await pagina.click('button[type="submit"]')
@@ -149,7 +163,26 @@ await pagina.waitForSelector('button:has-text("Marcar leída")')
 await pagina.click('button:has-text("Marcar leída")')
 await pagina.waitForSelector('table.mp-tabla', { state: 'detached' })
 assert.equal(marcadas, 1, 'se envio un unico PUT')
+assert.equal(await pagina.locator('.vacio').textContent(), 'No hay alertas con este filtro.')
 await pagina.screenshot({ path: `${SALIDA}-03-vacia-tras-marcar.png` })
+
+await pagina.getByRole('button', { name: 'Leídas', exact: true }).click()
+await pagina.waitForFunction(() => document.querySelectorAll('table.mp-tabla tbody tr').length === 2)
+assert.equal(await pagina.getByRole('button', { name: 'Marcar leída', exact: true }).count(), 0)
+
+// Un rechazo real de la consulta, aun con rol ADMIN en la interfaz, debe
+// mostrar el estado de permiso. La guarda y ocultar enlaces no prueban esto.
+denegarLectura = true
+await pagina.getByRole('button', { name: 'Actualizar', exact: true }).click()
+await pagina.getByText('Sin permiso.', { exact: true }).waitFor()
+assert.equal(rechazos, 1, 'la API simulada devolvio un 403')
+assert.equal(await pagina.getByRole('button', { name: 'Volver a intentar', exact: true }).count(), 0)
+assert.equal(await pagina.locator('table.mp-tabla').count(), 0)
+denegarLectura = false
+// Dejar Notificaciones en el historial permite intentar volver a ella con el
+// rol nuevo, sin recargar ni acceder a los objetos internos de Vue.
+await pagina.click('nav[aria-label="Secciones"] a:has-text("Caja")')
+await pagina.waitForURL('**/caja')
 
 // Un VENDEDOR no ve la seccion en la barra, porque la barra y la guarda
 // consultan la misma funcion de rol.
@@ -163,6 +196,12 @@ assert.ok(
   'la barra no ofrece Notificaciones a VENDEDOR',
 )
 await pagina.screenshot({ path: `${SALIDA}-04-vendedor-sin-seccion.png` })
+
+// Atras es navegacion SPA: preserva el token del vendedor en memoria.
+await pagina.goBack()
+await pagina.waitForFunction(() => window.location.pathname === '/caja')
+assert.equal(await pagina.getByRole('button', { name: 'Salir', exact: true }).count(), 1)
+assert.equal(rechazos, 1, 'la guarda impidio otra consulta a Notificaciones')
 
 // Un enlace profundo sin sesion termina en el inicio de sesion, con el destino
 // guardado para volver despues.
@@ -183,5 +222,6 @@ assert.ok(
   'el destino denegado se conserva para volver tras iniciar sesion',
 )
 
+assert.deepEqual(errores, [], 'sin errores JavaScript en el recorrido')
 await navegador.close()
 console.log('Recorrido completado. Capturas en', `${SALIDA}-*.png`)

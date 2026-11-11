@@ -1,0 +1,18 @@
+{
+  "base": "75549d7",
+  "parcheImportado": "2dac162",
+  "sha256": {
+    "monpoint-ms/cliente-web/README.md": "e366991a1b300c84015e324bb88c51055b624b6ed3441149ee596b5f3538803b",
+    "monpoint-ms/cliente-web/src/App.vue": "c634d98d5f602368ce3aff9113aee086dd87fb024f46308dfb71cf2cd9780a12",
+    "monpoint-ms/cliente-web/src/assets/base.css": "1975dd3d4f7d20310fdcf7ce70f49bb891159c64dec7c01bb0d81e6f40396446",
+    "monpoint-ms/cliente-web/src/componentes/EstadoRecurso.vue": "499a212015a543de748ce26b3661e3424b077aa7e6b464f00854483ce8517751",
+    "monpoint-ms/cliente-web/src/componentes/NavegacionLateral.vue": "705c389e3da98d704fe1c32e1310ca64f0ae5d0f1c602200e4ef0837d743e7cd",
+    "monpoint-ms/cliente-web/src/componentes/TablaDatos.vue": "d8f8d050dc98530e3022006cea44b9b8366471f45ebf02f19c24f1dcf3a92c35",
+    "monpoint-ms/cliente-web/src/composables/useRecurso.js": "c4fa1316df1f64d8dd6e4adeb5cde3dc634cbb7abbe90275900d7d6851710632",
+    "monpoint-ms/cliente-web/src/router/index.js": "8921b5a031177d152496cc300dbba8cb92e0a94bde96f0949225231a893be3d7",
+    "monpoint-ms/cliente-web/src/vistas/Notificaciones.vue": "70866279e7138bbfee7ec0d326a52566feeb4d351eb7c5d466b413711ebe31e7",
+    "monpoint-ms/cliente-web/test/notificaciones.browser.mjs": "3ad757efc8a7d5b4f59fcbae80812b76f87308e855ad6d5b56f51c125173c85b",
+    "monpoint-ms/cliente-web/test/recurso.test.js": "3aa6689c30f4bc8b49a5ecf99954d81e4147b428e7a9bbd070e6e9e933d090c7",
+    "monpoint-ms/cliente-web/test/notificaciones.real.browser.mjs": "785ab07e4d2f9ffba7cfc1ef3b7af361ae6833d5f37508638938fe0363fdf5af"
+  }
+}

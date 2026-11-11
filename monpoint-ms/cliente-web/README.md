@@ -25,14 +25,17 @@ CORS sin causa visible.
 ```
 src/
 ├── main.js            arranque y cableado (inyecta el token al cliente HTTP)
-├── App.vue            armazon: barra superior y RouterView
+├── App.vue            barra superior, navegacion lateral y RouterView
 ├── api/gateway.js     cliente HTTP unico: token, errores, expiracion
 ├── stores/sesion.js   sesion en Pinia (token EN MEMORIA)
 ├── router/index.js    rutas y guarda de sesion y rol
 ├── assets/base.css    variables del prototipo, reinicio y primitivas
+├── componentes/       navegacion, estados de carga y tabla accesible
+├── composables/       useRecurso: cancelacion, ultima respuesta y errores
 └── vistas/
     ├── IniciarSesion.vue   minima y funcional; la 5.3 la completa
     ├── Caja.vue            catálogo, carrito y seguimiento del cobro (5.5)
+    ├── Notificaciones.vue  alertas, filtros de lectura y marcado (solo ADMIN)
     └── NoEncontrada.vue
 ```
 
@@ -67,6 +70,8 @@ abrirla.
 | POST | `/auth/login` | `{correo, password}` → `{token, tipo, correo, nombre, rol, expiraEn}` |
 | POST | `/ventas` | 202 con la venta **PENDIENTE**; no es confirmacion |
 | GET | `/ventas/{id}` | detalle y estado de la venta — tarea 5.2 |
+| GET | `/notificaciones?leida=false` | solo ADMIN; omitir el filtro para todas o usar `true` para leídas |
+| PUT | `/notificaciones/{id}/leida` | solo ADMIN; sin cuerpo; 204; el servidor cierra la alerta |
 
 `expiraEn` es la **vigencia en milisegundos**, no una fecha. `stores/sesion.js`
 la convierte a instante absoluto (`Date.now() + expiraEn`). Tratarla como fecha
@@ -75,6 +80,55 @@ de epoca da 1970 y la sesion nace caducada.
 Los errores llegan como ProblemDetail (RFC 9457). `api/gateway.js` extrae
 `detail` y lo entrega en `ErrorDeGateway.message`, ya redactado para mostrarse
 al cajero; las vistas no deben reescribirlo.
+
+## Navegación y notificaciones
+
+La barra deriva sus enlaces de `meta.nav` y comparte `rolPermitido` con la
+guarda. ADMIN ve Caja y Notificaciones; VENDEDOR solo Caja. Las pantallas que
+todavía no existen no se anuncian. El Gateway valida el token y cada servicio
+autoriza las operaciones; ocultar un enlace no protege la API.
+
+Notificaciones empieza en «Sin leer» y admite «Leídas» y «Todas». Marcar una
+alerta envía PUT sin cuerpo y vuelve a consultar el filtro actual. El servicio
+pone `leida=true`, `activa=false` y `fechaLectura`; por eso desaparece de «Sin
+leer». Un listado vacío no demuestra que el inventario esté por encima de sus
+umbrales: puede haber alertas ya leídas. Las fechas se muestran en la zona del
+navegador. Actualmente la API devuelve una lista plana de entidades.
+
+`useRecurso` aborta la carga anterior y descarta respuestas de secuencias viejas.
+`EstadoRecurso` distingue carga, error, 403 y vacío. `TablaDatos` concentra la
+tabla accesible y su desplazamiento horizontal en pantallas estrechas.
+
+Recorrido con API simulada, después de compilar y arrancar `npm run preview`:
+
+```bash
+PLAYWRIGHT_MODULE=/ruta/a/playwright/index.mjs node test/notificaciones.browser.mjs
+```
+
+Acredita filtros y marcado, error 403, navegación por rol sin recargar y enlace
+profundo sin sesión. No consulta los servicios reales. Acepta `BASE_URL`
+(por omisión `http://localhost:4173`), `GATEWAY_URL`, `SALIDA`, `CHROMIUM_PATH`
+y `CHROMIUM_NO_SANDBOX=1` para entornos que requieran Chromium sin sandbox.
+Playwright se instala fuera del checkout como se explica en las pruebas de Caja;
+si no se indica `CHROMIUM_PATH`, requiere sus navegadores instalados.
+
+El recorrido real es independiente y requiere el conjunto ya levantado y Vite
+en `http://localhost:5173`, origen permitido por CORS:
+
+```bash
+PLAYWRIGHT_MODULE=/ruta/a/playwright/index.mjs node test/notificaciones.real.browser.mjs
+```
+
+**Crea datos de prueba**: un producto, una venta que cruza el umbral y un usuario
+VENDEDOR; lee únicamente la alerta del producto creado. No se ejecuta con
+`npm test` y no debe usarse contra producción. Usa `ADMIN_DEFAULT_PASSWORD`
+(por omisión la clave local de desarrollo), `PRUEBA_VENDEDOR_PASSWORD`,
+`BASE_URL`, `GATEWAY_URL`, `SALIDA`, `PLAYWRIGHT_MODULE` y las opciones de
+Chromium anteriores. La repetición crea otro juego de datos, no es idempotente.
+Solo reintenta el rechazo 400 exacto de producto aún no disponible en la réplica;
+un POST incierto o cualquier otro rechazo detiene la prueba.
+
+[Revisión con servicios reales y capturas](../../docs/aceptacion/cliente-concha-notificaciones-2026-11-11/RESULTADOS.md).
 
 ## Cliente empaquetado con nginx (5.6)
 

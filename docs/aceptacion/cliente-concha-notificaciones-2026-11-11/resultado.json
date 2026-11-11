@@ -1,0 +1,78 @@
+{
+  "inicio": "2026-11-11T13:51:41.081Z",
+  "cliente": "http://localhost:5173",
+  "gateway": "http://localhost:8080",
+  "casos": [
+    "ADMIN: lista real, PUT 204, desaparece de Sin leer y aparece en Leidas",
+    "VENDEDOR real: enlace oculto y API 403 con ProblemDetail"
+  ],
+  "errores": [],
+  "producto": {
+    "id": "6af472ee57cdec548cbc93a4",
+    "nombre": "Revision concha 1794405102326",
+    "descripcion": "Recorrido real del cliente",
+    "precio": 41.15,
+    "existencia": 10,
+    "umbralStock": 5,
+    "activo": true,
+    "fechaRegistro": "2026-11-11T13:51:42.429358877Z",
+    "fechaActualizacion": "2026-11-11T13:51:42.429358877Z"
+  },
+  "venta": {
+    "id": "6af472ee7fb0a867b5c1743f",
+    "folio": 53,
+    "estado": "CONFIRMADA",
+    "clienteId": null,
+    "clienteNombre": null,
+    "lineas": [
+      {
+        "productoId": "6af472ee57cdec548cbc93a4",
+        "nombreProducto": "Revision concha 1794405102326",
+        "precioUnitario": 41.15,
+        "cantidad": 5,
+        "subtotal": 205.75
+      }
+    ],
+    "total": 205.75,
+    "motivo": null,
+    "productoIdRechazado": null,
+    "fechaCreacion": "2026-11-11T13:51:42.945Z",
+    "fechaResolucion": "2026-11-11T13:51:43.013Z"
+  },
+  "antes": {
+    "id": "6af472ef99e4723b517aee81",
+    "tipo": "STOCK_BAJO",
+    "productoId": "6af472ee57cdec548cbc93a4",
+    "productoNombre": "Revision concha 1794405102326",
+    "existenciaResultante": 5,
+    "mensaje": "Existencia baja de Revision concha 1794405102326: 5",
+    "activa": true,
+    "leida": false,
+    "fechaCreacion": "2026-11-11T13:51:43.082Z",
+    "fechaLectura": null
+  },
+  "despues": {
+    "id": "6af472ef99e4723b517aee81",
+    "tipo": "STOCK_BAJO",
+    "productoId": "6af472ee57cdec548cbc93a4",
+    "productoNombre": "Revision concha 1794405102326",
+    "existenciaResultante": 5,
+    "mensaje": "Existencia baja de Revision concha 1794405102326: 5",
+    "activa": false,
+    "leida": true,
+    "fechaCreacion": "2026-11-11T13:51:43.082Z",
+    "fechaLectura": "2026-11-11T13:51:43.698Z"
+  },
+  "rechazoVendedor": {
+    "estado": 403,
+    "datos": {
+      "detail": "Solo un ADMIN puede consultar o leer notificaciones",
+      "instance": "/notificaciones",
+      "status": 403,
+      "title": "Acceso denegado",
+      "requestId": "eddc7503-f283-4175-9797-e4bb0ef81968"
+    }
+  },
+  "resultado": "PASS",
+  "fin": "2026-11-11T13:51:44.932Z"
+}
