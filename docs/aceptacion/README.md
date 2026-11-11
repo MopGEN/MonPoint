@@ -1,5 +1,12 @@
 # Evidencia de aceptación
 
+## Cliente — navegación y notificaciones
+
+[Revisión del parche y recorrido real del 11 de noviembre](cliente-concha-notificaciones-2026-11-11/RESULTADOS.md):
+ADMIN consulta y marca su alerta con 204; VENDEDOR recibe 403 por API. Incluye
+la regresión de Caja y separa las pruebas simuladas de la integración real.
+No cierra controles ni amplía esta prueba a las otras pantallas del prototipo.
+
 ## Recorrido 6.1 — siete escenarios en una sola ejecución
 
 [Recorrido manual en Windows del 11 de noviembre](6.1-windows-2026-11-11/RESULTADOS.md),
