@@ -166,6 +166,11 @@ Se intenta la venta real con `POST /ventas`. **Solo** se repite un HTTP 400 cuyo
 - `el cliente no está disponible; si acaba de darlo de alta, inténtelo de nuevo en unos segundos`,
   únicamente cuando esa solicitud incluye cliente.
 
+Este reconocimiento está acoplado a la redacción exacta de `ProblemDetail.detail`:
+hasta disponer de un código de error estable, cambiar esos textos exige actualizar
+el guion y sus pruebas; de lo contrario, un rechazo por réplica pendiente pasa a
+tratarse como un HTTP 400 no reintentable.
+
 Ambas validaciones ocurren antes de asignar el folio y de insertar la venta.
 Otro 400, un 5xx, un fallo de red, un timeout o un 202 incompleto **no** provocan
 otro POST. Un producto inactivo y una réplica que aún no llegó comparten el primer

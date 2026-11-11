@@ -33,6 +33,8 @@ import java.util.concurrent.ThreadLocalRandom;
 @Slf4j
 @Service
 public class VentaService {
+    // Contrato con scripts/semilla-ventas.mjs: compara este detail literalmente para esperar la réplica.
+    // Hasta disponer de un código estable, cambiar la redacción exige actualizar el guion y sus pruebas.
     public static final String CLIENTE_NO_DISPONIBLE =
             "el cliente no está disponible; si acaba de darlo de alta, inténtelo de nuevo en unos segundos";
     private static final int MAX_INTENTOS = 10;
@@ -130,6 +132,7 @@ public class VentaService {
         var lineas = new ArrayList<LineaVenta>();
         var cantidades = new HashMap<String, Integer>();
         for (var entrada : solicitud.lineas()) {
+            // Este detail (texto + productoId) también es contrato de reintento de semilla-ventas.mjs.
             var producto = productos.findById(entrada.productoId())
                     .filter(p -> p.isActivo())
                     .orElseThrow(() -> new VentaInvalidaException("El producto no está disponible o está inactivo: "
