@@ -1,0 +1,4 @@
+2026-11-11T07:56:30.306Z  INFO [] 1 --- [ms-inventario] [ntContainer#0-1] c.m.i.event.VentaCreadaListener          : evento=VENTA_CREADA_RECIBIDO eventoId=1eb998dc-c565-44d9-9cfb-8e993b91eab6
+2026-11-11T07:56:30.336Z  INFO [] 1 --- [ms-inventario] [ntContainer#0-1] c.m.i.service.ReservaStockService        : evento=STOCK_RESERVADO eventoId=1eb998dc-c565-44d9-9cfb-8e993b91eab6 ventaId=6af41fae2d1858377c263c90 lineas=1
+2026-11-11T08:17:11.801Z  INFO [] 1 --- [ms-inventario] [ntContainer#0-1] c.m.i.event.VentaCreadaListener          : evento=VENTA_CREADA_RECIBIDO eventoId=1eb998dc-c565-44d9-9cfb-8e993b91eab6
+2026-11-11T08:17:11.803Z  INFO [] 1 --- [ms-inventario] [ntContainer#0-1] c.m.i.service.ReservaStockService        : evento=VENTA_CREADA_DESCARTADO eventoId=1eb998dc-c565-44d9-9cfb-8e993b91eab6 motivo=ya_procesado

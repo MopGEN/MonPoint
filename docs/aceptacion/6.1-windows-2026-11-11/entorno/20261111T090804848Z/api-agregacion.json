@@ -1,0 +1,21 @@
+{
+    "periodo":  "DIA",
+    "desde":  "2026-11-10",
+    "hasta":  "2026-11-12",
+    "zonaHoraria":  "America/Mexico_City",
+    "total":  672.25,
+    "puntos":  [
+                   {
+                       "inicio":  "2026-11-10",
+                       "total":  0
+                   },
+                   {
+                       "inicio":  "2026-11-11",
+                       "total":  672.25
+                   },
+                   {
+                       "inicio":  "2026-11-12",
+                       "total":  0
+                   }
+               ]
+}

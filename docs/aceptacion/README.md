@@ -1,5 +1,19 @@
 # Evidencia de aceptación
 
+## Recorrido 6.1 — siete escenarios en una sola ejecución
+
+[Recorrido manual en Windows del 11 de noviembre](6.1-windows-2026-11-11/RESULTADOS.md),
+sobre volúmenes destruidos y reconstruidos, con `main` en `1244393`. Cubre los
+siete escenarios y la reentrega de CONTROL 2 en una única ejecución declarada: venta
+confirmada desde la caja, descuento, agregación, rechazo sin descuento, alerta
+bajo umbral, reentrega descartada por `eventoId` y 403 por rol. Incluye las
+incidencias del recorrido y los límites de lo que acredita. Las instantáneas de
+cierre recolectadas en PowerShell 5.1 confirman 11 contenedores saludables,
+existencias 5/7/8, cinco ventas confirmadas por 672.25, una cancelada y una alerta
+sin leer. El manifiesto cubre 59 archivos; se conservan tanto el intento fallido
+del recolector como el completo. No acredita por sí solo todos los criterios de
+CONTROL 3: siguen los límites sobre el arranque y el estado visual En proceso.
+
 ## Semilla 3.1 — fase 2, para revisión
 
 [Tres ventas confirmadas sobre volúmenes nuevos](3.1-fase2-2026-11-11/RESULTADOS.md),
@@ -50,11 +64,19 @@ prueba por defecto del proyecto y puede reemplazarse mediante variable.
   ausencia de reenvío. Las pruebas automatizadas lo cubren; este recorrido real
   detuvo inventario antes del cobro, pero el backend sí respondió al POST con
   202 y folio. Por eso ejercitó el corte del sondeo, no el POST colgado.
-- Recorrido en Windows con Docker Desktop y navegador local antes de la entrega.
-- Para 6.1, contrastar el alcance vigente del tablero con H-094: ticket,
-  historial/gráfica, notificación bajo umbral, reentrega de VentaCreada sin doble
-  descuento y arranque desde cero con el cliente empaquetado. Estos elementos
-  no se acreditan con el recorrido de 5.5. Los volúmenes usados ya tenían datos.
+- ~~Recorrido en Windows con Docker Desktop y navegador local antes de la
+  entrega.~~ Ejecutado el 11 de noviembre; el arranque con volúmenes nuevos fue
+  declarado por el operador, sin conservar la salida de su destrucción.
+- Recorrido de caja con sesión de **VENDEDOR**: el del 11 de noviembre se hizo
+  con sesión de ADMIN. El rol se ejercitó por API, no desde la pantalla.
+- Cuerpo del `ProblemDetail` en un 403 por rol: solo quedó registrado el código.
+- Segunda alerta de stock bajo del mismo producto, para observar el índice
+  parcial de ms-notificaciones actualizando la notificación activa en lugar de
+  crear otra.
+- Para 6.1, contrastar el alcance vigente del tablero con H-094: ticket y
+  gráfica de historial siguen sin evidencia en pantalla. La notificación y la
+  reentrega sí tienen evidencia; los límites sobre el arranque limpio y el
+  estado visual En proceso se detallan en el informe del 11 de noviembre.
 
 El avance y las fechas se mantienen en Asana; este directorio conserva pruebas,
 no replica el tablero.

@@ -1,0 +1,14 @@
+[
+    {
+        "id":  "6af41643d5bc7b7884626a84",
+        "tipo":  "STOCK_BAJO",
+        "productoId":  "6af4161361c0bf7a3edcb0b4",
+        "productoNombre":  "Semilla 3.1 - Tinta",
+        "existenciaResultante":  5,
+        "mensaje":  "Existencia baja de Semilla 3.1 - Tinta: 5",
+        "activa":  true,
+        "leida":  false,
+        "fechaCreacion":  "2026-11-11T07:16:19.454Z",
+        "fechaLectura":  null
+    }
+]

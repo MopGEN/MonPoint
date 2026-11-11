@@ -1,0 +1,2 @@
+?? docs/aceptacion/6.1-windows-2026-11-11/entorno/
+?? docs/aceptacion/windows-20261104-131653/

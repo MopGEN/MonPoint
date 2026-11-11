@@ -1,0 +1,27 @@
+[
+    {
+        "CreatedAt":  "2026-11-11T06:58:01Z",
+        "Driver":  "local",
+        "Labels":  {
+                       "com.docker.compose.config-hash":  "9b9f5d6fc33e82fa41d95252bc1a38f88952fc355afaf1174c8d905836e9e8d3",
+                       "com.docker.compose.project":  "monpoint-ms",
+                       "com.docker.compose.version":  "5.3.1",
+                       "com.docker.compose.volume":  "mongodb-datos"
+                   },
+        "Mountpoint":  "/var/lib/docker/volumes/monpoint-ms_mongodb-datos/_data",
+        "Name":  "monpoint-ms_mongodb-datos",
+        "Options":  null,
+        "Scope":  "local"
+    },
+    {
+        "CreatedAt":  "2026-11-11T06:58:02Z",
+        "Driver":  "local",
+        "Labels":  {
+                       "com.docker.volume.anonymous":  ""
+                   },
+        "Mountpoint":  "/var/lib/docker/volumes/09e8eba3217f6e9e145739727a553536e735c4ac77a74cb054e2d61a3c53c4cc/_data",
+        "Name":  "09e8eba3217f6e9e145739727a553536e735c4ac77a74cb054e2d61a3c53c4cc",
+        "Options":  null,
+        "Scope":  "local"
+    }
+]

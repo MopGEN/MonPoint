@@ -1,0 +1,6 @@
+{
+    "estado":  "INCOMPLETA",
+    "inicioUtc":  "2026-11-11T09:02:29.0438218Z",
+    "finUtc":  "2026-11-11T09:02:30.8336758Z",
+    "alcance":  "Fallo la recoleccion. Los archivos parciales no acreditan un cierre completo."
+}
