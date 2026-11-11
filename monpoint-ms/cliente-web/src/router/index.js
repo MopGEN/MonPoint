@@ -72,6 +72,18 @@ const rutas = [
     },
   },
   {
+    path: '/clientes',
+    name: 'clientes',
+    component: () => import('@/vistas/Clientes.vue'),
+    // Alta y cambio los permite ms-clientes a ambos roles; solo el borrado
+    // exige ADMIN, y eso lo resuelve la pantalla.
+    meta: {
+      titulo: 'Clientes',
+      roles: ['ADMIN', 'VENDEDOR'],
+      nav: { orden: 30, icono: '◍' },
+    },
+  },
+  {
     path: '/notificaciones',
     name: 'notificaciones',
     component: () => import('@/vistas/Notificaciones.vue'),
