@@ -1,5 +1,13 @@
 # Evidencia de aceptación
 
+## Cliente — Reportes y documentos
+
+[Revisión e integración real del 11 de noviembre](cliente-reportes-2026-11-11/RESULTADOS.md):
+agregación de confirmadas, exclusión de canceladas, configuración inicial y
+edición, tres PDF y permisos reales. Separa los límites de gráfica e historial
+y conserva los intentos fallidos del recorrido. No incluye ticket en pantalla
+ni empaquetado Windows.
+
 ## Cliente — Clientes y escritura compartida
 
 [Revisión y CRUD real del 11 de noviembre](cliente-clientes-2026-11-11/RESULTADOS.md):

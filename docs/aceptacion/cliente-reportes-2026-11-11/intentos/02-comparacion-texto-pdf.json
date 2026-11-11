@@ -1,0 +1,202 @@
+{
+  "inicio": "2026-11-11T15:41:19.293Z",
+  "cliente": "http://localhost:5173",
+  "gateway": "http://localhost:8080",
+  "casos": [
+    "Configuracion: GET 404, RFC invalido 400 junto al campo y PUT 200 con RFC normalizado",
+    "Venta confirmada 82.30 incrementa el agregado; cancelada 4073.85 llega a reportes y no suma",
+    "Grafica/tabla con tres periodos cero; cambiar el borrador no cambia la descripcion del resultado"
+  ],
+  "errores": [],
+  "configuracionInicial": {
+    "estado": 404
+  },
+  "rfcRechazado": {
+    "detail": "Uno o más campos no cumplen las validaciones",
+    "instance": "/reportes/configuracion",
+    "status": 400,
+    "title": "Datos inválidos",
+    "requestId": "d83a1aa5-d8fe-4e4b-a30e-7b96a09e202a",
+    "campos": {
+      "rfc": "El RFC no tiene un formato válido"
+    }
+  },
+  "configuracionGuardada": {
+    "nombreEmpresa": "Revision Reportes 1794411680561",
+    "rfc": "XAXX010101000",
+    "direccion": "Calle de prueba 1",
+    "telefono": "5512345678",
+    "fechaActualizacion": "2026-11-11T15:41:20.910Z"
+  },
+  "fixtures": {
+    "producto": {
+      "id": "6af48ca057cdec548cbc93a7",
+      "nombre": "Producto reportes 1794411680561",
+      "descripcion": null,
+      "precio": 41.15,
+      "existencia": 10,
+      "umbralStock": 5,
+      "activo": true,
+      "fechaRegistro": "2026-11-11T15:41:20.998309601Z",
+      "fechaActualizacion": "2026-11-11T15:41:20.998309601Z"
+    },
+    "cliente": {
+      "id": "6af48ca1ca3cccd0ca939c10",
+      "nombre": "Cliente reportes 1794411680561",
+      "correo": null,
+      "telefono": null,
+      "direccion": null,
+      "fechaRegistro": "2026-11-11T15:41:21.021869603Z",
+      "fechaActualizacion": "2026-11-11T15:41:21.021869603Z"
+    }
+  },
+  "antes": {
+    "periodo": "DIA",
+    "desde": "2026-11-11",
+    "hasta": "2026-11-11",
+    "zonaHoraria": "America/Mexico_City",
+    "total": 0,
+    "puntos": [
+      {
+        "inicio": "2026-11-11",
+        "total": 0
+      }
+    ]
+  },
+  "confirmada": {
+    "POST": 202,
+    "venta": {
+      "id": "6af48ca17fb0a867b5c1744f",
+      "folio": 54,
+      "estado": "CONFIRMADA",
+      "clienteId": "6af48ca1ca3cccd0ca939c10",
+      "clienteNombre": "Cliente reportes 1794411680561",
+      "lineas": [
+        {
+          "productoId": "6af48ca057cdec548cbc93a7",
+          "nombreProducto": "Producto reportes 1794411680561",
+          "precioUnitario": 41.15,
+          "cantidad": 2,
+          "subtotal": 82.3
+        }
+      ],
+      "total": 82.3,
+      "motivo": null,
+      "productoIdRechazado": null,
+      "fechaCreacion": "2026-11-11T15:41:21.082Z",
+      "fechaResolucion": "2026-11-11T15:41:21.128Z"
+    }
+  },
+  "despues": {
+    "periodo": "DIA",
+    "desde": "2026-11-11",
+    "hasta": "2026-11-11",
+    "zonaHoraria": "America/Mexico_City",
+    "total": 82.3,
+    "puntos": [
+      {
+        "inicio": "2026-11-11",
+        "total": 82.3
+      }
+    ]
+  },
+  "cancelada": {
+    "POST": 202,
+    "venta": {
+      "id": "6af48ca17fb0a867b5c17451",
+      "folio": 55,
+      "estado": "CANCELADA",
+      "clienteId": "6af48ca1ca3cccd0ca939c10",
+      "clienteNombre": "Cliente reportes 1794411680561",
+      "lineas": [
+        {
+          "productoId": "6af48ca057cdec548cbc93a7",
+          "nombreProducto": "Producto reportes 1794411680561",
+          "precioUnitario": 41.15,
+          "cantidad": 99,
+          "subtotal": 4073.85
+        }
+      ],
+      "total": 4073.85,
+      "motivo": "existencia insuficiente de Producto reportes 1794411680561, solicitado 99",
+      "productoIdRechazado": "6af48ca057cdec548cbc93a7",
+      "fechaCreacion": "2026-11-11T15:41:21.657Z",
+      "fechaResolucion": "2026-11-11T15:41:21.699Z"
+    }
+  },
+  "ticketCancelada": {
+    "estado": 409,
+    "datos": {
+      "detail": "La venta con folio 55 fue cancelada y no tiene comprobante",
+      "instance": "/reportes/ventas/6af48ca17fb0a867b5c17451/ticket",
+      "status": 409,
+      "title": "Venta cancelada",
+      "requestId": "8ca79135-9f20-4360-bbe7-03f8876c2992"
+    }
+  },
+  "trasCancelada": {
+    "periodo": "DIA",
+    "desde": "2026-11-11",
+    "hasta": "2026-11-11",
+    "zonaHoraria": "America/Mexico_City",
+    "total": 82.3,
+    "puntos": [
+      {
+        "inicio": "2026-11-11",
+        "total": 82.3
+      }
+    ]
+  },
+  "consultaUI": {
+    "periodo": "DIA",
+    "desde": "2026-11-11",
+    "hasta": "2026-11-11",
+    "zonaHoraria": "America/Mexico_City",
+    "total": 82.3,
+    "puntos": [
+      {
+        "inicio": "2026-11-11",
+        "total": 82.3
+      }
+    ]
+  },
+  "ceros": {
+    "periodo": "DIA",
+    "desde": "2000-01-01",
+    "hasta": "2000-01-03",
+    "zonaHoraria": "America/Mexico_City",
+    "total": 0,
+    "puntos": [
+      {
+        "inicio": "2000-01-01",
+        "total": 0
+      },
+      {
+        "inicio": "2000-01-02",
+        "total": 0
+      },
+      {
+        "inicio": "2000-01-03",
+        "total": 0
+      }
+    ]
+  },
+  "documentos": [
+    {
+      "archivo": "historial-ventas-2026-11-11_2026-11-11.pdf",
+      "bytes": 1823,
+      "sha256": "6d065611b01933dfad723496bd2071b363ced4965c8e5e4bbcda07cdc700ddd5",
+      "textoEmpresaYRegistro": true
+    },
+    {
+      "archivo": "listado-productos.pdf",
+      "bytes": 1649,
+      "sha256": "35543c0ec459efa847645a1252cc8abd5777307550b1bd6caf14b7a52ecbaf94",
+      "textoEmpresaYRegistro": true
+    }
+  ],
+  "resultado": "FAIL",
+  "fallo": "El PDF debe incluir el registro de prueba",
+  "configuracionNuevaConservada": true,
+  "fin": "2026-11-11T15:41:22.908Z"
+}

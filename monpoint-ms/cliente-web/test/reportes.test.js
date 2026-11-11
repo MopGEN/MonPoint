@@ -10,6 +10,7 @@ import {
   rangoPorOmision,
   rutaAgregado,
   validar,
+  validarHistorial,
 } from '../src/reportes/consulta.js'
 
 test('las granularidades son las tres del enum Periodo del servicio', () => {
@@ -65,9 +66,7 @@ test('la fecha final no puede ser anterior a la inicial', () => {
 })
 
 /**
- * El tope es una decision del cliente: la API acepta el rango entero y el
- * servidor rellena los huecos con cero, de modo que un rango largo por dia
- * devuelve miles de puntos y una grafica ilegible.
+ * El tope visual 370 es mas estricto que los 1000 puntos del servidor.
  */
 test('un rango que excede el tope de puntos se rechaza con su cuenta', () => {
   const e = validar({ periodo: 'DIA', desde: '2020-01-01', hasta: '2026-11-11' })
@@ -111,4 +110,24 @@ test('el nombre del documento lo pone el cliente porque el servidor no lo expone
     nombreDocumento('historial-ventas', '2026-11-01_2026-11-30'),
     'historial-ventas-2026-11-01_2026-11-30.pdf',
   )
+})
+
+test('un periodo desconocido no se interpreta como DIA', () => {
+  const consulta = { periodo: 'SEMANA', desde: '2026-11-01', hasta: '2026-11-11' }
+  assert.ok(validar(consulta).periodo)
+  assert.equal(cuentaPuntos('SEMANA', consulta.desde, consulta.hasta), null)
+})
+
+test('el historial limita dias aunque la agregacion permita meses o anios', () => {
+  const consulta = { periodo: 'MES', desde: '2024-01-01', hasta: '2024-12-31' }
+  assert.deepEqual(validar(consulta), {})
+  assert.deepEqual(validarHistorial(consulta), {}, '366 dias inclusivos')
+  assert.ok(validarHistorial({ ...consulta, hasta: '2025-01-01' }).hasta)
+  assert.ok(validarHistorial({ desde: '2026-11-12', hasta: '2026-11-11' }).hasta)
+  assert.ok(validarHistorial({ desde: '', hasta: '2026-11-11' }).desde)
+})
+
+test('las fechas de anios menores que 100 no se desplazan al siglo XX', () => {
+  assert.deepEqual(validar({ periodo: 'DIA', desde: '0050-01-01', hasta: '0050-01-02' }), {})
+  assert.equal(cuentaPuntos('DIA', '0050-01-01', '0050-01-02'), 2)
 })

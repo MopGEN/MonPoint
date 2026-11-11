@@ -20,11 +20,16 @@ let configuracion = {
 let rechazarConfiguracion = false
 const peticiones = []
 
-const navegador = await chromium.launch()
+const navegador = await chromium.launch({
+  ...(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}),
+  args: process.env.CHROMIUM_NO_SANDBOX === '1' ? ['--no-sandbox'] : [],
+})
 const contexto = await navegador.newContext({
   viewport: { width: 1280, height: 980 }, acceptDownloads: true,
 })
 const pagina = await contexto.newPage()
+const erroresJs = []
+pagina.on('pageerror', (e) => erroresJs.push(e.message))
 
 await pagina.route(`${API}/auth/login`, (r) =>
   r.fulfill({
@@ -55,7 +60,7 @@ await pagina.route(`${API}/reportes/ventas/agregado**`, (ruta) => {
   })
 })
 
-// PDF minimo valido: basta con que el navegador reciba algo que descargar.
+// Cuerpo de prueba con cabecera PDF: prueba transporte, no validez del PDF.
 const PDF = '%PDF-1.4\n1 0 obj<</Type/Catalog>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF'
 for (const ruta of ['ventas/historial', 'productos/listado', 'clientes/listado']) {
   await pagina.route(`${API}/reportes/${ruta}**`, (r) => {
@@ -70,6 +75,10 @@ for (const ruta of ['ventas/historial', 'productos/listado', 'clientes/listado']
 
 await pagina.route(`${API}/reportes/configuracion`, async (ruta) => {
   if (ruta.request().method() === 'GET') {
+    if (configuracion === null) return ruta.fulfill({
+      status: 404, contentType: 'application/problem+json',
+      body: JSON.stringify({ detail: 'La configuración de la empresa todavía no se ha registrado' }),
+    })
     return ruta.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(configuracion) })
   }
   const cuerpo = ruta.request().postDataJSON()
@@ -93,7 +102,7 @@ for (const x of ['inventario/productos', 'clientes', 'notificaciones']) {
 }
 
 async function entrar (seccion = 'Reportes') {
-  await pagina.goto(`${BASE}/login`)
+  if (new URL(pagina.url()).pathname !== '/login') await pagina.goto(`${BASE}/login`)
   await pagina.fill('#correo', 'a@b.test')
   await pagina.fill('#contrasena', 'x')
   await pagina.click('button[type="submit"]')
@@ -112,6 +121,7 @@ assert.equal(await pagina.locator('svg[role="img"] rect.vacia').count(), 1)
 assert.ok((await pagina.locator('.total').innerText()).includes('672.25'))
 assert.ok((await pagina.locator('.zona').innerText()).includes('America/Mexico_City'))
 await pagina.screenshot({ path: `${SALIDA}-01-grafica.png` })
+const descripcionInicial = await pagina.locator('svg[role="img"]').getAttribute('aria-label')
 
 // La serie tambien existe como tabla para lectores de pantalla.
 assert.equal(await pagina.locator('figcaption table tbody tr').count(), 3)
@@ -120,6 +130,8 @@ assert.equal(await pagina.locator('figcaption table tbody tr').count(), 3)
 const antes = peticiones.filter((p) => p.tipo === 'agregado').length
 await pagina.fill('#desde', '2026-11-12')
 await pagina.fill('#hasta', '2026-11-11')
+assert.equal(await pagina.locator('svg[role="img"]').getAttribute('aria-label'), descripcionInicial,
+  'editar el borrador no cambia el rango atribuido a los datos anteriores')
 await pagina.click('button:has-text("Consultar")')
 await pagina.waitForSelector('#hasta-error')
 assert.equal(peticiones.filter((p) => p.tipo === 'agregado').length, antes, 'no se consulto')
@@ -139,6 +151,8 @@ await pagina.click('button:has-text("Consultar")')
 await pagina.waitForFunction((n) => !document.querySelector('#hasta-error'), null)
 assert.equal(peticiones.filter((p) => p.tipo === 'agregado').length, antes + 1)
 assert.ok(peticiones.at(-1).url.includes('periodo=ANIO'))
+assert.equal(await pagina.locator('.documento:has-text("Historial de ventas") button').isDisabled(), true)
+assert.equal(peticiones.filter((p) => p.tipo === 'pdf').length, 0, 'no se pide un historial de mas de 366 dias')
 
 // Documento: se pide con el token y se guarda con el nombre que pone el
 // cliente, no con el que manda el servidor, que CORS no deja leer.
@@ -174,7 +188,20 @@ await pagina.click('button[form="forma-config"]')
 await pagina.waitForSelector('dialog[open]', { state: 'detached' })
 await pagina.waitForSelector('text=Otro nombre')
 
-// VENDEDOR: la seccion no se ofrece y el enlace profundo no la alcanza.
+// Sin configuracion aun: un 404 debe permitir registrar el primer documento.
+await pagina.click('nav[aria-label="Secciones"] a:has-text("Caja")')
+await pagina.waitForURL('**/caja')
+configuracion = null
+await pagina.click('nav[aria-label="Secciones"] a:has-text("Reportes")')
+await pagina.getByRole('button', { name: 'Registrar datos de empresa', exact: true }).waitFor()
+await pagina.getByRole('button', { name: 'Registrar datos de empresa', exact: true }).click()
+await pagina.getByRole('dialog', { name: 'Datos de la empresa', exact: true }).waitFor()
+assert.equal(await pagina.inputValue('#nombreEmpresa'), '')
+await pagina.getByRole('button', { name: 'Cancelar', exact: true }).click()
+await pagina.click('nav[aria-label="Secciones"] a:has-text("Caja")')
+await pagina.waitForURL('**/caja')
+
+// VENDEDOR: la seccion no se ofrece y la guarda rechaza volver por historial.
 rol = 'VENDEDOR'
 await pagina.click('button:has-text("Salir")')
 await pagina.waitForURL('**/login')
@@ -183,5 +210,20 @@ const secciones = await pagina.locator('nav[aria-label="Secciones"] a').allInner
 assert.ok(!secciones.some((s) => s.includes('Reportes')), 'la barra no ofrece Reportes a VENDEDOR')
 await pagina.screenshot({ path: `${SALIDA}-04-vendedor.png` })
 
+// Volver por historial conserva el token en memoria; goto no prueba la guarda.
+const lecturas = peticiones.filter((p) => p.tipo === 'agregado').length
+assert.equal(await pagina.evaluate(() => history.state.back), '/reportes')
+await pagina.evaluate(() => window.addEventListener('popstate', (evento) => {
+  // El estado del evento identifica la entrada recorrida aunque el router
+  // ya haya cambiado location al redirigir a Caja.
+  window.rutaIntentadaEnPrueba = evento.state?.current
+}, { once: true }))
+await pagina.goBack()
+await pagina.waitForFunction(() => window.location.pathname === '/caja')
+assert.equal(await pagina.evaluate(() => window.rutaIntentadaEnPrueba), '/reportes')
+assert.equal(await pagina.getByRole('button', { name: 'Salir', exact: true }).count(), 1)
+assert.equal(peticiones.filter((p) => p.tipo === 'agregado').length, lecturas)
+
+assert.deepEqual(erroresJs, [])
 await navegador.close()
 console.log('Recorrido completado. Capturas en', `${SALIDA}-*.png`)

@@ -1,0 +1,11 @@
+{
+  "inicio": "2026-11-11T15:40:56.875Z",
+  "cliente": "http://localhost:5173",
+  "gateway": "http://localhost:8080",
+  "casos": [],
+  "errores": [],
+  "resultado": "FAIL",
+  "fallo": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/login\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/login\", waiting until \"load\"\u001b[22m\n",
+  "configuracionNuevaConservada": false,
+  "fin": "2026-11-11T15:40:57.245Z"
+}

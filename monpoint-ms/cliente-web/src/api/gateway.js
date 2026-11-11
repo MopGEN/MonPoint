@@ -179,7 +179,14 @@ async function descargar (ruta, { senal } = {}) {
     )
   }
 
-  if (respuesta.ok) return respuesta.blob()
+  if (respuesta.ok) {
+    try {
+      return await respuesta.blob()
+    } catch (causa) {
+      if (causa?.name === 'AbortError') throw causa
+      throw new ErrorDeGateway('No se pudo completar la descarga. Revise la conexión e inténtelo de nuevo.', { estado: 0 })
+    }
+  }
 
   if (respuesta.status === 401) {
     alExpirarSesion()

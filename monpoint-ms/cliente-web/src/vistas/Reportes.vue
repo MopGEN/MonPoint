@@ -15,12 +15,13 @@ import {
   rangoPorOmision,
   rutaAgregado,
   validar,
+  validarHistorial,
 } from '@/reportes/consulta'
 
 /**
  * Reportes (ms-reportes, tareas 4.2, 4.6 y H-054).
  *
- * Pantalla solo de ADMIN: la agregacion y los tres documentos de catalogo lo
+ * Pantalla solo de ADMIN: la agregacion y las tres exportaciones PDF lo
  * exigen en el servicio. La configuracion de empresa la puede LEER tambien un
  * vendedor, pero no hay motivo para darle una pantalla cuyo resto no puede
  * usar, asi que vive aqui.
@@ -47,6 +48,10 @@ const puntos = computed(() =>
 
 const total = computed(() => agregado.datos.value?.total ?? null)
 const zona = computed(() => agregado.datos.value?.zonaHoraria ?? null)
+const descripcionAgregado = computed(() => {
+  const datos = agregado.datos.value
+  return datos ? `Ventas confirmadas entre ${datos.desde} y ${datos.hasta}` : 'Ventas confirmadas'
+})
 
 async function consultar () {
   const encontrados = validar(consulta)
@@ -81,8 +86,8 @@ const documento = useAccion(async (ruta, nombre) => {
     enlace.click()
     enlace.remove()
   } finally {
-    // Se espera un turno antes de revocar: revocar en el mismo instante puede
-    // cancelar la descarga que se acaba de iniciar.
+    // Se conservan diez segundos: revocar en el mismo instante puede cancelar
+    // la descarga que se acaba de iniciar.
     setTimeout(() => URL.revokeObjectURL(url), 10_000)
   }
 })
@@ -94,6 +99,7 @@ const DOCUMENTOS = computed(() => [
     detalle: `Ventas confirmadas entre ${consulta.desde} y ${consulta.hasta}.`,
     ruta: `/reportes/ventas/historial?desde=${consulta.desde}&hasta=${consulta.hasta}`,
     nombre: nombreDocumento('historial-ventas', `${consulta.desde}_${consulta.hasta}`),
+    bloqueo: Object.values(validarHistorial(consulta)).join(' '),
   },
   {
     clave: 'productos',
@@ -114,7 +120,7 @@ const DOCUMENTOS = computed(() => [
 const descargando = ref('')
 
 async function abrirDocumento (doc) {
-  if (documento.enCurso.value) return
+  if (documento.enCurso.value || doc.bloqueo) return
   descargando.value = doc.clave
   await documento.correr(doc.ruta, doc.nombre)
   descargando.value = ''
@@ -122,9 +128,15 @@ async function abrirDocumento (doc) {
 
 // --- configuracion de empresa --------------------------------------------
 
-const configuracion = useRecurso(({ senal }) =>
-  gateway.obtener('/reportes/configuracion', { senal }),
-)
+const configuracion = useRecurso(async ({ senal }) => {
+  try {
+    return await gateway.obtener('/reportes/configuracion', { senal })
+  } catch (causa) {
+    // Sin documento aun: no es un bloqueo para registrar la primera empresa.
+    if (causa.estado === 404) return null
+    throw causa
+  }
+})
 
 const dialogo = ref(false)
 const forma = reactive({ nombreEmpresa: '', rfc: '', direccion: '', telefono: '' })
@@ -145,10 +157,8 @@ function abrirConfiguracion () {
 async function guardarConfiguracion () {
   if (guardado.enCurso.value) return
 
-  // Solo se exige lo que exige el servidor: nombre y RFC no vacios. El RFC NO
-  // lleva comprobacion de formato porque ConfiguracionRequest tampoco la
-  // lleva, y una pantalla mas estricta que su API rechaza datos que el
-  // sistema aceptaria sin que el usuario sepa de donde viene el limite.
+  // Comprobacion local minima. El servidor aplica ademas @Pattern al RFC y
+  // @Size a nombre/direccion/telefono; useAccion muestra esos errores por campo.
   const encontrados = {}
   if (forma.nombreEmpresa.trim() === '') {
     encontrados.nombreEmpresa = 'El nombre de la empresa es obligatorio'
@@ -190,12 +200,13 @@ async function guardarConfiguracion () {
     </header>
 
     <form class="mp-tarjeta filtros" @submit.prevent="consultar">
-      <div class="campo">
-        <label class="mp-etiqueta" for="periodo">Granularidad</label>
-        <select id="periodo" v-model="consulta.periodo" class="mp-campo">
-          <option v-for="p in PERIODOS" :key="p.valor" :value="p.valor">{{ p.etiqueta }}</option>
-        </select>
-      </div>
+      <CampoFormulario id="periodo" etiqueta="Granularidad" :error="errores.periodo">
+        <template #default="{ atributos }">
+          <select v-bind="atributos" v-model="consulta.periodo" class="mp-campo">
+            <option v-for="p in PERIODOS" :key="p.valor" :value="p.valor">{{ p.etiqueta }}</option>
+          </select>
+        </template>
+      </CampoFormulario>
 
       <CampoFormulario id="desde" etiqueta="Desde" :error="errores.desde">
         <template #default="{ atributos }">
@@ -221,12 +232,13 @@ async function guardarConfiguracion () {
         :denegado="agregado.denegado.value"
         :vacio="agregado.resuelto.value && puntos.length === 0"
         mensaje-vacio="No hay periodos en el rango consultado."
-        @reintentar="agregado.recargar()"
+        @reintentar="consultar()"
       >
         <div class="resumen">
           <div>
             <p class="mp-etiqueta">Total del rango</p>
             <p class="total mp-cifra">{{ dinero(total) }}</p>
+            <p class="detalle rango-aplicado">{{ descripcionAgregado }}</p>
           </div>
           <p v-if="zona" class="zona">
             Los periodos se cortan en la zona horaria <strong>{{ zona }}</strong>.
@@ -235,7 +247,7 @@ async function guardarConfiguracion () {
 
         <GraficaBarras
           :puntos="puntos"
-          :descripcion="`Ventas confirmadas entre ${consulta.desde} y ${consulta.hasta}`"
+          :descripcion="descripcionAgregado"
         />
       </EstadoRecurso>
     </div>
@@ -250,11 +262,13 @@ async function guardarConfiguracion () {
         <div class="texto">
           <p class="nombre">{{ doc.titulo }}</p>
           <p class="detalle">{{ doc.detalle }}</p>
+          <p v-if="doc.bloqueo" :id="`${doc.clave}-bloqueo`" class="detalle">{{ doc.bloqueo }}</p>
         </div>
         <button
           type="button"
           class="mp-boton mp-boton--secundario"
-          :disabled="documento.enCurso.value"
+          :disabled="documento.enCurso.value || Boolean(doc.bloqueo)"
+          :aria-describedby="doc.bloqueo ? `${doc.clave}-bloqueo` : undefined"
           @click="abrirDocumento(doc)"
         >
           {{ descargando === doc.clave ? 'Generando…' : 'Descargar PDF' }}
@@ -277,9 +291,9 @@ async function guardarConfiguracion () {
           <div><dt>Teléfono</dt><dd>{{ configuracion.datos.value?.telefono || '—' }}</dd></div>
         </dl>
         <p class="pie-datos">
-          Estos datos encabezan los tickets y los listados en PDF.
+          {{ configuracion.datos.value ? 'Estos datos encabezan los tickets y los listados en PDF.' : 'Todavía no se han registrado los datos de la empresa.' }}
           <button type="button" class="mp-boton mp-boton--secundario" @click="abrirConfiguracion">
-            Editar
+            {{ configuracion.datos.value ? 'Editar' : 'Registrar datos de empresa' }}
           </button>
         </p>
       </EstadoRecurso>
@@ -303,11 +317,11 @@ async function guardarConfiguracion () {
             :error="guardado.campos.value.nombreEmpresa"
           >
             <template #default="{ atributos }">
-              <input v-bind="atributos" v-model="forma.nombreEmpresa" class="mp-campo" type="text" />
+              <input v-bind="atributos" v-model="forma.nombreEmpresa" class="mp-campo" type="text" maxlength="120" />
             </template>
           </CampoFormulario>
 
-          <CampoFormulario id="rfc" etiqueta="RFC" :error="guardado.campos.value.rfc">
+          <CampoFormulario id="rfc" etiqueta="RFC" :error="guardado.campos.value.rfc" ayuda="El servicio valida el formato del RFC (12 o 13 caracteres).">
             <template #default="{ atributos }">
               <input v-bind="atributos" v-model="forma.rfc" class="mp-campo" type="text" />
             </template>
@@ -319,7 +333,7 @@ async function guardarConfiguracion () {
             :error="guardado.campos.value.direccion"
           >
             <template #default="{ atributos }">
-              <input v-bind="atributos" v-model="forma.direccion" class="mp-campo" type="text" />
+              <input v-bind="atributos" v-model="forma.direccion" class="mp-campo" type="text" maxlength="200" />
             </template>
           </CampoFormulario>
 
@@ -329,7 +343,7 @@ async function guardarConfiguracion () {
             :error="guardado.campos.value.telefono"
           >
             <template #default="{ atributos }">
-              <input v-bind="atributos" v-model="forma.telefono" class="mp-campo" type="tel" />
+              <input v-bind="atributos" v-model="forma.telefono" class="mp-campo" type="tel" maxlength="30" />
             </template>
           </CampoFormulario>
         </fieldset>

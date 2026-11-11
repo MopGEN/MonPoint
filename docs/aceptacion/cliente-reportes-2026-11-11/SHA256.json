@@ -1,0 +1,21 @@
+{
+  "01-rfc-invalido.png": "7967f057f9be5dd37c7097cb91442e2b49c9057708ba4202776e232ccd970c18",
+  "02-agregado-empresa.png": "ae1b34798b03dfdf21bf763b163dfff527e8ab5c5d50283f39b4650e8b96d509",
+  "03-movil.png": "0ed48ec152f3b54cfa7c54d843f0f5ae71dccc89f2628152cc54c2190414e80f",
+  "RESULTADOS.md": "82ca2abbd243705f0dbfda915f98022a4388a99fc01111ce81531b37bc921765",
+  "entorno.json": "f74c9a7187102a7123ec5e55be38e6e9bbce81dbc29177258c6c3d501c620600",
+  "fuentes.json": "7910b72d5944c8b83fd223a25c02bf6fb6258280441e203060d6d5e22b8ce1b0",
+  "historial-ventas-2026-11-11_2026-11-11.pdf": "21cb6fea361c69015a0f26ee7a2ad59b8d976f161c289dd3402104a6e1f8ac36",
+  "intentos/01-sin-vite.json": "643ccf3500e47a120aa4a057ae71bbecb7680b0dacf9ce1d8b028e6b45b85fa2",
+  "intentos/02-comparacion-texto-pdf.json": "7a8c230dfa6076849f3f34286d6e26f7ac407c89dece4487c6718d4ddb61c242",
+  "intentos/02-rfc-inicial.png": "10063f91a08e5a2fb177e6ddd8bfac506d030e3c3ab5831e55cb0ce31fa473a0",
+  "listado-clientes.pdf": "f7d31bcd73116b78e0395d90c3f494cd42309161f1d53d9ce5508a08a5a9fe01",
+  "listado-productos.pdf": "4bbd72f85a0072c885d7ce6403ef5093118f1415f89aebe829a9adc299bbfbdd",
+  "npm-build.txt": "5f04dfed4896207d257e4468c90a98f57172f401ff9e76da34aa5825f1e74229",
+  "npm-test.txt": "bc242c838afc64746efa6ee90cee394a0c00d436a752b8dc73f5410b8d3610a5",
+  "resultado.json": "339d03acf99f6540dd516e8ae16d265996f0bb0fcbe4cb5e0ee5fbb6e25e2b30",
+  "simulado/01-grafica.png": "f57c229f83401b42116b4d320ed943e591d00f865bab6ff0017cb510e36a72ba",
+  "simulado/02-rango-excesivo.png": "f497c5b47c0e5543e34bcd50840f23cfd6b629695d475f188cfade0129057f5f",
+  "simulado/03-configuracion.png": "8427ce793aaa23b14d0baf7bcedad251214cde94513e970bd48fc834cef34f18",
+  "simulado/04-vendedor.png": "4432a8d6c8bdf7abf5b4564f8823ce2fb3f56f79cda6a60d15b952482c90a528"
+}
