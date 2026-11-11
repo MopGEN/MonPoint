@@ -52,8 +52,11 @@ try {
     # Solo montajes: docker inspect completo expondria variables de entorno.
     $montajes = Ejecutar 'docker' @('inspect', '--format', '{{json .Mounts}}', 'monpoint-mongodb')
     Guardar 'montajes-mongodb.json' $montajes
+    # PS 5.1 entrega el arreglo JSON como un unico objeto a la canalizacion.
+    # Asignarlo primero permite que foreach recorra cada montaje, no el arreglo.
+    $montajesDatos = ConvertFrom-Json -InputObject $montajes
     $volumenes = @()
-    foreach ($montaje in @($montajes | ConvertFrom-Json)) {
+    foreach ($montaje in $montajesDatos) {
         if ($montaje.Type -eq 'volume') {
             $volumenes += (Ejecutar 'docker' @('volume', 'inspect', '--format', '{{json .}}', $montaje.Name) | ConvertFrom-Json)
         }

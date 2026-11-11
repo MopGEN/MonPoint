@@ -215,8 +215,16 @@ Revisión del paquete recibido: 39 archivos dentro del directorio del recorrido
 y el README externo. SHA-256 del tarball original:
 `0e77beb0f9753bcb40dc6110eb3e794fa66f9dae2232f0719f5237a7a0d13f05`.
 Se compararon byte a byte los 36 PNG y el payload tras corregir el acta y el
-recolector; permanecen idénticos. El recolector pasó un análisis sintáctico con
-tree-sitter-powershell y revisión estática. No se ejecutó en PowerShell 5.1 ni
-contra el conjunto Windows durante esta revisión; su ejecución sigue pendiente.
+recolector; permanecen idénticos. La revisión inicial fue sintáctica y estática;
+el primer intento real en Windows falló al enumerar los montajes: el bucle
+recibía el arreglo JSON completo como un montaje y no encontraba `Name`.
+La corrección asigna el resultado de `ConvertFrom-Json` antes de recorrerlo.
+El intento fallido se conserva como INCOMPLETA y sin manifiesto.
+Las [pruebas del recolector](../pruebas/recolectar.test.ps1) ejercitan seis casos
+con respuestas simuladas y arreglos no enumerados: éxito, montajes vacíos,
+fallos nativos/HTTP, ausencia de descarte y folio discordante. Comprueban además
+la integridad del manifiesto y que no se guarden credenciales. Pasaron en
+PowerShell 7.4.6 sobre Linux; no equivalen a ejecutar contra el conjunto Windows
+ni a probar PowerShell 5.1. Esa ejecución completa sigue pendiente.
 Las instantáneas se obtienen secuencialmente, sin una transacción global: evitar
 otras operaciones mientras se recolecta y revisar los archivos antes de cerrar.
