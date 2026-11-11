@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onBeforeUnmount } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount, useId } from 'vue'
 
 /**
  * Dialogo modal sobre el elemento nativo `<dialog>`.
@@ -24,17 +24,16 @@ const props = defineProps({
 const emit = defineEmits(['cerrar'])
 
 const dialogo = ref(null)
+const tituloId = useId()
 
-watch(
-  () => props.abierto,
-  (abierto) => {
-    const el = dialogo.value
-    if (!el) return
-    if (abierto && !el.open) el.showModal()
-    if (!abierto && el.open) el.close()
-  },
-  { flush: 'post' },
-)
+function sincronizar () {
+  const el = dialogo.value
+  if (!el) return
+  if (props.abierto && !el.open) el.showModal()
+  if (!props.abierto && el.open) el.close()
+}
+onMounted(sincronizar)
+watch(() => props.abierto, sincronizar, { flush: 'post' })
 
 // Escape dispara `cancel`. Se intercepta para avisar al padre en lugar de
 // dejar que el navegador cierre por su cuenta: asi el estado del padre y el
@@ -52,11 +51,11 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <dialog ref="dialogo" class="dialogo" @cancel="alCancelar">
+  <dialog ref="dialogo" class="dialogo" :aria-labelledby="tituloId" @cancel="alCancelar">
     <!-- El formulario con method="dialog" no se usa: el envio lo controla el
          padre, que necesita esperar al servidor antes de cerrar. -->
     <header class="cabecera">
-      <h2>{{ titulo }}</h2>
+      <h2 :id="tituloId">{{ titulo }}</h2>
       <button
         type="button"
         class="cerrar"

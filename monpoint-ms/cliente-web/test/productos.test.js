@@ -1,5 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
+import { decimal } from '../src/comun/importe.js'
 import {
   UMBRAL_POR_OMISION,
   aPeticion,
@@ -49,11 +50,26 @@ test('el precio rechaza negativos, notacion cientifica y tres decimales', () => 
   }
 })
 
-test('el precio rechaza un literal que Number alteraria en silencio', () => {
-  // Trece digitos enteros ya exceden lo que un doble representa exactamente
-  // junto con dos decimales.
+test('el precio rechaza literales fuera del limite conservador del cliente', () => {
   assert.ok(validar(bueno({ precio: '12345678901234.56' })).precio)
+  assert.notEqual(String(Number('99999999999999.99')), '99999999999999.99')
+  assert.ok(validar(bueno({ precio: '99999999999999.99' })).precio)
   assert.deepEqual(validar(bueno({ precio: '123456789012.34' })), {})
+})
+
+test('los limites admitidos conservan el valor decimal en el JSON enviado', () => {
+  for (const precio of ['999999999999.99', '999999999999.01', '0.29', '0.01', '41.15']) {
+    const forma = bueno({ precio })
+    assert.deepEqual(validar(forma), {})
+    const enviado = JSON.parse(JSON.stringify(aPeticion(forma)))
+    const recibido = decimal(enviado.precio)
+    const esperado = decimal(precio)
+    assert.equal(
+      recibido.valor * 10n ** BigInt(esperado.escala),
+      esperado.valor * 10n ** BigInt(recibido.escala),
+      'igualdad decimal exacta, sin redondear a centavos',
+    )
+  }
 })
 
 test('existencia y umbral exigen enteros no negativos dentro del rango de int', () => {

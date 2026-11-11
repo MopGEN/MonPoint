@@ -1,0 +1,26 @@
+{
+  "01-alta.png": {
+    "sha256": "d78b995aa90ddaa6366a57b60c135100abba2f4f11a5f995b564008669801995",
+    "bytes": 49376
+  },
+  "02-edicion-movil.png": {
+    "sha256": "1d229991758804b62fa198070821032032d4a8bc290769e72077f81f852fe039",
+    "bytes": 44238
+  },
+  "03-baja.png": {
+    "sha256": "b733a352f6baed67e34e335188e6f4cc48c1d4e78f11c67d14773699f1252a69",
+    "bytes": 38155
+  },
+  "RESULTADOS.md": {
+    "sha256": "d5ed90cf2d7f96167d598acb2c572fdb4776108331c5ce778a54a5f6a8bcc4fd",
+    "bytes": 5931
+  },
+  "fuentes.json": {
+    "sha256": "25e3db80444d9c83809415ce85dc87d2d6e91ace3286116159733df6ee44efdd",
+    "bytes": 1436
+  },
+  "resultado.json": {
+    "sha256": "1cdc8ec8f3d735c59d42761cf43073fc6ed423fcc3deeedd617b45f479642f3a",
+    "bytes": 2150
+  }
+}

@@ -85,6 +85,9 @@ function cerrarDialogo () {
 }
 
 async function guardar () {
+  // Vue actualiza disabled en el siguiente render; dos submit del mismo turno
+  // deben quedar bloqueados tambien antes de que cambie el DOM.
+  if (guardando.value) return
   const encontrados = validar(forma, { edicion: dialogo.value === 'edicion' })
   errores.value = encontrados
   errorGeneral.value = null
@@ -131,7 +134,7 @@ function pedirBaja (producto) {
 }
 
 async function confirmarBaja () {
-  if (!dandoBaja.value) return
+  if (bajaEnCurso.value || !dandoBaja.value) return
   bajaEnCurso.value = true
   errorBaja.value = null
   try {
@@ -234,71 +237,73 @@ async function confirmarBaja () {
       @cerrar="cerrarDialogo"
     >
       <form id="forma-producto" novalidate @submit.prevent="guardar">
-        <div v-if="errorGeneral" class="mp-aviso mp-aviso--error" role="alert">
-          {{ errorGeneral.message }}
-        </div>
+        <fieldset class="campos" :disabled="guardando">
+          <div v-if="errorGeneral" class="mp-aviso mp-aviso--error" role="alert">
+            {{ errorGeneral.message }}
+          </div>
 
-        <CampoFormulario id="nombre" etiqueta="Nombre" :error="errores.nombre">
-          <template #default="{ atributos }">
-            <input v-bind="atributos" v-model="forma.nombre" class="mp-campo" type="text" />
-          </template>
-        </CampoFormulario>
+          <CampoFormulario id="nombre" etiqueta="Nombre" :error="errores.nombre">
+            <template #default="{ atributos }">
+              <input v-bind="atributos" v-model="forma.nombre" class="mp-campo" type="text" />
+            </template>
+          </CampoFormulario>
 
-        <CampoFormulario id="descripcion" etiqueta="Descripción (opcional)" :error="errores.descripcion">
-          <template #default="{ atributos }">
-            <input v-bind="atributos" v-model="forma.descripcion" class="mp-campo" type="text" />
-          </template>
-        </CampoFormulario>
+          <CampoFormulario id="descripcion" etiqueta="Descripción (opcional)" :error="errores.descripcion">
+            <template #default="{ atributos }">
+              <input v-bind="atributos" v-model="forma.descripcion" class="mp-campo" type="text" />
+            </template>
+          </CampoFormulario>
 
-        <CampoFormulario
-          id="precio"
-          etiqueta="Precio"
-          :error="errores.precio"
-          ayuda="Hasta dos decimales, con punto. Sin signo de moneda."
-        >
-          <template #default="{ atributos }">
-            <input
-              v-bind="atributos"
-              v-model="forma.precio"
-              class="mp-campo mp-cifra"
-              type="text"
-              inputmode="decimal"
-            />
-          </template>
-        </CampoFormulario>
+          <CampoFormulario
+            id="precio"
+            etiqueta="Precio"
+            :error="errores.precio"
+            ayuda="Hasta dos decimales, con punto. Sin signo de moneda."
+          >
+            <template #default="{ atributos }">
+              <input
+                v-bind="atributos"
+                v-model="forma.precio"
+                class="mp-campo mp-cifra"
+                type="text"
+                inputmode="decimal"
+              />
+            </template>
+          </CampoFormulario>
 
-        <CampoFormulario id="existencia" etiqueta="Existencia" :error="errores.existencia">
-          <template #default="{ atributos }">
-            <input
-              v-bind="atributos"
-              v-model="forma.existencia"
-              class="mp-campo mp-cifra"
-              type="text"
-              inputmode="numeric"
-            />
-          </template>
-        </CampoFormulario>
+          <CampoFormulario id="existencia" etiqueta="Existencia" :error="errores.existencia">
+            <template #default="{ atributos }">
+              <input
+                v-bind="atributos"
+                v-model="forma.existencia"
+                class="mp-campo mp-cifra"
+                type="text"
+                inputmode="numeric"
+              />
+            </template>
+          </CampoFormulario>
 
-        <CampoFormulario
-          id="umbralStock"
-          etiqueta="Umbral de existencia baja"
-          :error="errores.umbralStock"
-          :ayuda="
-            dialogo === 'edicion'
-              ? 'Obligatorio al editar: dejarlo vacío conservaría el umbral anterior.'
-              : `Si se deja vacío se usa ${UMBRAL_POR_OMISION}.`
-          "
-        >
-          <template #default="{ atributos }">
-            <input
-              v-bind="atributos"
-              v-model="forma.umbralStock"
-              class="mp-campo mp-cifra"
-              type="text"
-              inputmode="numeric"
-            />
-          </template>
-        </CampoFormulario>
+          <CampoFormulario
+            id="umbralStock"
+            etiqueta="Umbral de existencia baja"
+            :error="errores.umbralStock"
+            :ayuda="
+              dialogo === 'edicion'
+                ? 'Obligatorio al editar: dejarlo vacío conservaría el umbral anterior.'
+                : `Si se deja vacío se usa ${UMBRAL_POR_OMISION}.`
+            "
+          >
+            <template #default="{ atributos }">
+              <input
+                v-bind="atributos"
+                v-model="forma.umbralStock"
+                class="mp-campo mp-cifra"
+                type="text"
+                inputmode="numeric"
+              />
+            </template>
+          </CampoFormulario>
+        </fieldset>
       </form>
 
       <template #pie>
@@ -359,6 +364,13 @@ async function confirmarBaja () {
 .pantalla {
   max-width: 68rem;
   margin: 0 auto;
+}
+
+.campos {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
 }
 
 .encabezado {

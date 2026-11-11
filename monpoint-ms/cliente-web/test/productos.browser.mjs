@@ -25,9 +25,17 @@ let catalogo = [
   { id: 'p3', nombre: 'Sello automático', descripcion: null, precio: 120, existencia: 9, umbralStock: 5, activo: true },
 ]
 const recibidos = []
+let rechazarSiguienteAlta = true
+let retrasarAlta = false
+let liberarAlta
 
-const navegador = await chromium.launch()
+const navegador = await chromium.launch({
+  ...(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}),
+  args: process.env.CHROMIUM_NO_SANDBOX === '1' ? ['--no-sandbox'] : [],
+})
 const pagina = await (await navegador.newContext({ viewport: { width: 1280, height: 860 } })).newPage()
+const erroresJs = []
+pagina.on('pageerror', (e) => erroresJs.push(e.message))
 
 await pagina.route(`${API}/auth/login`, (r) =>
   r.fulfill({
@@ -54,22 +62,24 @@ await pagina.route(`${API}/inventario/productos**`, async (ruta) => {
   const cuerpo = metodo === 'DELETE' ? null : peticion.postDataJSON()
   recibidos.push({ metodo, url: peticion.url(), cuerpo })
 
-  // Un alta con nombre repetido se rechaza como lo hace el servicio: 400 con
-  // el mapa `campos`, que es lo que la pantalla debe saber pintar.
-  if (metodo === 'POST' && catalogo.some((p) => p.activo && p.nombre === cuerpo.nombre)) {
+  // Respuesta ficticia para comprobar el mapa campos. El backend NO impone
+  // unicidad por nombre; este rechazo no pretende probar una regla de dominio.
+  if (metodo === 'POST' && rechazarSiguienteAlta) {
+    rechazarSiguienteAlta = false
     return ruta.fulfill({
       status: 400,
       contentType: 'application/problem+json',
       body: JSON.stringify({
         title: 'Datos inválidos',
         detail: 'Uno o más campos no cumplen las validaciones',
-        campos: { nombre: 'Ya existe un producto activo con ese nombre' },
+        campos: { nombre: 'Mensaje de validacion simulado' },
       }),
     })
   }
 
   if (metodo === 'POST') {
-    catalogo.push({ id: `p${catalogo.length + 1}`, activo: true, descripcion: null, ...cuerpo })
+    if (retrasarAlta) await new Promise((r) => { liberarAlta = r })
+    catalogo.push({ id: `p${catalogo.length + 1}`, activo: true, descripcion: null, ...cuerpo, umbralStock: cuerpo.umbralStock ?? 5 })
     return ruta.fulfill({ status: 201, contentType: 'application/json', body: JSON.stringify(cuerpo) })
   }
   if (metodo === 'PUT') {
@@ -119,6 +129,7 @@ await pagina.waitForFunction(() => document.querySelectorAll('table.mp-tabla tbo
 const antes = recibidos.length
 await pagina.click('button:has-text("Nuevo producto")')
 await pagina.waitForSelector('dialog[open]')
+assert.ok(await pagina.getByRole('dialog', { name: 'Nuevo producto', exact: true }).isVisible())
 await pagina.click('button[form="forma-producto"]')
 await pagina.waitForSelector('#nombre-error')
 assert.equal(recibidos.length, antes, 'un formulario invalido no gasta una peticion')
@@ -129,7 +140,7 @@ await pagina.fill('#nombre', 'Papel bond')
 await pagina.fill('#precio', '10.00')
 await pagina.fill('#existencia', '3')
 await pagina.click('button[form="forma-producto"]')
-await pagina.waitForSelector('text=Ya existe un producto activo con ese nombre')
+await pagina.waitForSelector('text=Mensaje de validacion simulado')
 assert.ok(
   await pagina.locator('#nombre[aria-invalid="true"]').count(),
   'el campo queda marcado como invalido para un lector de pantalla',
@@ -138,13 +149,27 @@ await pagina.screenshot({ path: `${SALIDA}-03-validacion-servidor.png` })
 
 // Alta correcta: el dialogo se cierra y la fila aparece.
 await pagina.fill('#nombre', 'Cinta adhesiva')
-await pagina.click('button[form="forma-producto"]')
+retrasarAlta = true
+const antesAlta = recibidos.length
+// Dos submit sin esperar el render: disabled por si solo no lo impide.
+await pagina.locator('#forma-producto').evaluate((forma) => {
+  forma.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+  forma.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+})
+await pagina.waitForFunction(() => document.querySelector('button[form="forma-producto"]').disabled)
+assert.equal(recibidos.length - antesAlta, 1, 'un unico POST antes de completar el alta')
+assert.ok(await pagina.locator('#nombre').isDisabled(), 'no se editan datos durante el envio')
+await pagina.keyboard.press('Escape')
+assert.ok(await pagina.getByRole('dialog', { name: 'Nuevo producto', exact: true }).isVisible(), 'Escape no cierra una operacion pendiente')
+retrasarAlta = false
+liberarAlta()
 await pagina.waitForFunction(() => document.querySelectorAll('table.mp-tabla tbody tr').length === 4)
 assert.equal(await pagina.locator('dialog[open]').count(), 0, 'el dialogo se cierra al guardar')
 const alta = recibidos.at(-1)
 assert.equal(alta.metodo, 'POST')
 assert.equal(alta.cuerpo.precio, 10, 'el precio viaja como numero')
 assert.equal(alta.cuerpo.umbralStock, null, 'sin umbral viaja null para que el servidor ponga el suyo')
+assert.equal(catalogo.at(-1).umbralStock, 5, 'el simulador aplica el valor por omision real')
 
 // Edicion: el umbral vacio es un error, porque el servidor conservaria el viejo.
 await pagina.click('table.mp-tabla tbody tr:first-child button:has-text("Editar")')
@@ -163,9 +188,10 @@ assert.equal(recibidos.at(-1).cuerpo.umbralStock, 7)
 await pagina.click('table.mp-tabla tbody tr:first-child button:has-text("Dar de baja")')
 await pagina.waitForSelector('dialog[open]')
 await pagina.screenshot({ path: `${SALIDA}-04-confirmar-baja.png` })
-await pagina.click('dialog[open] button:has-text("Dar de baja")')
+await pagina.locator('dialog[open] button:has-text("Dar de baja")').evaluate((b) => { b.click(); b.click() })
 await pagina.waitForFunction(() => document.querySelectorAll('table.mp-tabla tbody tr').length === 3)
 assert.equal(recibidos.at(-1).metodo, 'DELETE')
+assert.equal(recibidos.filter((r) => r.metodo === 'DELETE').length, 1, 'un unico DELETE con doble clic')
 
 // VENDEDOR: misma pantalla, sin ninguna accion de escritura.
 rol = 'VENDEDOR'
@@ -178,5 +204,6 @@ assert.equal(await pagina.locator('button:has-text("Dar de baja")').count(), 0)
 assert.ok(await pagina.locator('text=Solo consulta.').count(), 'la pantalla dice que es de consulta')
 await pagina.screenshot({ path: `${SALIDA}-05-vendedor-solo-consulta.png` })
 
+assert.deepEqual(erroresJs, [])
 await navegador.close()
 console.log('Recorrido completado. Capturas en', `${SALIDA}-*.png`)

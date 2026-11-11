@@ -1,0 +1,17 @@
+{
+  "base": "d3766cb",
+  "parcheImportado": "d5fcce4",
+  "sha256": {
+    "monpoint-ms/cliente-web/README.md": "590201841db0f744859adc980785b16bd73b1bd8393dba283e2f76c73b3669e4",
+    "monpoint-ms/cliente-web/src/caja/cobro.js": "854a5b0b7fed7883a48313d69dde6416ac51422f65efa650c95573caa7e06bb8",
+    "monpoint-ms/cliente-web/src/componentes/CampoFormulario.vue": "50636c1800b7c9a0ff297c1be5d8ec2a76605f51140b3746d886c30e0437c371",
+    "monpoint-ms/cliente-web/src/componentes/DialogoModal.vue": "c27d087fa8364d27f5157bc85b0fb7eece7582d433531e42af5417b199d97b6a",
+    "monpoint-ms/cliente-web/src/comun/importe.js": "ca93aa9118bbb222a6c393e523c1c24b52f1c0cb7fbeba5511f639bbc50df925",
+    "monpoint-ms/cliente-web/src/productos/formulario.js": "551c1d94fc903e6f0dfabdf8568e161c6bfb6291e3862bc9b89ea7a6cbd288f6",
+    "monpoint-ms/cliente-web/src/router/index.js": "6ed21b43692a1e3410ee331bde2e5cc6a542d797b1e929361aa9182900ba48a3",
+    "monpoint-ms/cliente-web/src/vistas/Productos.vue": "1528e30d3ef28034a142fb0a6471ed7158d73c6fbf239fbfa51ee6cb79ba8297",
+    "monpoint-ms/cliente-web/test/productos.browser.mjs": "ba859cefd45937d124881c2369e266e9c5b8198d0077115aed0b038df3ea2591",
+    "monpoint-ms/cliente-web/test/productos.test.js": "c8886ba76558b85d9895bca602e67ca62178ab7fea0a55a49bcfa8c9a59b9132",
+    "monpoint-ms/cliente-web/test/productos.real.browser.mjs": "f150302e53c214ac164abe2e9b228cd057d0c2247af35d30c177470578495978"
+  }
+}

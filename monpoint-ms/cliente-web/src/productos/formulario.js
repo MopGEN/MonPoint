@@ -3,8 +3,9 @@ import { decimal } from '../comun/importe.js'
 /**
  * Reglas del formulario de producto, sin Vue, para poder probarlas solas.
  *
- * Las validaciones reproducen las del servidor (`ProductoRequest`), no las
- * sustituyen: el Gateway y el servicio siguen siendo quienes deciden. Lo que se
+ * Valida los campos de `ProductoRequest` y limita el formato de precio del
+ * cliente a dos decimales y doce enteros; el servidor admite otros BigDecimal
+ * no negativos. No sustituye la validacion remota. Lo que se
  * gana validando aqui es no gastar una peticion en un error evidente y poder
  * senalar el campo antes de enviarlo.
  *
@@ -23,10 +24,10 @@ const MAX_ENTERO = 2147483647
  * Digitos de parte entera admitidos en el precio.
  *
  * El precio viaja como numero JSON, que es el camino ya probado contra el
- * servicio. `Number` es exacto mientras el literal quepa en la precision de un
- * doble; con dos decimales y doce enteros sobra margen y nunca se altera el
- * valor en silencio. Un literal mas largo se rechaza aqui en vez de enviarse
- * redondeado sin avisar.
+ * servicio. Number no representa exactamente muchas fracciones decimales.
+ * El limite conserva el valor decimal al serializar de nuevo el numero como
+ * JSON; no se afirma exactitud binaria. Un literal mayor se rechaza en vez de
+ * enviarse con una precision no garantizada. Es una restriccion del cliente.
  */
 const MAX_ENTEROS_PRECIO = 12
 
