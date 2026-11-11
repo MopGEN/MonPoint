@@ -1,5 +1,11 @@
 # Evidencia de aceptación
 
+## Cliente — Clientes y escritura compartida
+
+[Revisión y CRUD real del 11 de noviembre](cliente-clientes-2026-11-11/RESULTADOS.md):
+alta y modificación desde ambos roles, eliminación ADMIN y errores por campo
+reales. Incluye el correo local citado y las regresiones de los listados.
+
 ## Cliente — Productos
 
 [Revisión del parche y CRUD real del 11 de noviembre](cliente-productos-2026-11-11/RESULTADOS.md):

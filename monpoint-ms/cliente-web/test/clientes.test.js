@@ -22,7 +22,7 @@ test('el correo vacio no se valida porque es opcional', () => {
   assert.deepEqual(validar(bueno({ correo: '   ' })), {})
 })
 
-test('la comprobacion del correo descarta solo lo imposible', () => {
+test('la comprobacion basica del correo acepta formas comunes y rechaza errores evidentes', () => {
   for (const valido of ['a@b', 'ana.ruiz@example.test', 'x+etiqueta@dominio.mx']) {
     assert.equal(correoPlausible(valido), true, valido)
   }
@@ -31,12 +31,21 @@ test('la comprobacion del correo descarta solo lo imposible', () => {
   }
 })
 
+test('una parte local citada no se rechaza por espacios o arrobas interiores', () => {
+  for (const correo of ['"Ana Ruiz"@example.test', '"ana@oficina"@example.test']) {
+    assert.equal(correoPlausible(correo), true)
+    assert.deepEqual(validar(bueno({ correo })), {})
+    assert.equal(aPeticion(bueno({ correo })).correo, correo)
+  }
+  assert.equal(correoPlausible('Ana Ruiz@example.test'), false)
+})
+
 /**
  * El servidor usa `@Email` de Jakarta, cuyo patron es permisivo. Si el cliente
  * fuera mas estricto rechazaria direcciones que el servidor aceptaria y el
  * usuario no tendria forma de saber que el limite lo pone la pantalla.
  */
-test('no se rechazan direcciones que el servidor aceptaria', () => {
+test('la comprobacion admite dominios sin punto y apostrofos en la parte local', () => {
   assert.equal(correoPlausible('a@b'), true, 'sin punto en el dominio')
   assert.equal(correoPlausible('nombre@localhost'), true)
   assert.equal(correoPlausible("o'brien@example.test"), true)

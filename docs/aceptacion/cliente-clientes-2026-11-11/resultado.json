@@ -1,0 +1,82 @@
+{
+  "inicio": "2026-11-11T15:07:03.151Z",
+  "cliente": "http://localhost:5173",
+  "gateway": "http://localhost:8080",
+  "casos": [
+    "VENDEDOR: alta 201 y edicion 200 desde la pantalla; DELETE 403 por API",
+    "400 real con campos.correo: error junto al campo y sin aviso generico",
+    "ADMIN: alta 201 y edicion 200 con correo local citado conservado",
+    "ADMIN elimina: 204, ausencia tras recarga y consulta directa 404"
+  ],
+  "errores": [],
+  "altaVendedor": {
+    "id": "6af48498ca3cccd0ca939c0e",
+    "nombre": "Revision clientes 1794409623869 vendedor",
+    "correo": null,
+    "telefono": null,
+    "direccion": null,
+    "fechaRegistro": "2026-11-11T15:07:04.592391941Z",
+    "fechaActualizacion": "2026-11-11T15:07:04.592391941Z"
+  },
+  "edicionVendedor": {
+    "id": "6af48498ca3cccd0ca939c0e",
+    "nombre": "Revision clientes 1794409623869 vendedor",
+    "correo": null,
+    "telefono": "5544332211",
+    "direccion": null,
+    "fechaRegistro": "2026-11-11T15:07:04.592Z",
+    "fechaActualizacion": "2026-11-11T15:07:04.709292153Z"
+  },
+  "borradoVendedor": {
+    "estado": 403,
+    "datos": {
+      "detail": "Solo un ADMIN puede dar de baja clientes",
+      "instance": "/clientes/6af48498ca3cccd0ca939c0e",
+      "status": 403,
+      "title": "Acceso denegado",
+      "requestId": "de0e028a-284e-46f0-b395-9b5dcc92c4d3"
+    }
+  },
+  "validacionRemota": {
+    "detail": "Uno o más campos no cumplen las validaciones",
+    "instance": "/clientes",
+    "status": 400,
+    "title": "Datos inválidos",
+    "requestId": "8ab6a5f3-3ffc-43a3-9da6-048ca6597328",
+    "campos": {
+      "correo": "El correo no tiene un formato válido"
+    }
+  },
+  "altaAdmin": {
+    "id": "6af48499ca3cccd0ca939c0f",
+    "nombre": "Revision clientes 1794409623869 admin",
+    "correo": "\"Ana Ruiz\"@example.test",
+    "telefono": null,
+    "direccion": null,
+    "fechaRegistro": "2026-11-11T15:07:05.289077551Z",
+    "fechaActualizacion": "2026-11-11T15:07:05.289077551Z"
+  },
+  "edicionAdmin": {
+    "id": "6af48499ca3cccd0ca939c0f",
+    "nombre": "Revision clientes 1794409623869 admin",
+    "correo": "\"Ana Ruiz\"@example.test",
+    "telefono": null,
+    "direccion": "Calle de prueba 1",
+    "fechaRegistro": "2026-11-11T15:07:05.289Z",
+    "fechaActualizacion": "2026-11-11T15:07:05.401834210Z"
+  },
+  "eliminados": [
+    {
+      "id": "6af48499ca3cccd0ca939c0f",
+      "DELETE": 204,
+      "GET": 404
+    },
+    {
+      "id": "6af48498ca3cccd0ca939c0e",
+      "DELETE": 204,
+      "GET": 404
+    }
+  ],
+  "resultado": "PASS",
+  "fin": "2026-11-11T15:07:05.922Z"
+}

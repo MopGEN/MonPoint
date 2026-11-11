@@ -1,9 +1,10 @@
 /**
  * Filtro de texto sobre una lista ya cargada.
  *
- * Ninguno de los servicios ofrece busqueda, asi que las pantallas filtran lo
- * que ya tienen en memoria. Con un catalogo grande esto habria que pedirselo
- * al servidor; queda anotado en vez de fingir que escala.
+ * Las pantallas filtran lo que ya tienen en memoria para buscar tambien por
+ * correo/telefono y sin acentos. Clientes si ofrece GET /clientes?nombre;
+ * este filtro local no lo usa. No sustituye paginacion ni busqueda remota para
+ * catalogos grandes.
  *
  * Se normaliza quitando acentos y mayusculas: quien escribe "automatico" en
  * una caja espera encontrar "Semilla automático", y exigirle el acento

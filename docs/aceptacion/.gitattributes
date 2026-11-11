@@ -3,3 +3,4 @@
 6.1-windows-2026-11-11/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 cliente-concha-notificaciones-2026-11-11/** -text
 cliente-productos-2026-11-11/** -text
+cliente-clientes-2026-11-11/** -text

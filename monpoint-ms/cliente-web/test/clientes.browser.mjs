@@ -23,8 +23,13 @@ let clientes = [
 ]
 const recibidos = []
 
-const navegador = await chromium.launch()
+const navegador = await chromium.launch({
+  ...(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}),
+  args: process.env.CHROMIUM_NO_SANDBOX === '1' ? ['--no-sandbox'] : [],
+})
 const pagina = await (await navegador.newContext({ viewport: { width: 1280, height: 860 } })).newPage()
+const erroresJs = []
+pagina.on('pageerror', (e) => erroresJs.push(e.message))
 
 await pagina.route(`${API}/auth/login`, (r) =>
   r.fulfill({
@@ -151,9 +156,11 @@ assert.ok(
 )
 await pagina.screenshot({ path: `${SALIDA}-03-eliminar.png` })
 await pagina.click('dialog[open] button.peligro')
-// Se espera a que desaparezca esa fila concreta: una condicion absoluta, no
-// una diferencia respecto a una cuenta tomada en un instante cualquiera.
-await pagina.waitForSelector('table.mp-tabla >> text=Ana Ruiz', { state: 'detached' })
+// Una ausencia durante Cargando no prueba el listado final. Primero esperar
+// el cierre tras el 204 y el contenido positivo del listado recargado.
+await pagina.waitForSelector('dialog[open]', { state: 'detached' })
+await pagina.getByText('Luis Pérez', { exact: true }).waitFor()
+assert.equal(await pagina.getByText('Ana Ruiz', { exact: true }).count(), 0)
 assert.equal(recibidos.at(-1).metodo, 'DELETE')
 
 // VENDEDOR: puede dar de alta y editar, pero no eliminar.
@@ -166,5 +173,6 @@ assert.ok(await pagina.locator('button:has-text("Editar")').count(), 'puede edit
 assert.equal(await pagina.locator('button:has-text("Eliminar")').count(), 0, 'no puede eliminar')
 await pagina.screenshot({ path: `${SALIDA}-04-vendedor.png` })
 
+assert.deepEqual(erroresJs, [])
 await navegador.close()
 console.log('Recorrido completado. Capturas en', `${SALIDA}-*.png`)

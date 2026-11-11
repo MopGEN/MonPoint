@@ -10,8 +10,9 @@ import { ref, shallowRef } from 'vue'
  * DOS BANDERAS, A PROPOSITO. `enCurso` es reactiva y sirve para la interfaz:
  * deshabilitar el boton, cambiar su texto. `bloqueado` no es reactiva y es la
  * que impide la segunda escritura. Se separan porque cumplen papeles
- * distintos: el estado que pinta la pantalla puede ir un fotograma por detras
- * sin consecuencias, y la guarda no puede ir por detras ni uno. Confiar el
+ * distintos. El valor de un ref cambia sincronicamente; lo que espera al
+ * render es el DOM. El cerrojo privado separa el bloqueo del estado publicado
+ * para la interfaz, no compensa un retraso de enCurso.value. Confiar el
  * bloqueo al `disabled` del boton deja pasar dos clics en el mismo fotograma,
  * porque entre el primero y el repintado no hay nada que los frene.
  *

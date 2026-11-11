@@ -32,10 +32,12 @@ src/
 ├── assets/base.css    variables del prototipo, reinicio y primitivas
 ├── componentes/       navegacion, estados de carga y tabla accesible
 ├── composables/       useRecurso: cancelacion, ultima respuesta y errores
+│                     useAccion: guarda de escritura y errores por campo
 └── vistas/
     ├── IniciarSesion.vue   minima y funcional; la 5.3 la completa
     ├── Caja.vue            catálogo, carrito y seguimiento del cobro (5.5)
     ├── Productos.vue       catálogo activo y CRUD por rol
+    ├── Clientes.vue        altas/cambios para ambos roles; eliminación ADMIN
     ├── Notificaciones.vue  alertas, filtros de lectura y marcado (solo ADMIN)
     └── NoEncontrada.vue
 ```
@@ -75,6 +77,10 @@ abrirla.
 | POST | `/inventario/productos` | alta ADMIN; 201 con producto |
 | PUT | `/inventario/productos/{id}` | reemplaza datos editables, incluida existencia; solo ADMIN |
 | DELETE | `/inventario/productos/{id}` | baja lógica ADMIN; 204 |
+| GET | `/clientes` | listado para ambos roles; la API también admite `?nombre=` |
+| POST | `/clientes` | alta para ambos roles; 201 |
+| PUT | `/clientes/{id}` | modificación para ambos roles; 200 |
+| DELETE | `/clientes/{id}` | eliminación física, solo ADMIN; 204 |
 | GET | `/notificaciones?leida=false` | solo ADMIN; omitir el filtro para todas o usar `true` para leídas |
 | PUT | `/notificaciones/{id}/leida` | solo ADMIN; sin cuerpo; 204; el servidor cierra la alerta |
 
@@ -186,6 +192,56 @@ Comprueba el CRUD de la pantalla, el mapa remoto `campos` por API y los tres
 rechazos de escritura con token real de VENDEDOR. No forma parte de `npm test`.
 
 [Revisión y capturas de Productos](../../docs/aceptacion/cliente-productos-2026-11-11/RESULTADOS.md).
+
+## Clientes y useAccion
+
+Ambos roles consultan, crean y modifican clientes. Solo ADMIN ve y ejecuta la
+eliminación. Esta es física: el listado deja de incluir al cliente y GET por id
+responde 404. El backend no publica un evento de borrado; las réplicas de otros
+servicios no se actualizan por esta operación. El diálogo advierte esta
+consecuencia. No es la baja lógica de Productos.
+
+Nombre es obligatorio; correo, teléfono y dirección son opcionales. Los textos
+vacíos se envían como null, que es lo que el modelo almacena tras limpiarlos.
+El correo se comprueba de forma básica, admitiendo partes locales entre
+comillas como `"Ana Ruiz"@example.test`. No es un parser RFC completo: `@Email`
+del servidor decide finalmente y sus errores se muestran junto al campo.
+
+`useAccion` centraliza la guarda por instancia, la bandera visible, el error
+general y el mapa `campos`. Un segundo envío pendiente devuelve
+`{ ok: false, omitida: true }`. `fijarCampos` recibe la validación local y
+`limpiar` borra mensajes sin liberar la operación. El ref cambia de inmediato;
+solo la actualización del DOM espera al render. No hay reintento automático ni
+idempotencia HTTP. Productos y Notificaciones conservan sus guardas anteriores;
+la incorporación de este helper no las migra.
+
+`comun/filtro.js` sirve a Productos y Clientes. Clientes filtra localmente por
+nombre, correo y teléfono, sin dirección. La API sí ofrece búsqueda por nombre,
+pero no se usa en esta pantalla para combinar esos campos y quitar acentos.
+
+Después de compilar y arrancar preview:
+
+```bash
+PLAYWRIGHT_MODULE=/ruta/a/playwright/index.mjs node test/clientes.browser.mjs
+```
+
+Comprueba el doble envío, errores locales, opcionales, filtros y los botones de
+cada rol. La ausencia de una fila se comprueba tras el cierre y la carga del
+contenido final; una ausencia durante Cargando no demuestra que se eliminó.
+
+Con Vite y los servicios reales, sin intercepciones:
+
+```bash
+PLAYWRIGHT_MODULE=/ruta/a/playwright/index.mjs node test/clientes.real.browser.mjs
+```
+
+Usa las mismas variables de navegador, ADMIN y vendedor de los recorridos
+anteriores. **Crea un vendedor y dos clientes**; al terminar elimina solo esos
+clientes con ADMIN y conserva el usuario. No es idempotente ni se ejecuta con
+`npm test`. Solo entornos de prueba. Verifica permisos, CRUD, correo citado y un
+400 real presentado en el campo, además de la ausencia final por listado y 404.
+
+[Revisión y evidencia de Clientes](../../docs/aceptacion/cliente-clientes-2026-11-11/RESULTADOS.md).
 
 ## Cliente empaquetado con nginx (5.6)
 

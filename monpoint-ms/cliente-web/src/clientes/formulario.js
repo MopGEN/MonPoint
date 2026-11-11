@@ -3,8 +3,9 @@ import { filtrarPor } from '../comun/filtro.js'
 /**
  * Reglas del formulario de cliente, sin Vue, para poder probarlas solas.
  *
- * Reproducen las de `ClienteRequest`: nombre obligatorio y correo opcional
- * pero con formato valido si viene. Telefono y direccion no tienen validacion
+ * Nombre obligatorio y correo opcional. La comprobacion local del correo es
+ * basica; la validacion definitiva es @Email en `ClienteRequest`.
+ * Telefono y direccion no tienen validacion
  * en el servidor y aqui tampoco se inventa ninguna.
  *
  * Las claves de los errores son los nombres de campo del DTO, para que un
@@ -26,14 +27,18 @@ export const desdeCliente = (c) => ({
  *
  * El servidor usa `@Email` de Jakarta, cuyo patron es permisivo. Validar aqui
  * con una expresion mas estricta rechazaria direcciones que el servidor
- * aceptaria, y el usuario no tendria forma de saber que el limite lo pone el
- * cliente. Solo se descarta lo que ningun correo puede ser: sin arroba, con
- * mas de una, con algun lado vacio o con espacios.
+ * aceptaria. Una parte local entre comillas puede contener espacios o arrobas:
+ * se separa por la ultima @ y se permite esa forma, sin implementar un parser
+ * RFC completo. El servidor sigue decidiendo el formato definitivo.
  */
 export function correoPlausible (texto) {
-  if (/\s/.test(texto)) return false
-  const partes = texto.split('@')
-  return partes.length === 2 && partes[0].length > 0 && partes[1].length > 0
+  const arroba = texto.lastIndexOf('@')
+  if (arroba <= 0 || arroba === texto.length - 1) return false
+  const local = texto.slice(0, arroba)
+  const dominio = texto.slice(arroba + 1)
+  if (/\s/.test(dominio)) return false
+  if (local.startsWith('"') && local.endsWith('"')) return !/[\r\n]/.test(local)
+  return !/[@\s"]/.test(local)
 }
 
 export function validar (forma) {
