@@ -1,0 +1,128 @@
+{
+    "1":  {
+              "id":  "6af416432d1858377c263c86",
+              "folio":  1,
+              "estado":  "CONFIRMADA",
+              "clienteId":  "6af41612d6c395da9ed990d0",
+              "clienteNombre":  "Semilla 3.1 - Ana",
+              "lineas":  [
+                             {
+                                 "productoId":  "6af4161361c0bf7a3edcb0b4",
+                                 "nombreProducto":  "Semilla 3.1 - Tinta",
+                                 "precioUnitario":  41.15,
+                                 "cantidad":  5,
+                                 "subtotal":  205.75
+                             }
+                         ],
+              "total":  205.75,
+              "motivo":  null,
+              "productoIdRechazado":  null,
+              "fechaCreacion":  "2026-11-11T07:16:19.048Z",
+              "fechaResolucion":  "2026-11-11T07:16:19.301Z"
+          },
+    "2":  {
+              "id":  "6af416432d1858377c263c88",
+              "folio":  2,
+              "estado":  "CONFIRMADA",
+              "clienteId":  "6af41612d6c395da9ed990d1",
+              "clienteNombre":  "Semilla 3.1 - Luis",
+              "lineas":  [
+                             {
+                                 "productoId":  "6af4161361c0bf7a3edcb0b5",
+                                 "nombreProducto":  "Semilla 3.1 - Papel",
+                                 "precioUnitario":  75.5,
+                                 "cantidad":  2,
+                                 "subtotal":  151.0
+                             }
+                         ],
+              "total":  151.0,
+              "motivo":  null,
+              "productoIdRechazado":  null,
+              "fechaCreacion":  "2026-11-11T07:16:19.778Z",
+              "fechaResolucion":  "2026-11-11T07:16:19.810Z"
+          },
+    "3":  {
+              "id":  "6af416442d1858377c263c8a",
+              "folio":  3,
+              "estado":  "CONFIRMADA",
+              "clienteId":  null,
+              "clienteNombre":  null,
+              "lineas":  [
+                             {
+                                 "productoId":  "6af4161361c0bf7a3edcb0b6",
+                                 "nombreProducto":  "Semilla 3.1 - Sello",
+                                 "precioUnitario":  120,
+                                 "cantidad":  1,
+                                 "subtotal":  120
+                             }
+                         ],
+              "total":  120,
+              "motivo":  null,
+              "productoIdRechazado":  null,
+              "fechaCreacion":  "2026-11-11T07:16:20.329Z",
+              "fechaResolucion":  "2026-11-11T07:16:20.365Z"
+          },
+    "4":  {
+              "id":  "6af41a2b2d1858377c263c8c",
+              "folio":  4,
+              "estado":  "CONFIRMADA",
+              "clienteId":  "6af41612d6c395da9ed990d0",
+              "clienteNombre":  "Semilla 3.1 - Ana",
+              "lineas":  [
+                             {
+                                 "productoId":  "6af4161361c0bf7a3edcb0b5",
+                                 "nombreProducto":  "Semilla 3.1 - Papel",
+                                 "precioUnitario":  75.5,
+                                 "cantidad":  1,
+                                 "subtotal":  75.5
+                             }
+                         ],
+              "total":  75.5,
+              "motivo":  null,
+              "productoIdRechazado":  null,
+              "fechaCreacion":  "2026-11-11T07:32:59.103Z",
+              "fechaResolucion":  "2026-11-11T07:32:59.207Z"
+          },
+    "5":  {
+              "id":  "6af41c0e2d1858377c263c8e",
+              "folio":  5,
+              "estado":  "CANCELADA",
+              "clienteId":  null,
+              "clienteNombre":  null,
+              "lineas":  [
+                             {
+                                 "productoId":  "6af4161361c0bf7a3edcb0b4",
+                                 "nombreProducto":  "Semilla 3.1 - Tinta",
+                                 "precioUnitario":  41.15,
+                                 "cantidad":  99,
+                                 "subtotal":  4073.85
+                             }
+                         ],
+              "total":  4073.85,
+              "motivo":  "existencia insuficiente de Semilla 3.1 - Tinta, solicitado 99",
+              "productoIdRechazado":  "6af4161361c0bf7a3edcb0b4",
+              "fechaCreacion":  "2026-11-11T07:41:02.210Z",
+              "fechaResolucion":  "2026-11-11T07:41:02.321Z"
+          },
+    "6":  {
+              "id":  "6af41fae2d1858377c263c90",
+              "folio":  6,
+              "estado":  "CONFIRMADA",
+              "clienteId":  null,
+              "clienteNombre":  null,
+              "lineas":  [
+                             {
+                                 "productoId":  "6af4161361c0bf7a3edcb0b6",
+                                 "nombreProducto":  "Semilla 3.1 - Sello",
+                                 "precioUnitario":  120,
+                                 "cantidad":  1,
+                                 "subtotal":  120
+                             }
+                         ],
+              "total":  120,
+              "motivo":  null,
+              "productoIdRechazado":  null,
+              "fechaCreacion":  "2026-11-11T07:56:30.268Z",
+              "fechaResolucion":  "2026-11-11T07:56:30.354Z"
+          }
+}

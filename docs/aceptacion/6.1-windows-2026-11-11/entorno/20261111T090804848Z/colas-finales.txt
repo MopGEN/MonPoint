@@ -1,0 +1,19 @@
+Timeout: 60.0 seconds ...
+Listing queues for vhost / ...
+name	messages	consumers
+ventas.stock.fallidos	0	0
+reportes.productos	0	1
+ventas.stock	0	1
+reportes.clientes	0	1
+reportes.clientes.fallidos	0	0
+inventario.venta-creada.fallidos	0	0
+ventas.productos.fallidos	0	0
+ventas.clientes	0	1
+ventas.clientes.fallidos	0	0
+ventas.productos	0	1
+reportes.ventas	0	1
+reportes.ventas.fallidos	0	0
+inventario.venta-creada	0	1
+notificaciones.stock-bajo	0	1
+reportes.productos.fallidos	0	0
+notificaciones.stock-bajo.fallidos	0	0

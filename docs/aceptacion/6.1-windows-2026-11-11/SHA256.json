@@ -1,0 +1,238 @@
+{
+    "00-arranque/01-puertos-excluidos.png":  {
+                                                 "sha256":  "2c0dbeed2d5ad77a5f8c278e671b82ebb0d624f2a84b05095594d1ef34a51dda",
+                                                 "bytes":  25269
+                                             },
+    "00-arranque/02-winnat-exclusion.png":  {
+                                                "sha256":  "b1bcd6f10d573ffe7d4f1c43f71fd8e514b025382ab45aea3d3145acf9a73978",
+                                                "bytes":  28058
+                                            },
+    "00-arranque/03-conjunto-saludable.png":  {
+                                                  "sha256":  "eefb785958a820aa9a84b92828618a7b0ab5b0c6e5fe2dfb8022300f53bcecd4",
+                                                  "bytes":  118325
+                                              },
+    "00-arranque/04-puertos-publicados.png":  {
+                                                  "sha256":  "164ec5f702b578c1d8c9795299bbc63ffaae03fdb0caa16f1d75c48a17352767",
+                                                  "bytes":  29646
+                                              },
+    "01-semilla/05-semilla-fase1.png":  {
+                                            "sha256":  "bec7d1c9c4e319d1450b870d7199118e3b2cc890d99d023e065a77c31a936a8c",
+                                            "bytes":  85339
+                                        },
+    "01-semilla/06-semilla-fase2.png":  {
+                                            "sha256":  "fe90849abe47928f13a2b84d38d318b90b1de6c2c6eb14984f97a14b068e36af",
+                                            "bytes":  80643
+                                        },
+    "01-semilla/07-linea-base-notificacion-agregacion.png":  {
+                                                                 "sha256":  "08b76337ded3e8ae0938122d85d7b7a0fd67b41637e1508741b6d6279c18dadc",
+                                                                 "bytes":  122396
+                                                             },
+    "01-semilla/08-existencias-iniciales.png":  {
+                                                    "sha256":  "b96a101e9b4399dc87ad69117837ed18af8e3783b0351af51b272ab2f177455f",
+                                                    "bytes":  95242
+                                                },
+    "02-escenarios/09-carrito-papel.png":  {
+                                               "sha256":  "4ba24bf96a096933372ff71130bb18d307ebe3a6cb322f49d1c25a74a594423b",
+                                               "bytes":  155875
+                                           },
+    "02-escenarios/10-folio4-confirmado-red.png":  {
+                                                       "sha256":  "fa0d92a54c5c986821e1541d47a49841c332815a1e2bfc489b2c1c4912d74901",
+                                                       "bytes":  174892
+                                                   },
+    "02-escenarios/11-catalogo-actualizado-papel-7.png":  {
+                                                              "sha256":  "5e6732e4b549473fecdb4446678bd230b9f22adf8756506be9601d1e39fff19b",
+                                                              "bytes":  184969
+                                                          },
+    "02-escenarios/12-agregacion-552-25.png":  {
+                                                   "sha256":  "f151320b94d18fbe11f0d62ca10521d6c9c7dba443ab643d4b811156b7924cd2",
+                                                   "bytes":  44046
+                                               },
+    "02-escenarios/13-folio5-cancelado.png":  {
+                                                  "sha256":  "46656c8e3bba82e448f09c46fab57f086ba55edf5cf1338566cdf0a8638b1ff0",
+                                                  "bytes":  200342
+                                              },
+    "02-escenarios/14-existencias-tras-cancelacion.png":  {
+                                                              "sha256":  "7d0211be95f1dba9318650785196a28ce331e7e2b88c10778473244c244f29aa",
+                                                              "bytes":  24329
+                                                          },
+    "02-escenarios/15-folio6-confirmado.png":  {
+                                                   "sha256":  "810467bfca248c25cc86b018b99157fbb12f02259746ac1ff75b9e5cb21e5bdb",
+                                                   "bytes":  213331
+                                               },
+    "02-escenarios/16-existencias-5-7-8.png":  {
+                                                   "sha256":  "048fdebbe68c0470a2e29b9bb19c15a8e571f4d5a34829be7f9bf6e94bdaa57a",
+                                                   "bytes":  28226
+                                               },
+    "03-reentrega/17-colas-captura-creadas.png":  {
+                                                      "sha256":  "d2d1e11c23b5aa037ef5d9bce519d12f7233d6d798c975e170541f20f77d783a",
+                                                      "bytes":  14638
+                                                  },
+    "03-reentrega/18-enlace-venta-creada.png":  {
+                                                    "sha256":  "ebe4d60a9e39936f76fe5ec42aa2545e42aaa990811c572bc2dd01a26a1c7e58",
+                                                    "bytes":  85280
+                                                },
+    "03-reentrega/19-enlace-stock-reservado.png":  {
+                                                       "sha256":  "5a87a1ed306174c3f080ff7cb91804979c55dbe16d2c5ab67efadb5e904a6093",
+                                                       "bytes":  116256
+                                                   },
+    "03-reentrega/20-colas-antes-de-vender.png":  {
+                                                      "sha256":  "6d24ee89e58fe2f317f741af4f32c48086d8e66f15d78937588778d1488feac1",
+                                                      "bytes":  164678
+                                                  },
+    "03-reentrega/21-mensaje-original.png":  {
+                                                 "sha256":  "843123642eddcf6f94a1e7a322035c745e2a2e0784ece118b48f248f7e5cad01",
+                                                 "bytes":  49628
+                                             },
+    "03-reentrega/22-log-primera-entrega.png":  {
+                                                    "sha256":  "2796748c675fa21028f683adf111ad4b4e6c860759080549740b03fbaf62efa0",
+                                                    "bytes":  30658
+                                                },
+    "03-reentrega/23-colas-en-cero.png":  {
+                                              "sha256":  "b2d129230c29b247aae26ec223964ad345bfb8cd787100e432c61d2347d24b54",
+                                              "bytes":  174158
+                                          },
+    "03-reentrega/24-bindings-exchange.png":  {
+                                                  "sha256":  "d5d4edaa5558e83010a2263ab062b070b53f7dbd2300fcc945d1a4529225562a",
+                                                  "bytes":  70426
+                                              },
+    "03-reentrega/25-publicacion-aceptada.png":  {
+                                                     "sha256":  "dcc5aab794f79f6087911137f48ca93bec0f0876b978081faf2b99d171995676",
+                                                     "bytes":  64615
+                                                 },
+    "03-reentrega/26-log-descarte-y-estado.png":  {
+                                                      "sha256":  "3fb78c194aa81997b7e2cb4b91c3b516894cfee4f51c008b1a79f896cee5d77c",
+                                                      "bytes":  116026
+                                                  },
+    "03-reentrega/27-agregacion-672-25.png":  {
+                                                  "sha256":  "ce73d9d1c7b96cf2b2ce5fd669cb731e47c7c5a44571390fb514ed7d56f50055",
+                                                  "bytes":  31566
+                                              },
+    "03-reentrega/28-colas-tras-republicar.png":  {
+                                                      "sha256":  "79b496050a86a1320fc5c7388277f0c16d96dc5bed510ea962e69bd0dfc6b498",
+                                                      "bytes":  142763
+                                                  },
+    "03-reentrega/29-colas-limpias.png":  {
+                                              "sha256":  "02bf88543c6c3fb7684b63b163b1e8f8d72ecace5d61846d5a593eca2196caf3",
+                                              "bytes":  121325
+                                          },
+    "04-autorizacion/30-vendedor-200-y-403.png":  {
+                                                      "sha256":  "47397e9362323ef1acc66abc216a4ad23e6fdeab4bb74bfadaa23d57e60b1141",
+                                                      "bytes":  117906
+                                                  },
+    "04-autorizacion/31-sin-token-401.png":  {
+                                                 "sha256":  "e49a86ccb4b64a0f0e9608698c74ca317095e6cda2dc5cf959ca8a53d23e3e3d",
+                                                 "bytes":  26830
+                                             },
+    "entorno/20261111T090229047Z/bindings-finales.txt":  {
+                                                             "sha256":  "775e1d4202c262238751722dd671534ba0848180ab01df5e39ee26f911954648",
+                                                             "bytes":  1338
+                                                         },
+    "entorno/20261111T090229047Z/colas-finales.txt":  {
+                                                          "sha256":  "e9d71706d03aed1a43f5815c6591266d51d1e27797094b0801818ca0e46ea2f9",
+                                                          "bytes":  532
+                                                      },
+    "entorno/20261111T090229047Z/contenedores.json":  {
+                                                          "sha256":  "a3309a875a2f3cce2d71a7351abc8a2a599b6f5214ae4748838eeba128e9513b",
+                                                          "bytes":  19825
+                                                      },
+    "entorno/20261111T090229047Z/estado-git.txt":  {
+                                                       "sha256":  "0f5fdf46c9bc756306f7fc1549a069a0bc8c45bb508110d498617d8c120eba64",
+                                                       "bytes":  95
+                                                   },
+    "entorno/20261111T090229047Z/montajes-mongodb.json":  {
+                                                              "sha256":  "eb9b8a54b73e49918d07f70a41f82500b64d280a47868904901e90c75e6d1c4b",
+                                                              "bytes":  678
+                                                          },
+    "entorno/20261111T090229047Z/recoleccion.json":  {
+                                                         "sha256":  "1c796ebc292bca4e2e20163cf727e8bc6d3d3cd14a2e12681a26b814772a8c8b",
+                                                         "bytes":  230
+                                                     },
+    "entorno/20261111T090229047Z/revision.txt":  {
+                                                     "sha256":  "d3d961c29ed419f66118f1b00080bc8bd4861a49d4108277212874f3553135f4",
+                                                     "bytes":  40
+                                                 },
+    "entorno/20261111T090804848Z/api-agregacion.json":  {
+                                                            "sha256":  "9d6c7cc7bf76c79ef4b41914f8db56c8c6becedb6dbf78119b5c569a68d115fd",
+                                                            "bytes":  583
+                                                        },
+    "entorno/20261111T090804848Z/api-notificaciones.json":  {
+                                                                "sha256":  "90143ab49a80a6b686a003dd36837d4b5949f6c3d98f91d9c25d7f5b313f160b",
+                                                                "bytes":  438
+                                                            },
+    "entorno/20261111T090804848Z/api-productos.json":  {
+                                                           "sha256":  "a923670500fc532c1e671ed420779d54a88287926a3b9aa20d282a0cab976fcd",
+                                                           "bytes":  1113
+                                                       },
+    "entorno/20261111T090804848Z/api-ventas.json":  {
+                                                        "sha256":  "d5304d55ae58526e1186426d7855f6db1df75fae83e11afde2076d7e3375be5b",
+                                                        "bytes":  5514
+                                                    },
+    "entorno/20261111T090804848Z/bindings-finales.txt":  {
+                                                             "sha256":  "775e1d4202c262238751722dd671534ba0848180ab01df5e39ee26f911954648",
+                                                             "bytes":  1338
+                                                         },
+    "entorno/20261111T090804848Z/colas-finales.txt":  {
+                                                          "sha256":  "e9d71706d03aed1a43f5815c6591266d51d1e27797094b0801818ca0e46ea2f9",
+                                                          "bytes":  532
+                                                      },
+    "entorno/20261111T090804848Z/contenedores.json":  {
+                                                          "sha256":  "e6da6034dc5ca53fecdc86d1a6c78149c1703b18204b62e6f7562665f17164b6",
+                                                          "bytes":  19825
+                                                      },
+    "entorno/20261111T090804848Z/estado-git.txt":  {
+                                                       "sha256":  "0f5fdf46c9bc756306f7fc1549a069a0bc8c45bb508110d498617d8c120eba64",
+                                                       "bytes":  95
+                                                   },
+    "entorno/20261111T090804848Z/inventario-reentrega.txt":  {
+                                                                 "sha256":  "db4ce9efc57d89b708ae6ce63051257316d65d246d399de882c50c5be15906f9",
+                                                                 "bytes":  828
+                                                             },
+    "entorno/20261111T090804848Z/montajes-mongodb.json":  {
+                                                              "sha256":  "eb9b8a54b73e49918d07f70a41f82500b64d280a47868904901e90c75e6d1c4b",
+                                                              "bytes":  678
+                                                          },
+    "entorno/20261111T090804848Z/recoleccion.json":  {
+                                                         "sha256":  "4f094c0fe2050cb1a6bd4dcc752070b32621f2d9ba80a1ab660ad67838162032",
+                                                         "bytes":  389
+                                                     },
+    "entorno/20261111T090804848Z/revision.txt":  {
+                                                     "sha256":  "f99e2cf1c5f5a89e980e0c904f44494516192c35f74129f43799a168747b0a0a",
+                                                     "bytes":  40
+                                                 },
+    "entorno/20261111T090804848Z/volumenes-mongodb.json":  {
+                                                               "sha256":  "c52e27b2ea4d6ce93f8107ec5e97251977db0befadf5c8f988e86571180af1ab",
+                                                               "bytes":  1111
+                                                           },
+    "incidencias/i1-tabla-vacia-powershell.png":  {
+                                                      "sha256":  "69370f339618b68505a412117ca010e63aee84c7ac09770e5fb9a86a0cfb8b4e",
+                                                      "bytes":  17041
+                                                  },
+    "incidencias/i2-tabla-correcta-tras-asignar.png":  {
+                                                           "sha256":  "ea6b50f8ab8816ddfbf85649e93f46dbfad9e6ed79646ae44c51d3f7b77b80a2",
+                                                           "bytes":  20663
+                                                       },
+    "incidencias/i3-purga-cola-equivocada.png":  {
+                                                     "sha256":  "e596f0450361c36409d84aee87c6cb1a5d0f033c941eec12c1eacf2ea540c806",
+                                                     "bytes":  103610
+                                                 },
+    "incidencias/i4-publicacion-no-enrutada.png":  {
+                                                       "sha256":  "4cb25229cbdbb42daf493389a8b6465720f1383a4eda37e900feaedd8971aecc",
+                                                       "bytes":  82642
+                                                   },
+    "incidencias/i5-consola-sin-variables.png":  {
+                                                     "sha256":  "5c27e67bbdd61a805c028a2378d23f3db3db97e7bf3294befcd35c5d1dba966c",
+                                                     "bytes":  63346
+                                                 },
+    "recolectar.ps1":  {
+                           "sha256":  "5e5447f03672525cb4caa07bee992c2087506df208b3ca8d657b1375d981b561",
+                           "bytes":  7881
+                       },
+    "RESULTADOS.md":  {
+                          "sha256":  "edf39e960a1cf21b20056c09c796c0c693f1e9ca1514f05f046e51907ab2c11e",
+                          "bytes":  15931
+                      },
+    "venta-creada.payload.json":  {
+                                      "sha256":  "afdf2ed67a9adf577f503df0cea874442fd26d19f76f31985fd38a698091bb8e",
+                                      "bytes":  422
+                                  }
+}

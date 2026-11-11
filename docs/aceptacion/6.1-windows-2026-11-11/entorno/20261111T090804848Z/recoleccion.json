@@ -1,0 +1,9 @@
+{
+    "estado":  "COMPLETADA",
+    "inicioUtc":  "2026-11-11T09:08:04.8436802Z",
+    "finUtc":  "2026-11-11T09:08:12.1352278Z",
+    "zonaLocal":  "Central Standard Time (Mexico)",
+    "powershell":  "5.1.26100.9711",
+    "gateway":  "http://localhost:8080",
+    "alcance":  "Instantaneas posteriores; no certifican por si solas el arranque limpio ni la revision de las imagenes."
+}

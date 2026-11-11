@@ -1,0 +1,35 @@
+[
+    {
+        "id":  "6af4161361c0bf7a3edcb0b4",
+        "nombre":  "Semilla 3.1 - Tinta",
+        "descripcion":  "Producto de prueba",
+        "precio":  41.15,
+        "existencia":  5,
+        "umbralStock":  5,
+        "activo":  true,
+        "fechaRegistro":  "2026-11-11T07:15:31.001Z",
+        "fechaActualizacion":  "2026-11-11T07:16:19.248Z"
+    },
+    {
+        "id":  "6af4161361c0bf7a3edcb0b5",
+        "nombre":  "Semilla 3.1 - Papel",
+        "descripcion":  "Producto de prueba",
+        "precio":  75.5,
+        "existencia":  7,
+        "umbralStock":  5,
+        "activo":  true,
+        "fechaRegistro":  "2026-11-11T07:15:31.130Z",
+        "fechaActualizacion":  "2026-11-11T07:32:59.168Z"
+    },
+    {
+        "id":  "6af4161361c0bf7a3edcb0b6",
+        "nombre":  "Semilla 3.1 - Sello",
+        "descripcion":  "Producto de prueba",
+        "precio":  120,
+        "existencia":  8,
+        "umbralStock":  5,
+        "activo":  true,
+        "fechaRegistro":  "2026-11-11T07:15:31.170Z",
+        "fechaActualizacion":  "2026-11-11T07:56:30.323Z"
+    }
+]
