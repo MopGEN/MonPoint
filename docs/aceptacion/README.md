@@ -1,5 +1,11 @@
 # Evidencia de aceptación
 
+## Cliente — Productos
+
+[Revisión del parche y CRUD real del 11 de noviembre](cliente-productos-2026-11-11/RESULTADOS.md):
+alta, edición, baja lógica y permisos de escritura; incluye regresión de Caja,
+prueba de doble envío y límites del formulario. No incluye empaquetado Windows.
+
 ## Cliente — navegación y notificaciones
 
 [Revisión del parche y recorrido real del 11 de noviembre](cliente-concha-notificaciones-2026-11-11/RESULTADOS.md):

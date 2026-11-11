@@ -35,6 +35,7 @@ src/
 └── vistas/
     ├── IniciarSesion.vue   minima y funcional; la 5.3 la completa
     ├── Caja.vue            catálogo, carrito y seguimiento del cobro (5.5)
+    ├── Productos.vue       catálogo activo y CRUD por rol
     ├── Notificaciones.vue  alertas, filtros de lectura y marcado (solo ADMIN)
     └── NoEncontrada.vue
 ```
@@ -70,6 +71,10 @@ abrirla.
 | POST | `/auth/login` | `{correo, password}` → `{token, tipo, correo, nombre, rol, expiraEn}` |
 | POST | `/ventas` | 202 con la venta **PENDIENTE**; no es confirmacion |
 | GET | `/ventas/{id}` | detalle y estado de la venta — tarea 5.2 |
+| GET | `/inventario/productos` | activos; ADMIN y VENDEDOR |
+| POST | `/inventario/productos` | alta ADMIN; 201 con producto |
+| PUT | `/inventario/productos/{id}` | reemplaza datos editables, incluida existencia; solo ADMIN |
+| DELETE | `/inventario/productos/{id}` | baja lógica ADMIN; 204 |
 | GET | `/notificaciones?leida=false` | solo ADMIN; omitir el filtro para todas o usar `true` para leídas |
 | PUT | `/notificaciones/{id}/leida` | solo ADMIN; sin cuerpo; 204; el servidor cierra la alerta |
 
@@ -129,6 +134,58 @@ Solo reintenta el rechazo 400 exacto de producto aún no disponible en la répli
 un POST incierto o cualquier otro rechazo detiene la prueba.
 
 [Revisión con servicios reales y capturas](../../docs/aceptacion/cliente-concha-notificaciones-2026-11-11/RESULTADOS.md).
+
+## Productos y formularios compartidos
+
+ADMIN puede dar de alta, editar y dar de baja. VENDEDOR ve el catálogo y la
+búsqueda, sin acciones ni diálogos de escritura. El filtro por nombre o
+descripción es local, ignora acentos y mayúsculas y consulta solo los activos
+ya cargados. No es una búsqueda paginada del servidor.
+
+`CampoFormulario` asocia etiqueta, ayuda y error al control; las claves de
+`campos` coinciden con los ids. `DialogoModal` usa el diálogo nativo, un título
+accesible y bloqueo de cierre durante el envío. Una guarda síncrona en cada
+mutación evita dos peticiones antes de que Vue actualice `disabled`.
+
+El umbral vacío al crear viaja como null y el servicio aplica 5. Al editar es
+obligatorio: null conservaría el anterior. El precio viaja como número JSON;
+el formulario limita a dos decimales y doce enteros, sin notación científica.
+**Es una restricción del cliente:** el DTO remoto acepta BigDecimal no negativo
+sin esa restricción de escala. Un precio previo con más de dos decimales no se
+redondea al abrir la edición, pero impide guardar hasta corregirlo expresamente.
+El límite conserva el valor decimal al serializar; no supone que Number sea
+aritmética decimal exacta. La Caja sigue admitiendo su escala original.
+
+Las funciones de importe viven en `comun/importe.js` y siguen reexportadas por
+`caja/cobro.js`. Al editar se envía también existencia: la API no ofrece versión
+optimista para proteger cambios simultáneos con reservas de ventas. El listado
+no se actualiza en tiempo real y cambiar existencias manualmente no publica
+StockBajo; esa alerta se emite en la reserva de una venta.
+
+Con la compilación servida por `npm run preview`, el recorrido simulado es:
+
+```bash
+PLAYWRIGHT_MODULE=/ruta/a/playwright/index.mjs node test/productos.browser.mjs
+```
+
+Prueba filtros, errores por campo, alta, edición, baja, permisos y dos envíos
+en el mismo turno con una sola petición. El 400 es una respuesta ficticia para
+verificar la presentación de `campos`; no prueba unicidad de nombres, que el
+backend no exige. Admite las mismas variables de navegador que Notificaciones.
+
+Contra Vite y el conjunto real:
+
+```bash
+PLAYWRIGHT_MODULE=/ruta/a/playwright/index.mjs node test/productos.real.browser.mjs
+```
+
+**Crea un producto y un VENDEDOR**, da de baja únicamente su producto y conserva
+el usuario. No es idempotente ni debe ejecutarse en producción. Usa las mismas
+variables y credenciales de prueba que el recorrido real de Notificaciones.
+Comprueba el CRUD de la pantalla, el mapa remoto `campos` por API y los tres
+rechazos de escritura con token real de VENDEDOR. No forma parte de `npm test`.
+
+[Revisión y capturas de Productos](../../docs/aceptacion/cliente-productos-2026-11-11/RESULTADOS.md).
 
 ## Cliente empaquetado con nginx (5.6)
 

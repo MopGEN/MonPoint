@@ -1,0 +1,71 @@
+{
+  "inicio": "2026-11-11T14:23:26.740Z",
+  "cliente": "http://localhost:5173",
+  "gateway": "http://localhost:8080",
+  "casos": [
+    "Alta UI 201 con umbral 5 por omision y edicion UI 200",
+    "VENDEDOR: lectura 200, sin acciones/dialogos y POST/PUT/DELETE 403",
+    "Baja UI 204: desaparece del listado, consulta directa conserva activo=false"
+  ],
+  "errores": [],
+  "alta": {
+    "id": "6af47a5f57cdec548cbc93a6",
+    "nombre": "Revision productos 1794407007606",
+    "descripcion": null,
+    "precio": 41.15,
+    "existencia": 10,
+    "umbralStock": 5,
+    "activo": true,
+    "fechaRegistro": "2026-11-11T14:23:27.712416680Z",
+    "fechaActualizacion": "2026-11-11T14:23:27.712416680Z"
+  },
+  "edicion": {
+    "id": "6af47a5f57cdec548cbc93a6",
+    "nombre": "Revision productos 1794407007606",
+    "descripcion": "Producto editado desde el cliente",
+    "precio": 75.5,
+    "existencia": 8,
+    "umbralStock": 7,
+    "activo": true,
+    "fechaRegistro": "2026-11-11T14:23:27.712Z",
+    "fechaActualizacion": "2026-11-11T14:23:27.887780832Z"
+  },
+  "validacionRemota": {
+    "estado": 400,
+    "datos": {
+      "detail": "Uno o más campos no cumplen las validaciones",
+      "instance": "/inventario/productos",
+      "status": 400,
+      "title": "Datos inválidos",
+      "requestId": "241976ce-2f64-4f97-8346-ae15fe96a039",
+      "campos": {
+        "existencia": "La existencia no puede ser negativa",
+        "nombre": "El nombre es obligatorio",
+        "precio": "El precio no puede ser negativo",
+        "umbralStock": "El umbral no puede ser negativo"
+      }
+    }
+  },
+  "permisosVendedor": {
+    "GET": 200,
+    "POST": 403,
+    "PUT": 403,
+    "DELETE": 403
+  },
+  "baja": {
+    "estado": 200,
+    "datos": {
+      "id": "6af47a5f57cdec548cbc93a6",
+      "nombre": "Revision productos 1794407007606",
+      "descripcion": "Producto editado desde el cliente",
+      "precio": 75.5,
+      "existencia": 8,
+      "umbralStock": 7,
+      "activo": false,
+      "fechaRegistro": "2026-11-11T14:23:27.712Z",
+      "fechaActualizacion": "2026-11-11T14:23:29.161Z"
+    }
+  },
+  "resultado": "PASS",
+  "fin": "2026-11-11T14:23:29.225Z"
+}
