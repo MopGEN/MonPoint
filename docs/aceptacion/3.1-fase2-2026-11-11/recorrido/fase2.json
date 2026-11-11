@@ -1,0 +1,58 @@
+{
+  "codigo": 0,
+  "salida": {
+    "fase": 2,
+    "estado": "COMPLETADA",
+    "ventasPrevistas": 3,
+    "ventasConfirmadas": [
+      {
+        "orden": 1,
+        "clienteId": "6af40ca96b05d1493d2ca2b1",
+        "lineas": [
+          {
+            "productoId": "6af40ca9a4b0c9b91329f627",
+            "cantidad": 5
+          }
+        ],
+        "estado": "CONFIRMADA",
+        "id": "6af40caad01ed89363406700",
+        "folio": 1,
+        "total": 205.75
+      },
+      {
+        "orden": 2,
+        "clienteId": "6af40ca96b05d1493d2ca2b2",
+        "lineas": [
+          {
+            "productoId": "6af40ca9a4b0c9b91329f628",
+            "cantidad": 2
+          }
+        ],
+        "estado": "CONFIRMADA",
+        "id": "6af40cabd01ed89363406702",
+        "folio": 2,
+        "total": 151
+      },
+      {
+        "orden": 3,
+        "clienteId": null,
+        "lineas": [
+          {
+            "productoId": "6af40ca9a4b0c9b91329f629",
+            "cantidad": 1
+          }
+        ],
+        "estado": "CONFIRMADA",
+        "id": "6af40cabd01ed89363406704",
+        "folio": 3,
+        "total": 120
+      }
+    ],
+    "ventaEnCurso": null,
+    "rechazosReplica": {
+      "producto": 0,
+      "cliente": 0
+    },
+    "advertencia": "Fase no idempotente. Conservar este resumen. No repetir el lote ni un POST incierto; consultar los ids conocidos y verificar manualmente antes de continuar."
+  }
+}

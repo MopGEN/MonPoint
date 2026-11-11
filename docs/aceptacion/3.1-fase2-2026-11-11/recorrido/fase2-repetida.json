@@ -1,0 +1,19 @@
+{
+  "codigo": 1,
+  "salida": {
+    "error": "Semilla 3.1 - Tinta: se esperaba existencia inicial 10. La fase 2 requiere datos sin ventas previas; no repone stock ni repite ventas.",
+    "resumen": {
+      "fase": 2,
+      "estado": "INTERRUMPIDA",
+      "ventasPrevistas": 3,
+      "ventasConfirmadas": [],
+      "ventaEnCurso": null,
+      "rechazosReplica": {
+        "producto": 0,
+        "cliente": 0
+      },
+      "advertencia": "Fase no idempotente. Conservar este resumen. No repetir el lote ni un POST incierto; consultar los ids conocidos y verificar manualmente antes de continuar.",
+      "operacion": "GET /clientes"
+    }
+  }
+}

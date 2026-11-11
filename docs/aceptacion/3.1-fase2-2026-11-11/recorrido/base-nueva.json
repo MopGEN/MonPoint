@@ -1,0 +1,18 @@
+{
+  "productos": [],
+  "clientes": [],
+  "notificaciones": [],
+  "agregado": {
+    "periodo": "DIA",
+    "desde": "2026-11-11",
+    "hasta": "2026-11-11",
+    "zonaHoraria": "America/Mexico_City",
+    "total": 0,
+    "puntos": [
+      {
+        "inicio": "2026-11-11",
+        "total": 0
+      }
+    ]
+  }
+}

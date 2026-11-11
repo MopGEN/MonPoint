@@ -1,0 +1,130 @@
+[
+  {
+    "nombre": "inventario.venta-creada",
+    "durable": true,
+    "consumidores": 1,
+    "mensajes": 0,
+    "pendientes": 0,
+    "sinConfirmar": 0
+  },
+  {
+    "nombre": "inventario.venta-creada.fallidos",
+    "durable": true,
+    "consumidores": 0,
+    "mensajes": 0,
+    "pendientes": 0,
+    "sinConfirmar": 0
+  },
+  {
+    "nombre": "notificaciones.stock-bajo",
+    "durable": true,
+    "consumidores": 1,
+    "mensajes": 0,
+    "pendientes": 0,
+    "sinConfirmar": 0
+  },
+  {
+    "nombre": "notificaciones.stock-bajo.fallidos",
+    "durable": true,
+    "consumidores": 0,
+    "mensajes": 0,
+    "pendientes": 0,
+    "sinConfirmar": 0
+  },
+  {
+    "nombre": "reportes.clientes",
+    "durable": true,
+    "consumidores": 1,
+    "mensajes": 0,
+    "pendientes": 0,
+    "sinConfirmar": 0
+  },
+  {
+    "nombre": "reportes.clientes.fallidos",
+    "durable": true,
+    "consumidores": 0,
+    "mensajes": 0,
+    "pendientes": 0,
+    "sinConfirmar": 0
+  },
+  {
+    "nombre": "reportes.productos",
+    "durable": true,
+    "consumidores": 1,
+    "mensajes": 0,
+    "pendientes": 0,
+    "sinConfirmar": 0
+  },
+  {
+    "nombre": "reportes.productos.fallidos",
+    "durable": true,
+    "consumidores": 0,
+    "mensajes": 0,
+    "pendientes": 0,
+    "sinConfirmar": 0
+  },
+  {
+    "nombre": "reportes.ventas",
+    "durable": true,
+    "consumidores": 1,
+    "mensajes": 0,
+    "pendientes": 0,
+    "sinConfirmar": 0
+  },
+  {
+    "nombre": "reportes.ventas.fallidos",
+    "durable": true,
+    "consumidores": 0,
+    "mensajes": 0,
+    "pendientes": 0,
+    "sinConfirmar": 0
+  },
+  {
+    "nombre": "ventas.clientes",
+    "durable": true,
+    "consumidores": 1,
+    "mensajes": 0,
+    "pendientes": 0,
+    "sinConfirmar": 0
+  },
+  {
+    "nombre": "ventas.clientes.fallidos",
+    "durable": true,
+    "consumidores": 0,
+    "mensajes": 0,
+    "pendientes": 0,
+    "sinConfirmar": 0
+  },
+  {
+    "nombre": "ventas.productos",
+    "durable": true,
+    "consumidores": 1,
+    "mensajes": 0,
+    "pendientes": 0,
+    "sinConfirmar": 0
+  },
+  {
+    "nombre": "ventas.productos.fallidos",
+    "durable": true,
+    "consumidores": 0,
+    "mensajes": 0,
+    "pendientes": 0,
+    "sinConfirmar": 0
+  },
+  {
+    "nombre": "ventas.stock",
+    "durable": true,
+    "consumidores": 1,
+    "mensajes": 0,
+    "pendientes": 0,
+    "sinConfirmar": 0
+  },
+  {
+    "nombre": "ventas.stock.fallidos",
+    "durable": true,
+    "consumidores": 0,
+    "mensajes": 0,
+    "pendientes": 0,
+    "sinConfirmar": 0
+  }
+]

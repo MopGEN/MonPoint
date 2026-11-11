@@ -1,0 +1,72 @@
+[
+  {
+    "nombre": "/semilla32-mongodb",
+    "imagen": "sha256:bf46c3fd4f186a3569a6c8d180ee6f55e46cc81e98c0cadaee2f56718c84979f",
+    "creado": "2026-11-11T06:32:12.372188233Z",
+    "estado": "running",
+    "salud": "healthy"
+  },
+  {
+    "nombre": "/semilla32-rabbitmq",
+    "imagen": "sha256:de912cbbf07f938bb8aaa5682464a73a00c6a996efdf0880423aeb4eae006c34",
+    "creado": "2026-11-11T06:32:12.372141059Z",
+    "estado": "running",
+    "salud": "healthy"
+  },
+  {
+    "nombre": "/semilla32-eureka-server",
+    "imagen": "sha256:c13c5cf06aa64c9ae8fa1b30cc941a6ea1d13f148f4936f77b40103b68593a2b",
+    "creado": "2026-11-11T06:32:12.3722358Z",
+    "estado": "running",
+    "salud": "healthy"
+  },
+  {
+    "nombre": "/semilla32-api-gateway",
+    "imagen": "sha256:0faf959c6e014f0ff9ef06e59975fa9a1ae42b8400b265f7f93d08a513443031",
+    "creado": "2026-11-11T06:32:15.363766904Z",
+    "estado": "running",
+    "salud": "healthy"
+  },
+  {
+    "nombre": "/semilla32-ms-auth",
+    "imagen": "sha256:cc96152385fd508f02d650ad798c545919e24db3a492377210a9abefa16a57b6",
+    "creado": "2026-11-11T06:32:21.087114259Z",
+    "estado": "running",
+    "salud": "healthy"
+  },
+  {
+    "nombre": "/semilla32-ms-inventario",
+    "imagen": "sha256:d87923f3f91392d8e7fe38cc1d6d5eb9600887aa8deef2a45ad979fd88091528",
+    "creado": "2026-11-11T06:32:21.088535443Z",
+    "estado": "running",
+    "salud": "healthy"
+  },
+  {
+    "nombre": "/semilla32-ms-clientes",
+    "imagen": "sha256:a0b43638f749dbf7ea536d39f01a68f52b2d68f888670078d83213085b9d2b51",
+    "creado": "2026-11-11T06:32:21.100466238Z",
+    "estado": "running",
+    "salud": "healthy"
+  },
+  {
+    "nombre": "/semilla32-ms-ventas",
+    "imagen": "sha256:48b31761b79bde0e5672e85530e2f05ccd2f4bd8443f62a083bfc03d3900787c",
+    "creado": "2026-11-11T06:32:21.086936798Z",
+    "estado": "running",
+    "salud": "healthy"
+  },
+  {
+    "nombre": "/semilla32-ms-reportes",
+    "imagen": "sha256:f97a04226c365cf28626394d63146bd6e30da0af041a68b8aee374af70cea4cf",
+    "creado": "2026-11-11T06:32:21.084992943Z",
+    "estado": "running",
+    "salud": "healthy"
+  },
+  {
+    "nombre": "/semilla32-ms-notificaciones",
+    "imagen": "sha256:7e5fbff8ce4c33e07d9fdde658925ae369679f4c0521a3a49a409289acceafd3",
+    "creado": "2026-11-11T06:32:21.088646821Z",
+    "estado": "running",
+    "salud": "healthy"
+  }
+]

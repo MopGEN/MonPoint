@@ -1,0 +1,46 @@
+✔ confirma tres ventas seriales con clientes reales y una sin cliente; deja tinta en el umbral (66.144698ms)
+✔ los dos 400 conocidos repiten exactamente la misma venta hasta que llegan ambas réplicas (57.887536ms)
+✔ otro 400 no se reintenta: Importe inválido (12.814716ms)
+✔ otro 400 no se reintenta: El producto no está disponible o está inactivo: otro-id (10.923615ms)
+✔ otro 400 no se reintenta: el cliente no está disponible (11.07986ms)
+✔ otro 400 no se reintenta: null (11.744311ms)
+✔ la ausencia persistente de réplica agota el plazo sin consumir folios (80.623536ms)
+✔ 202 PENDIENTE nunca se cuenta como éxito y el sondeo tiene límite (81.983201ms)
+✔ el plazo de la saga no se reinicia tras esperar la réplica (408.852425ms)
+✔ una CANCELADA detiene el lote y conserva su id y folio para consultar el motivo (17.893331ms)
+✔ POST red tras una confirmada: conserva la frontera y no repite ni avanza (20.902696ms)
+✔ POST timeout tras una confirmada: conserva la frontera y no repite ni avanza (118.535169ms)
+✔ POST 500 tras una confirmada: conserva la frontera y no repite ni avanza (24.44576ms)
+✔ POST 202-incompleto tras una confirmada: conserva la frontera y no repite ni avanza (27.152622ms)
+✔ POST 202-ilegible tras una confirmada: conserva la frontera y no repite ni avanza (23.69715ms)
+✔ fallos transitorios del GET se reintentan sin reenviar el POST (57.271127ms)
+✔ GET 401 detiene el lote con la venta aceptada aún identificable (11.99465ms)
+✔ GET 403 detiene el lote con la venta aceptada aún identificable (12.60786ms)
+✔ GET 404 detiene el lote con la venta aceptada aún identificable (12.387092ms)
+✔ un consumidor inaccesible impide todas las ventas (63.419595ms)
+✔ stock consumido, cliente ausente o identidad ambigua se detectan antes del primer POST (24.940816ms)
+✔ repetir el lote tras completarlo se rechaza por stock cambiado, sin prometer idempotencia (47.511723ms)
+✔ una identidad de consulta distinta no se cuenta como venta confirmada (10.975232ms)
+✔ CLI --ventas conserva el resumen parcial sin imprimir cuerpo de error, contraseña ni token (573.859858ms)
+✔ base sin datos de negocio: crea vendedor, dos clientes y tres productos; nunca envía ventas (45.555961ms)
+✔ segunda ejecución reutiliza todos los ids sin altas ni reposición de existencias (37.542761ms)
+✔ contraseña ADMIN incorrecta detiene la ejecución antes de leer o crear datos (2.695045ms)
+✔ CLI falla con código 1 y no imprime contraseñas ni tokens (58.50665ms)
+✔ un listado inaccesible impide todas las altas (8.459449ms)
+✔ duplicados por nombre se detectan antes de crear el vendedor o los clientes (8.779291ms)
+✔ un precio cambiado se informa como conflicto sin sobrescribir ni continuar (9.102669ms)
+✔ el vendedor existente con otra contraseña se detecta antes de sembrar catálogos (9.371304ms)
+✔ caída después de guardar un cliente: no repite el POST y otra ejecución recupera su id (29.406156ms)
+✔ vendedor inactivo no listado: un 409 detiene las altas restantes sin intentar reactivar (9.585307ms)
+✔ un POST colgado agota el plazo, no se reintenta y deja la operación identificada (108.919237ms)
+✔ ADMIN_DEFAULT_PASSWORD ausente o vacía autentica con el mismo valor por omisión (27.121795ms)
+✔ precios como cadenas decimales, con ceros o exponentes, reutilizan el mismo producto (53.891533ms)
+✔ la comparación decimal no oculta diferencias menores que la precisión del doble ni acepta valores inválidos (68.013068ms)
+ℹ tests 38
+ℹ suites 0
+ℹ pass 38
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1847.139115

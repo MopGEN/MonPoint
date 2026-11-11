@@ -1,0 +1,3 @@
+FROM monpoint-ms-ms-ventas:latest
+COPY --chmod=644 app.jar /app/app.jar
+HEALTHCHECK --interval=10s --timeout=5s --start-period=40s --retries=10 CMD curl -fs http://localhost:8085/actuator/health || exit 1

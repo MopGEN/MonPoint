@@ -1,0 +1,23 @@
+{
+  "Dockerfile.nube": "ae3b9cfcf718f36d1320b03d99e6a84e6b4cd7cd212d0aa9009bc4981013956d",
+  "RESULTADOS.md": "843801c19b59f653294755ab60e56d334a341e1764181a0dc96b1ef4a30d075a",
+  "arranque.txt": "d416e0d2aaea8f3d8a8abe8d768b8d0ad3d999bb3ee299e4481eea3be5c1a6d0",
+  "cierre.txt": "2f6881725c8a0e114a74f92e14aba3a795998f46698a2e079beb53465f52ae4d",
+  "contenedores.json": "bad25d7dd5d4d4565d25dc8e67a7f713d044da67c5721145daf229e55b9033c3",
+  "fuentes-probadas.json": "a9b2097f6627ba8cb681ae297d50dc924d5089165584c50fdd885dac1f1a8e68",
+  "pruebas.txt": "65566562d431dd4fa09ee6ee4b350fe3cd5d7b7ec6e5a39099dcff418e87a31c",
+  "recorrido/agregado.json": "55fd0fd568ced38d81348ca66c245a27ffa1ee27f21dcbbad71113173597bc03",
+  "recorrido/base-nueva.json": "ef64d6ea88685a779ac8f87b7ea955210d42f4e25311e4315d81f01913ea8ae7",
+  "recorrido/colas-antes.json": "f3c64021ee3332d6832912b3ea571539c62ab5cb58ac167477111e3e3225555b",
+  "recorrido/colas-despues.json": "f3c64021ee3332d6832912b3ea571539c62ab5cb58ac167477111e3e3225555b",
+  "recorrido/existencias-finales.json": "0526bf17e40cbc42cbf3e6d0425e1400d4ec00916b59575db71c661e7a811e18",
+  "recorrido/fase1-repetida.json": "f74d831065d477be59f316d72802135002e08dc1aeb2816469f9e1cb36987a1b",
+  "recorrido/fase1.json": "346244bb53c76bc9e1ad0607220090fc1ee109e7c3072c5a4e662a5269f4584d",
+  "recorrido/fase2-repetida.json": "1c8b91d47440c5c39f17f8d9dd6851c6c5529862b01b7476d407c075f097d5d5",
+  "recorrido/fase2.json": "f6081dc7e0b42ba1d3e403641044a08e6b0ff142af4de6e5ed46b0f92724bfbc",
+  "recorrido/notificaciones.json": "80723851b3c9b77c9c00428bf0765d1e4ecfe78129d10b08ec89a2f0b9f7d009",
+  "recorrido/resultado.json": "503ae1648c70f3b80ef32ad251bf0af45014b3b2ed42e06668ae5bb599275d4e",
+  "recorrido/ventas-consultadas.json": "d955fd88a1040eaeda5394b1c37274e6c38e20a61319fb5653d1ce6b39eb6d86",
+  "verificar-real.mjs": "99b66c7e61127b2a33ad2c1ecf2f0651707c4beac8dcd4c51b6830647fb41402",
+  "volumenes.json": "0bd8be5ca3f1ca8eb7bb81a2c9e15656200b50b2e8efb8562ff496f9ec32f878"
+}

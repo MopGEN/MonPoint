@@ -1,0 +1,22 @@
+[
+  {
+    "Name": "monpoint-semilla32_mongodb-datos",
+    "CreatedAt": "2026-11-11T06:32:12Z",
+    "Labels": {
+      "com.docker.compose.config-hash": "de8a6c1d8326d71082f18c09ccaa8ae292a230183496bac0ec709e8101a9ee6f",
+      "com.docker.compose.project": "monpoint-semilla32",
+      "com.docker.compose.version": "2.40.3",
+      "com.docker.compose.volume": "mongodb-datos"
+    }
+  },
+  {
+    "Name": "monpoint-semilla32_rabbitmq-datos",
+    "CreatedAt": "2026-11-11T06:32:12Z",
+    "Labels": {
+      "com.docker.compose.config-hash": "af44f7b9b29b4da8cd1481d34cb9ecc54b42fb8c655246308901e71761db3d29",
+      "com.docker.compose.project": "monpoint-semilla32",
+      "com.docker.compose.version": "2.40.3",
+      "com.docker.compose.volume": "rabbitmq-datos"
+    }
+  }
+]
