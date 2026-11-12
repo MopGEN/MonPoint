@@ -2,7 +2,11 @@ import { simularConcha } from './concha-fixture.mjs'
 // Ejecutar con Vite activo. Ver README para instalar Playwright fuera del checkout.
 import assert from 'node:assert/strict'
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:5173'
-const { chromium } = await import(process.env.PLAYWRIGHT_MODULE ?? 'playwright')
+// Playwright es CommonJS: importado por ruta llega bajo `default`, importado
+// por nombre trae ademas los nombrados. Se aceptan las dos formas, igual que
+// en los demas recorridos.
+const modulo = await import(process.env.PLAYWRIGHT_MODULE ?? 'playwright')
+const { chromium } = modulo.default ?? modulo
 const browser = await chromium.launch({
   executablePath: process.env.CHROMIUM_PATH ?? '/usr/bin/chromium',
   headless: true,

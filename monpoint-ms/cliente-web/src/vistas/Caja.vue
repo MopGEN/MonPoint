@@ -4,6 +4,7 @@ import { gateway } from '@/api/gateway'
 import TicketVenta from '@/componentes/TicketVenta.vue'
 import { useCaja } from '@/stores/caja'
 import { crearCobro, editable, cantidadValida, precioValido, dinero, estimado } from '@/caja/cobro'
+import { filtrarPor } from '@/comun/filtro'
 const s = useCaja().cobro
 const cobro = crearCobro(s, gateway)
 const productos = ref([]),
@@ -12,6 +13,7 @@ const productos = ref([]),
 const cargando = ref(false),
   errorCatalogo = ref(''),
   errorClientes = ref('')
+const campoBusqueda = ref(null)
 let carga,
   desmontado = false
 const puedeEditar = computed(() => editable(s))
@@ -19,16 +21,79 @@ const validas = computed(() =>
   s.lineas.every((l) => cantidadValida(l.cantidad) && precioValido(l.precio)),
 )
 const total = computed(() => (validas.value ? dinero(estimado(s.lineas)) : '—'))
+// Se filtra sin acentos y tambien por descripcion. El prototipo ofrece buscar
+// por "codigo", pero `ProductoResponse` no tiene codigo ni SKU: los campos de
+// texto del catalogo son `nombre` y `descripcion`, asi que la caja busca en
+// esos dos y el marcador los nombra. Inventar un codigo en el cliente seria
+// prometer un dato que el servidor no guarda.
 const visibles = computed(() =>
-  productos.value.filter(
-    (p) =>
-      p.activo !== false &&
-      p.nombre
-        .toLocaleLowerCase('es-MX')
-        .includes(busqueda.value.trim().toLocaleLowerCase('es-MX')),
+  filtrarPor(
+    productos.value.filter((p) => p.activo !== false),
+    busqueda.value,
+    ['nombre', 'descripcion'],
   ),
 )
 const rechazado = computed(() => (s.estado === 'cancelada' ? s.venta?.productoIdRechazado : null))
+
+/**
+ * Estado de existencia de un producto, para la insignia de la tarjeta.
+ *
+ * `umbralStock` es el mismo campo con el que ms-inventario decide emitir
+ * StockBajo, asi que la caja y las notificaciones avisan por el mismo
+ * criterio y no por dos umbrales distintos.
+ *
+ * Ninguno de los tres estados deshabilita la tarjeta: la existencia que se ve
+ * aqui es una lectura anterior al cobro, y quien decide si alcanza es el
+ * servidor al reservar. Bloquear en el cliente daria una negativa que el
+ * servidor no ha dado.
+ */
+function existencia (p) {
+  if (!(p.existencia > 0)) return { clase: 'mp-insignia--error', glifo: '✕', texto: 'Sin existencia' }
+  if (p.existencia <= p.umbralStock)
+    return { clase: 'mp-insignia--aviso', glifo: '▲', texto: `Existencia ${p.existencia}` }
+  return { clase: 'mp-insignia--apagada', glifo: '●', texto: `Existencia ${p.existencia}` }
+}
+
+// Los tres pasos del prototipo sobre los seis estados de la maquina de cobro.
+// `cancelada` cae en el paso 3 y no en el 1 aunque el carrito vuelva a ser
+// editable: para quien mira la pantalla, una venta cancelada es un resultado,
+// y el paso 1 ya quedo recorrido.
+const PASOS = ['Carrito', 'En proceso', 'Resultado']
+const pasoActual = computed(() => {
+  if (['enviando', 'enProceso'].includes(s.estado)) return 2
+  if (['confirmada', 'cancelada'].includes(s.estado)) return 3
+  return 1
+})
+
+const puedeCobrar = computed(() => puedeEditar.value && s.lineas.length > 0 && validas.value)
+
+function agregarPrimero () {
+  const primero = visibles.value[0]
+  if (primero) agregar(primero)
+}
+
+/**
+ * Atajos de teclado anunciados en la interfaz.
+ *
+ * F2 enfoca la busqueda. F12 cobra, que es lo que rotula el boton, pero el
+ * navegador se queda tambien con la pulsacion para abrir sus herramientas de
+ * desarrollo: ese atajo no es cancelable desde la pagina, asi que
+ * `preventDefault` no lo evita. Por eso se acepta ademas Ctrl+Enter, que si es
+ * exclusivo de la aplicacion y es el que conviene usar en una demostracion.
+ */
+function atajos (e) {
+  if (e.key === 'F2') {
+    e.preventDefault()
+    campoBusqueda.value?.focus()
+    campoBusqueda.value?.select()
+    return
+  }
+  const cobrarConTeclado = e.key === 'F12' || (e.key === 'Enter' && (e.ctrlKey || e.metaKey))
+  if (cobrarConTeclado && puedeCobrar.value) {
+    e.preventDefault()
+    void cobro.cobrar()
+  }
+}
 async function cargar() {
   if (cargando.value) return
   cargando.value = true
@@ -68,12 +133,14 @@ function prevenirSalida(e) {
 onMounted(() => {
   void cargar()
   window.addEventListener('beforeunload', prevenirSalida)
+  window.addEventListener('keydown', atajos)
 })
 onUnmounted(() => {
   desmontado = true
   carga?.abort()
   cobro.detener()
   window.removeEventListener('beforeunload', prevenirSalida)
+  window.removeEventListener('keydown', atajos)
 })
 </script>
 
@@ -90,39 +157,64 @@ onUnmounted(() => {
     <div class="columnas">
       <section class="mp-tarjeta panel" aria-labelledby="titulo-catalogo">
         <h2 id="titulo-catalogo">Productos</h2>
-        <label class="mp-etiqueta" for="buscar">Buscar por nombre</label
-        ><input
-          id="buscar"
-          v-model="busqueda"
-          class="mp-campo"
-          type="search"
-          placeholder="Escribe el nombre del producto"
-        />
+        <label class="mp-etiqueta" for="buscar">Buscar producto</label>
+        <div class="busqueda">
+          <input
+            id="buscar"
+            ref="campoBusqueda"
+            v-model="busqueda"
+            class="mp-campo campo-busqueda"
+            type="search"
+            placeholder="Nombre o descripción"
+            aria-describedby="pista-busqueda"
+            @keydown.enter.prevent="agregarPrimero"
+          />
+          <!-- El chip no es interactivo: rotula el atajo que escucha la vista.
+               Se marca `aria-hidden` porque la pista de abajo ya lo nombra en
+               una frase, y leerlo dos veces solo estorba. -->
+          <span class="tecla" aria-hidden="true">F2</span>
+        </div>
+        <p id="pista-busqueda" class="pista">
+          F2 enfoca la búsqueda. Enter agrega el primer resultado al carrito.
+        </p>
         <p v-if="errorCatalogo" role="alert" class="mp-aviso mp-aviso--error">
           {{ errorCatalogo }}
         </p>
         <p v-else-if="cargando" role="status">Cargando productos…</p>
         <p v-else-if="!visibles.length" class="vacio">No hay productos para esta búsqueda.</p>
-        <ul class="productos">
-          <li v-for="p in visibles" :key="p.id" class="producto">
-            <div>
-              <strong>{{ p.nombre }}</strong>
-              <p class="suave">Existencia: {{ p.existencia }}</p>
-              <span class="mp-cifra precio">{{ dinero(p.precio) }}</span>
-            </div>
+        <ul v-else class="rejilla">
+          <li v-for="p in visibles" :key="p.id">
             <button
-              class="mp-boton mp-boton--secundario"
-              :aria-label="`Agregar ${p.nombre}`"
+              class="tarjeta"
+              :aria-label="`Agregar ${p.nombre}, ${dinero(p.precio)}, ${existencia(p).texto}`"
               :disabled="!puedeEditar || !precioValido(p.precio)"
               @click="agregar(p)"
             >
-              Agregar
+              <span class="nombre">{{ p.nombre }}</span>
+              <span class="precio">{{ dinero(p.precio) }}</span>
+              <span class="mp-insignia existencia" :class="existencia(p).clase">
+                <span class="glifo" aria-hidden="true">{{ existencia(p).glifo }}</span>
+                {{ existencia(p).texto }}
+              </span>
             </button>
           </li>
         </ul>
-        <p class="suave">La existencia puede cambiar. Se confirma al procesar el cobro.</p>
+        <p class="pista">La existencia puede cambiar. Se confirma al procesar el cobro.</p>
       </section>
       <section class="mp-tarjeta panel" aria-labelledby="titulo-carrito">
+        <!-- Lista ordenada y no una fila de `div`: son etapas numeradas de un
+             mismo proceso, y asi un lector de pantalla las anuncia con su
+             posicion y su total sin que haya que repetirlo en el texto. -->
+        <ol class="pasos">
+          <li
+            v-for="(nombre, i) in PASOS"
+            :key="nombre"
+            :class="{ alcanzado: i + 1 <= pasoActual }"
+            :aria-current="i + 1 === pasoActual ? 'step' : undefined"
+          >
+            <span class="numero" aria-hidden="true">{{ i + 1 }}</span>{{ nombre }}
+          </li>
+        </ol>
         <h2 id="titulo-carrito">
           Carrito <span class="contador">{{ s.lineas.length }}</span>
         </h2>
@@ -216,11 +308,7 @@ onUnmounted(() => {
           <div>
             <span>Total estimado</span><strong class="mp-cifra total">{{ total }}</strong>
           </div>
-          <button
-            class="mp-boton cobrar"
-            :disabled="!puedeEditar || !s.lineas.length || !validas"
-            @click="cobro.cobrar"
-          >
+          <button class="mp-boton cobrar" :disabled="!puedeCobrar" @click="cobro.cobrar">
             {{
               s.estado === 'enviando'
                 ? 'Enviando…'
@@ -228,6 +316,7 @@ onUnmounted(() => {
                   ? 'Esperando resultado…'
                   : 'Cobrar'
             }}
+            <span v-if="puedeCobrar" class="tecla tecla--clara" aria-hidden="true">F12</span>
           </button>
         </div>
       </section>
@@ -289,36 +378,177 @@ onUnmounted(() => {
   color: var(--mp-texto-suave);
   margin: 0.4rem 0;
 }
+/* El panel de cobro mide 392px en el prototipo y no una fraccion: es una
+   columna de trabajo cuyo contenido no crece con la pantalla, mientras el
+   catalogo si debe aprovechar el ancho que sobre. El minimo de 320px le
+   permite ceder antes de que el diseno pase a una sola columna. */
 .columnas {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 392px);
   gap: 1.5rem;
   align-items: start;
 }
 .panel {
-  padding: 1.5rem;
+  padding: 20px;
 }
-.productos,
+.rejilla,
 .lineas,
 .detalle {
   list-style: none;
   padding: 0;
   margin: 1rem 0;
 }
-.productos {
+
+/* `auto-fill` y no cuatro columnas fijas: el minimo da cuatro columnas al
+   ancho de trabajo y baja a tres y a dos sin puntos de ruptura escritos a
+   mano. El minimo es 165px y no los 185px que mide la tarjeta del prototipo
+   porque la concha de la aplicacion gasta 64px que el prototipo no gasta:
+   20px de relleno a cada lado de `main` y 24px de hueco entre los dos
+   paneles. Con 185px de minimo la cuarta columna no entra y la rejilla cae a
+   tres, que es la diferencia que de verdad se nota; las tarjetas quedan en
+   ~168px. Recuperar los 185px exige tocar la concha, no esta vista. */
+.rejilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+  gap: 12px;
   max-height: 60vh;
   overflow: auto;
 }
-.producto {
+
+.tarjeta {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem 0;
-  border-bottom: 1px solid var(--mp-borde);
+  flex-direction: column;
+  align-items: start;
+  gap: 6px;
+  width: 100%;
+  height: 100%;
+  padding: 14px;
+  border: 1px solid var(--mp-borde-suave);
+  border-radius: var(--mp-radio-tarjeta);
+  background: var(--mp-superficie);
+  color: var(--mp-texto);
+  text-align: left;
+  cursor: pointer;
+}
+.tarjeta:hover:not(:disabled) {
+  border-color: var(--mp-verde);
+  background: var(--mp-verde-suave);
+}
+.tarjeta:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.nombre {
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+/* `margin-top: auto` empuja la insignia al borde inferior: en una fila de la
+   rejilla las tarjetas se estiran a la mas alta, y sin esto las insignias
+   quedarian a distintas alturas segun lo largo del nombre. */
+.existencia {
+  margin-top: auto;
+}
+.glifo {
+  font-family: var(--mp-tipografia-cifras);
+}
+/* El prototipo pone el dinero en la familia del texto y reserva la
+   monoespaciada para los identificadores y los rotulos de tecla. Se conserva
+   `tabular-nums`, que es lo que de verdad aporta la mono en una columna de
+   importes: cifras del mismo ancho para que los puntos decimales se alineen.
+   Asi se obtiene la alineacion sin cambiar de familia. */
+.precio,
+.total,
+.definitivo {
+  font-family: var(--mp-tipografia);
+  font-variant-numeric: tabular-nums;
 }
 .precio {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* Chip que rotula una tecla. Monoespaciado para que se lea como una tecla y no
+   como una palabra del texto. */
+.tecla {
+  padding: 2px 6px;
+  border: 1px solid var(--mp-borde);
+  border-radius: 5px;
+  background: var(--mp-superficie-2);
+  color: var(--mp-texto-auxiliar);
+  font-family: var(--mp-tipografia-cifras);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+.tecla--clara {
+  border-color: rgb(255 255 255 / 45%);
+  background: rgb(255 255 255 / 18%);
+  color: #fff;
+}
+
+.busqueda {
+  position: relative;
+}
+/* El relleno derecho reserva el sitio del chip para que el texto escrito no
+   pase por debajo de el. */
+.campo-busqueda {
+  padding-right: 3.5rem;
+}
+.busqueda .tecla {
+  position: absolute;
+  top: 50%;
+  right: 0.6rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.pista {
+  margin: 0.4rem 0 0;
+  color: var(--mp-texto-auxiliar);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.pasos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+  font-size: 0.875rem;
+  color: var(--mp-texto);
+}
+.pasos li {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+/* La flecha separadora es decorativa y se genera en CSS, no en el marcado: asi
+   no la lee un lector de pantalla entre los nombres de los pasos. */
+.pasos li:not(:last-child)::after {
+  content: '→';
+  margin-left: 6px;
+  color: var(--mp-texto-auxiliar);
+}
+.numero {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--mp-borde);
+  border-radius: 50%;
+  background: var(--mp-superficie-2);
+  color: var(--mp-texto-auxiliar);
+  font-size: 0.6875rem;
   font-weight: 700;
+}
+.pasos .alcanzado .numero {
+  border-color: var(--mp-verde);
+  background: var(--mp-verde);
+  color: #fff;
 }
 .vacio {
   text-align: center;
