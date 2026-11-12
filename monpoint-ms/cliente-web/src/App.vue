@@ -1,139 +1,42 @@
 <script setup>
-import { useRouter } from 'vue-router'
 import { useSesion } from '@/stores/sesion'
+import { usePreferencias } from '@/stores/preferencias'
 import NavegacionLateral from '@/componentes/NavegacionLateral.vue'
-
+import CabeceraAplicacion from '@/componentes/CabeceraAplicacion.vue'
+import MarcaMonPoint from '@/componentes/MarcaMonPoint.vue'
 const sesion = useSesion()
-const router = useRouter()
-
-function salir () {
-  sesion.cerrar()
-  router.replace({ name: 'login' })
-}
+const preferencias = usePreferencias()
 </script>
 
 <template>
-  <div class="app">
-    <!-- La barra solo existe con sesion abierta: en la pantalla de inicio de
-         sesion no hay nada que mostrar en ella. -->
-    <header v-if="sesion.autenticado" class="barra">
-      <span class="marca">MonPoint</span>
-
-      <span class="usuario">
-        {{ sesion.nombre }}
-        <span class="rol">{{ sesion.rol }}</span>
-      </span>
-
-      <button type="button" class="mp-boton mp-boton--secundario salir" @click="salir">
-        Salir
+  <div v-if="sesion.autenticado" class="app" :class="{ colapsada: preferencias.colapsada }">
+    <aside class="lateral">
+      <RouterLink :to="{ name: 'caja' }" class="marca" aria-label="MonPoint" :title="preferencias.colapsada ? 'MonPoint v3' : undefined"><MarcaMonPoint /></RouterLink>
+      <NavegacionLateral :colapsada="preferencias.colapsada" />
+      <button type="button" class="colapsar" :aria-label="preferencias.colapsada ? 'Expandir barra' : 'Colapsar barra'" :aria-expanded="!preferencias.colapsada" @click="preferencias.colapsada = !preferencias.colapsada">
+        <span aria-hidden="true">{{ preferencias.colapsada ? '»' : '«' }}</span><span v-if="!preferencias.colapsada">Colapsar barra</span>
       </button>
-    </header>
-
-    <!-- Con sesion abierta la pagina se parte en barra lateral y contenido.
-         Sin ella no hay nada que navegar, asi que el inicio de sesion ocupa el
-         ancho completo. -->
-    <div class="cuerpo" :class="{ 'con-barra': sesion.autenticado }">
-      <aside v-if="sesion.autenticado" class="lateral">
-        <NavegacionLateral />
-      </aside>
-
-      <main class="contenido">
-        <RouterView />
-      </main>
-    </div>
+    </aside>
+    <div class="cuerpo"><CabeceraAplicacion /><main id="contenido" class="contenido"><RouterView /></main></div>
   </div>
+  <main v-else class="sin-sesion"><RouterView /></main>
 </template>
 
 <style scoped>
-.app {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-}
-
-.barra {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.75rem 1rem;
-  background: var(--mp-marino);
-  color: #fff;
-}
-
-.marca {
-  font-weight: 700;
-  letter-spacing: 0.02em;
-}
-
-.usuario {
-  margin-left: auto;
-  min-width: 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  overflow-wrap: anywhere;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9375rem;
-}
-
-.rol {
-  padding: 0.1rem 0.5rem;
-  border-radius: 999px;
-  background: rgb(255 255 255 / 15%);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-}
-
-.salir {
-  flex-shrink: 0;
-  color: #fff;
-  border-color: rgb(255 255 255 / 30%);
-}
-
-.salir:hover:not(:disabled) {
-  background: rgb(255 255 255 / 12%);
-}
-
-.cuerpo {
-  flex: 1;
-  display: flex;
-  min-height: 0;
-}
-
-.lateral {
-  flex: 0 0 13.5rem;
-  border-right: 1px solid var(--mp-borde);
-  background: var(--mp-superficie);
-}
-
-.contenido {
-  flex: 1;
-  /* min-width: 0 permite que una tabla ancha se desplace dentro de su
-     envoltura en vez de ensanchar la pagina entera y sacar la barra lateral
-     de la pantalla. Sin esto, un nombre de producto largo rompe el diseno. */
-  min-width: 0;
-  padding: 1.25rem 1rem;
-}
-
-/* Por debajo de 720px la barra deja de ser columna y pasa a ser una fila bajo
-   la cabecera, que es lo que hace la propia barra en su media query. */
+.app { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100dvh; }
+.app.colapsada { grid-template-columns: 64px minmax(0, 1fr); }
+.lateral { display: flex; flex-direction: column; min-width: 0; position: sticky; top: 0; height: 100dvh; background: var(--mp-barra); color: var(--mp-barra-texto); overflow-y: auto; }
+.marca { display: flex; align-items: center; min-height: 64px; padding: 8px 12px; color: var(--mp-barra-texto); text-decoration: none; }
+.colapsada .marca :deep(.marca-monpoint > span) { display: none; }
+.colapsar { display: flex; align-items: center; justify-content: center; gap: 12px; width: calc(100% - 24px); min-height: 44px; margin: auto 12px 12px; padding: 8px; border: 0; border-radius: var(--mp-radio); background: transparent; color: var(--mp-barra-texto); font-size: 12px; cursor: pointer; }
+.colapsar:hover { background: var(--mp-barra-activo); }
+.cuerpo { min-width: 0; }
+.contenido { min-width: 0; padding: 24px 20px; }
+.sin-sesion { min-height: 100dvh; }
 @media (max-width: 720px) {
-  .cuerpo.con-barra {
-    flex-direction: column;
-  }
-
-  .lateral {
-    flex: none;
-    border-right: 0;
-    border-bottom: 1px solid var(--mp-borde);
-  }
-}
-
-@media (max-width: 480px) {
-  .contenido {
-    padding: 1rem 16px;
-  }
+  .app, .app.colapsada { display: flex; flex-direction: column; }
+  .lateral { position: static; height: auto; }
+  .marca, .colapsar { display: none; }
+  .contenido { padding: 20px 16px; }
 }
 </style>

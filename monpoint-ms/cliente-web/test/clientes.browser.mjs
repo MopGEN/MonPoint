@@ -1,3 +1,4 @@
+import { simularConcha, salirDesdeMenu } from './concha-fixture.mjs'
 /**
  * Recorrido de la pantalla de clientes con el Gateway simulado.
  *
@@ -28,6 +29,7 @@ const navegador = await chromium.launch({
   args: process.env.CHROMIUM_NO_SANDBOX === '1' ? ['--no-sandbox'] : [],
 })
 const pagina = await (await navegador.newContext({ viewport: { width: 1280, height: 860 } })).newPage()
+await simularConcha(pagina, API)
 const erroresJs = []
 pagina.on('pageerror', (e) => erroresJs.push(e.message))
 
@@ -165,7 +167,7 @@ assert.equal(recibidos.at(-1).metodo, 'DELETE')
 
 // VENDEDOR: puede dar de alta y editar, pero no eliminar.
 rol = 'VENDEDOR'
-await pagina.click('button:has-text("Salir")')
+await salirDesdeMenu(pagina)
 await pagina.waitForURL('**/login')
 await entrar()
 assert.ok(await pagina.locator('button:has-text("Nuevo cliente")').count(), 'puede dar de alta')

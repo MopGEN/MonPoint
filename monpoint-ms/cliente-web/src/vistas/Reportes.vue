@@ -8,6 +8,7 @@ import DialogoModal from '@/componentes/DialogoModal.vue'
 import CampoFormulario from '@/componentes/CampoFormulario.vue'
 import GraficaBarras from '@/componentes/GraficaBarras.vue'
 import { dinero } from '@/comun/importe'
+import { empresaActualizada } from '@/composables/actualizacionesInterfaz'
 import { guardarDocumento } from '@/comun/documento'
 import {
   PERIODOS,
@@ -172,6 +173,7 @@ async function guardarConfiguracion () {
   if (!r.ok) return
   dialogo.value = false
   await configuracion.recargar()
+  empresaActualizada()
 }
 </script>
 
@@ -179,8 +181,6 @@ async function guardarConfiguracion () {
   <section class="pantalla">
     <header class="encabezado">
       <div>
-        <p class="seccion">ANÁLISIS</p>
-        <h1>Reportes</h1>
         <p class="descripcion">
           Ventas confirmadas por periodo. Una venta cancelada no suma a ningún total.
         </p>

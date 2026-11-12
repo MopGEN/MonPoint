@@ -153,8 +153,6 @@ async function confirmarBaja () {
   <section class="pantalla">
     <header class="encabezado">
       <div>
-        <p class="seccion">INVENTARIO</p>
-        <h1>Productos</h1>
         <p class="descripcion">
           Catálogo activo. {{ esAdmin ? 'Altas, cambios y bajas lógicas.' : 'Solo consulta.' }}
         </p>
@@ -443,11 +441,14 @@ async function confirmarBaja () {
 }
 
 .peligro {
-  background: var(--mp-rojo);
+  background: var(--mp-error-fondo);
+  color: var(--mp-error);
+  border-color: var(--mp-error-borde);
 }
 
 .peligro:hover:not(:disabled) {
-  background: #a03024;
+  background: var(--mp-error-fondo);
+  border-color: var(--mp-error);
 }
 
 .confirmacion {

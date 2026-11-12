@@ -1,3 +1,4 @@
+import { simularConcha, salirDesdeMenu } from './concha-fixture.mjs'
 /**
  * Recorrido de la pantalla de productos con el Gateway simulado.
  *
@@ -34,6 +35,7 @@ const navegador = await chromium.launch({
   args: process.env.CHROMIUM_NO_SANDBOX === '1' ? ['--no-sandbox'] : [],
 })
 const pagina = await (await navegador.newContext({ viewport: { width: 1280, height: 860 } })).newPage()
+await simularConcha(pagina, API)
 const erroresJs = []
 pagina.on('pageerror', (e) => erroresJs.push(e.message))
 
@@ -195,7 +197,7 @@ assert.equal(recibidos.filter((r) => r.metodo === 'DELETE').length, 1, 'un unico
 
 // VENDEDOR: misma pantalla, sin ninguna accion de escritura.
 rol = 'VENDEDOR'
-await pagina.click('button:has-text("Salir")')
+await salirDesdeMenu(pagina)
 await pagina.waitForURL('**/login')
 await entrar()
 assert.equal(await pagina.locator('button:has-text("Nuevo producto")').count(), 0)

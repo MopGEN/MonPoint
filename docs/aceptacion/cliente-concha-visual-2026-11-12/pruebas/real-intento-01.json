@@ -1,0 +1,91 @@
+{
+  "inicio": "2026-11-12T06:48:12.046Z",
+  "cliente": "http://localhost:5173",
+  "gateway": "http://localhost:8080",
+  "casos": [],
+  "errores": [],
+  "lecturas": [
+    {
+      "ruta": "/reportes/configuracion",
+      "estado": 200
+    },
+    {
+      "ruta": "/inventario/productos",
+      "estado": 200
+    },
+    {
+      "ruta": "/clientes",
+      "estado": 200
+    },
+    {
+      "ruta": "/notificaciones?leida=false",
+      "estado": 200
+    },
+    {
+      "ruta": "/notificaciones?leida=false",
+      "estado": 200
+    },
+    {
+      "ruta": "/inventario/productos",
+      "estado": 200
+    },
+    {
+      "ruta": "/clientes",
+      "estado": 200
+    },
+    {
+      "ruta": "/reportes/configuracion",
+      "estado": 200
+    },
+    {
+      "ruta": "/reportes/ventas/agregado?periodo=DIA&desde=2026-10-14&hasta=2026-11-12",
+      "estado": 200
+    },
+    {
+      "ruta": "/notificaciones?leida=false",
+      "estado": 200
+    },
+    {
+      "ruta": "/auth/usuarios",
+      "estado": 200
+    },
+    {
+      "ruta": "/auth/me",
+      "estado": 200
+    },
+    {
+      "ruta": "/inventario/productos",
+      "estado": 200
+    },
+    {
+      "ruta": "/inventario/productos",
+      "estado": 200
+    },
+    {
+      "ruta": "/clientes",
+      "estado": 200
+    },
+    {
+      "ruta": "/reportes/configuracion",
+      "estado": 200
+    },
+    {
+      "ruta": "/inventario/productos",
+      "estado": 200
+    },
+    {
+      "ruta": "/clientes",
+      "estado": 200
+    }
+  ],
+  "empresaVisible": "Revision Reportes 1794411680561",
+  "sinLeer": 2,
+  "cuentaTemporal": {
+    "id": "6af5612e37c4c1cab6cc601b",
+    "correo": "concha.1794466094356@monpoint.test"
+  },
+  "resultado": "FAIL",
+  "fallo": "page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/login\" until \"load\"\n  navigated to \"http://localhost:5173/login?regresarA=/clientes\"\n============================================================",
+  "desactivacionTemporal": 204,
+  "fin": "2026-11-12T06:48:45.231Z"
+}

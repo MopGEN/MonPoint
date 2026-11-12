@@ -1,3 +1,4 @@
+import { simularConcha } from './concha-fixture.mjs'
 /** Ticket en Caja con Gateway simulado. El cuerpo PDF prueba transporte;
  * la validez del documento se contrasta en usuarios-ticket.real.browser.mjs. */
 import assert from 'node:assert/strict'
@@ -18,6 +19,7 @@ try {
   for (const [rol, caso] of [['ADMIN', 'descarga'], ['VENDEDOR', 'descarga'], ['ADMIN', 'cancelada'],
     ['VENDEDOR', 'seguimiento'], ['ADMIN', 'desmontaje'], ['ADMIN', 'sesion401']]) {
     const pagina = await navegador.newPage({ viewport: { width: 1280, height: 900 }, acceptDownloads: true })
+    await simularConcha(pagina, API)
     pagina.on('pageerror', (e) => resultado.errores.push(e.message))
     const archivos = []
     pagina.on('download', (d) => archivos.push(d.suggestedFilename()))
@@ -25,6 +27,7 @@ try {
     const boton = pagina.getByRole('button', { name: 'Descargar ticket del folio 1042 (PDF)', exact: true })
     await pagina.route(`${API}/**`, async (ruta) => {
       const req = ruta.request(), path = new URL(req.url()).pathname
+      if (['/reportes/configuracion', '/notificaciones'].includes(path)) { await ruta.fallback(); return }
       let datos, estado = 200
       if (path === '/auth/login') datos = { token: 'token-simulado', expiraEn: 3600000, correo: 'caja@example.test', nombre: 'Cajero', rol }
       else if (path === '/inventario/productos') datos = [{ id: 'p1', nombre: 'Tinta', precio: 41.15, existencia: 10, activo: true }]
@@ -58,7 +61,7 @@ try {
     })
     await pagina.goto(`${BASE}/login`)
     await pagina.getByLabel('Correo', { exact: true }).fill('caja@example.test')
-    await pagina.getByLabel('Contrasena', { exact: true }).fill('simulada')
+    await pagina.getByLabel('Contraseña', { exact: true }).fill('simulada')
     await pagina.getByRole('button', { name: 'Entrar', exact: true }).click()
     await pagina.getByRole('button', { name: 'Agregar Tinta', exact: true }).click()
     await pagina.clock.install()

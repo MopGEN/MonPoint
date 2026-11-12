@@ -1,3 +1,4 @@
+import { simularConcha, salirDesdeMenu, menuUsuario } from './concha-fixture.mjs'
 /**
  * Recorrido de la pantalla de notificaciones con el Gateway simulado.
  *
@@ -59,6 +60,7 @@ const navegador = await chromium.launch({
 })
 const contexto = await navegador.newContext({ viewport: { width: 1280, height: 800 } })
 const pagina = await contexto.newPage()
+await simularConcha(pagina, API)
 
 let rolActual = 'ADMIN'
 let marcadas = 0
@@ -187,7 +189,7 @@ await pagina.waitForURL('**/caja')
 // Un VENDEDOR no ve la seccion en la barra, porque la barra y la guarda
 // consultan la misma funcion de rol.
 rolActual = 'VENDEDOR'
-await pagina.click('button:has-text("Salir")')
+await salirDesdeMenu(pagina)
 await pagina.waitForURL('**/login')
 await entrar()
 const seccionesVendedor = await pagina.locator('nav[aria-label="Secciones"] a').allInnerTexts()
@@ -200,7 +202,7 @@ await pagina.screenshot({ path: `${SALIDA}-04-vendedor-sin-seccion.png` })
 // Atras es navegacion SPA: preserva el token del vendedor en memoria.
 await pagina.goBack()
 await pagina.waitForFunction(() => window.location.pathname === '/caja')
-assert.equal(await pagina.getByRole('button', { name: 'Salir', exact: true }).count(), 1)
+assert.equal(await menuUsuario(pagina).count(), 1)
 assert.equal(rechazos, 1, 'la guarda impidio otra consulta a Notificaciones')
 
 // Un enlace profundo sin sesion termina en el inicio de sesion, con el destino

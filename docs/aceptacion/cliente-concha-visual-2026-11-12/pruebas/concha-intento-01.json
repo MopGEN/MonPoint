@@ -1,0 +1,71 @@
+{
+  "inicio": "2026-11-12T06:41:44.638Z",
+  "casos": [],
+  "errores": [],
+  "externos": [],
+  "fuentes": [
+    {
+      "ruta": "/assets/inter-latin-Dx4kXJAl.woff2",
+      "estado": 200
+    }
+  ],
+  "geometriaClara": {
+    "lateral": {
+      "x": 0,
+      "y": 0,
+      "ancho": 232,
+      "alto": 900
+    },
+    "cabecera": {
+      "x": 232,
+      "y": 0,
+      "ancho": 1208,
+      "alto": 65.5
+    },
+    "viewport": 1440,
+    "documento": 1440,
+    "tema": "claro",
+    "tokens": {
+      "fondo": "#f2f5f8",
+      "borde": "#c8d1dc",
+      "texto": "#16202b",
+      "texto-suave": "#4e5a6b",
+      "verde-oscuro": "#17795a",
+      "proceso": "#1b4f8f",
+      "proceso-fondo": "#e3ecf8",
+      "radio": "8px",
+      "radio-tarjeta": "12px"
+    }
+  },
+  "geometriaOscura": {
+    "lateral": {
+      "x": 0,
+      "y": 0,
+      "ancho": 232,
+      "alto": 900
+    },
+    "cabecera": {
+      "x": 232,
+      "y": 0,
+      "ancho": 1208,
+      "alto": 65.5
+    },
+    "viewport": 1440,
+    "documento": 1440,
+    "tema": "oscuro",
+    "tokens": {
+      "fondo": "#0c131c",
+      "borde": "#33424f",
+      "texto": "#e9eef4",
+      "texto-suave": "#afbcca",
+      "verde-oscuro": "#249b6e",
+      "proceso": "#7fb2ee",
+      "proceso-fondo": "#0f2740",
+      "radio": "8px",
+      "radio-tarjeta": "12px"
+    }
+  },
+  "resultado": "FAIL",
+  "fallo": "locator.waitFor: Error: strict mode violation: locator('.estado[aria-busy=\"true\"]') resolved to 2 elements:\n    1) <div class=\"estado\" aria-busy=\"true\" data-v-2235a862=\"\" data-v-95c4e13a=\"\">…</div> aka locator('div').filter({ hasText: 'Cargando…' }).nth(4)\n    2) <div class=\"estado\" aria-busy=\"true\" data-v-2235a862=\"\" data-v-95c4e13a=\"\">…</div> aka locator('div').filter({ hasText: /^Cargando…$/ }).nth(3)\n\nCall log:\n\u001b[2m  - waiting for locator('.estado[aria-busy=\"true\"]') to be detached\u001b[22m\n",
+  "fin": "2026-11-12T06:41:46.288Z"
+}

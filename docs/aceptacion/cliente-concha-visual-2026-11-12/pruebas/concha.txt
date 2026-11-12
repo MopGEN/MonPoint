@@ -1,0 +1,12 @@
+Concha: PASS [
+  'geometria 232/64 y cabecera interior',
+  'seis rutas, ambos temas, un h1',
+  'menu por teclado y cierre de sesion',
+  'badge actualizado tras marcar',
+  'nombre de empresa actualizado tras guardar',
+  'movil 390 px sin desbordamiento',
+  'tema persistido, token en memoria',
+  'VENDEDOR sin campana ni solicitudes de avisos',
+  'fallo de avisos sin falso cero; reintento manual recupera contador',
+  'preferencia del sistema y almacenamiento bloqueado'
+]

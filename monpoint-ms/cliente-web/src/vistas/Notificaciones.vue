@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { gateway } from '@/api/gateway'
+import { avisosActualizados } from '@/composables/actualizacionesInterfaz'
 import { useRecurso } from '@/composables/useRecurso'
 import EstadoRecurso from '@/componentes/EstadoRecurso.vue'
 import TablaDatos from '@/componentes/TablaDatos.vue'
@@ -66,6 +67,7 @@ async function marcarLeida (notificacion) {
     // es "sin leer", la fila debe desaparecer, y eso lo decide el servidor,
     // no esta vista.
     await recurso.recargar()
+    avisosActualizados()
   } catch (causa) {
     errorAccion.value = causa
   } finally {
@@ -91,8 +93,6 @@ function fecha (valor) {
   <section class="pantalla">
     <header class="encabezado">
       <div>
-        <p class="seccion">INVENTARIO</p>
-        <h1>Notificaciones</h1>
         <p class="descripcion">
           Alertas generadas cuando un producto queda en su umbral o por debajo.
         </p>

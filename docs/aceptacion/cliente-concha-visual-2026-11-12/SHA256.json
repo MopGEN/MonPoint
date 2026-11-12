@@ -1,0 +1,162 @@
+[
+  {
+    "archivo": "RESULTADOS.md",
+    "sha256": "6bfcb5eeb7098f88ebe043e220cc01b6e1cfb087fa6acbebd6949bfb771cae85"
+  },
+  {
+    "archivo": "capturas/01-login-claro.png",
+    "sha256": "96fde9fb121f99e7186ae8c7ca83fd8873b3a9d9c0b5c4ec4329b0c24e09f597"
+  },
+  {
+    "archivo": "capturas/02-caja-claro.png",
+    "sha256": "9bed2548c2ba1ba0d16f0de8fe4dca54152557e64fd4d6be0080128ee5dae236"
+  },
+  {
+    "archivo": "capturas/03-colapsada.png",
+    "sha256": "c664152c7729ac1ca6fb93963daf2e5ef330a8ed8fba535d3a930be360bceedc"
+  },
+  {
+    "archivo": "capturas/04-campana-oscuro.png",
+    "sha256": "d2357813dc7c13c9ea3f7cbef7e4f47844ae94bdbccd84a268e9aceb871fd920"
+  },
+  {
+    "archivo": "capturas/05-login-oscuro.png",
+    "sha256": "8f985939b8f9f4da61d8817d23fe6255b13ef897793766530207b06ebf6d1dfb"
+  },
+  {
+    "archivo": "capturas/06-vendedor.png",
+    "sha256": "d8fd63f08a2066d7467e0c16287052c3be072cd0c2909b9fb9cd48365c1aa244"
+  },
+  {
+    "archivo": "capturas/claro-clientes.png",
+    "sha256": "ded3e7c81082c7850f60d3d450008b82ee6e349169d687317a941787bb38c1b9"
+  },
+  {
+    "archivo": "capturas/claro-notificaciones.png",
+    "sha256": "78e35cf13e12fc7513e733e9ed49a97f063c1e12f276ec25d1d0c01accd21f6c"
+  },
+  {
+    "archivo": "capturas/claro-productos.png",
+    "sha256": "007c016c88407dd6d3ef53b8322193f8a89103e2568ec53d82f4127373281d99"
+  },
+  {
+    "archivo": "capturas/claro-reportes.png",
+    "sha256": "e3be3f8458d60af9fa583f901d94d70d5f9f087dc9bafe99f0a23f7dbcf02d4d"
+  },
+  {
+    "archivo": "capturas/claro-usuarios.png",
+    "sha256": "8ade2f7bd40c69532ec0754d864b1901759311f0bc849e4719244283c6d68b6a"
+  },
+  {
+    "archivo": "capturas/movil-caja.png",
+    "sha256": "810c62431c9d4a439a9b64f95631da9e92116df02961adb32257e7b6a5295692"
+  },
+  {
+    "archivo": "capturas/movil-productos.png",
+    "sha256": "398c34bc1277c7cd560e596f0c09c3018072ec9a901afe21185dc1a58515ff03"
+  },
+  {
+    "archivo": "capturas/movil-reportes.png",
+    "sha256": "30a7042080d12b0a327b5bba15b06a6db319a3a54aa068c23d208abc76eafaea"
+  },
+  {
+    "archivo": "capturas/oscuro-caja.png",
+    "sha256": "6cdd0f7ed3d3185e464852b895aede41dc0cc0f0b6253e57439b0b172c88ccde"
+  },
+  {
+    "archivo": "capturas/oscuro-clientes.png",
+    "sha256": "4901f0941e2849d4c593adf76a2d580b5711717ef67280d356a5c1a2918bce24"
+  },
+  {
+    "archivo": "capturas/oscuro-notificaciones.png",
+    "sha256": "c31e20919ae25754239b38b63564edb17bd98209b41b0f7a18d78b7a1e855dd5"
+  },
+  {
+    "archivo": "capturas/oscuro-productos.png",
+    "sha256": "eb65551446d7a301dc8a751ae76953718d9ea8c5d3e36e642c63290c87221e83"
+  },
+  {
+    "archivo": "capturas/oscuro-reportes.png",
+    "sha256": "0acd9eecde9211aaf12df5bd936654a51952119e243f1ee5d11c81e2abf13d8b"
+  },
+  {
+    "archivo": "capturas/oscuro-usuarios.png",
+    "sha256": "ceaa23d6637f8a79d75a08dc2d2bc9e1ac76d868201ad998cbc486158355b852"
+  },
+  {
+    "archivo": "fuentes.json",
+    "sha256": "5696d0843534be2704a3bafee99e5599980639a7447f695361c856b959d92256"
+  },
+  {
+    "archivo": "pruebas/build.txt",
+    "sha256": "5252654874c3f8556a18f3c8ca6906114dae0ad1e084e0769ba2f2b353b9fa19"
+  },
+  {
+    "archivo": "pruebas/caja.txt",
+    "sha256": "5873a05b1491aadacaef3b71a0ac086667c492a7ed174c37395a0129312018ff"
+  },
+  {
+    "archivo": "pruebas/clientes.txt",
+    "sha256": "e4dc56b071735c78f6fed69fe3598efdc1fc1ec7cc426d68dfefb1555bff2f0c"
+  },
+  {
+    "archivo": "pruebas/concha-intento-01.json",
+    "sha256": "174d5a4ad6b791d5c3889d1d95bcb4b3a7ef319b5d220f5db7f7f81b3204902d"
+  },
+  {
+    "archivo": "pruebas/concha.json",
+    "sha256": "200379c15cee8f97387a840f8bfd16a7184ff748bbd63bdd0786b174ff78f1d0"
+  },
+  {
+    "archivo": "pruebas/concha.txt",
+    "sha256": "dd5a9c3be719a48c3cb03b0013f2d63305dd093a81656ce8a5c61df5e60c3cea"
+  },
+  {
+    "archivo": "pruebas/notificaciones.txt",
+    "sha256": "b8234177312f2008d0564fe394273114110fd9d79af543a7355327c0df9efb7f"
+  },
+  {
+    "archivo": "pruebas/productos.txt",
+    "sha256": "197308a61d5630a920a65eb771cea63e78da9e87c93d6b7a2699f3f44c8c2777"
+  },
+  {
+    "archivo": "pruebas/real-intento-01.json",
+    "sha256": "0852dbce45f00dc3d2e46a90112d52fc97b30a6249042c910d3f2572a0385ccf"
+  },
+  {
+    "archivo": "pruebas/reportes.txt",
+    "sha256": "e2bd224e643b7404ea4d3bf2d47a3f7d2da29766b11ab7b762cc84db951b7fa9"
+  },
+  {
+    "archivo": "pruebas/ticket.txt",
+    "sha256": "86281c42e7c72b7c0fc271bd4838572cfa0b03586b5dd3b3ff390ea73a0801af"
+  },
+  {
+    "archivo": "pruebas/unitarias.txt",
+    "sha256": "e81501a7643ac40ca202291521dcc5c580deba8c48243ce2ad345e6c6a9b3f2d"
+  },
+  {
+    "archivo": "pruebas/usuarios.txt",
+    "sha256": "c71f5892e00ce7628b38fde9263a6dd39f5dafa7f7fe8a7c8bf89e63351c151e"
+  },
+  {
+    "archivo": "real/01-campana-admin.png",
+    "sha256": "313ceea7b5b8c863b286b66dd85c2ac5e4f99ba06cc3563f01af6d98f16b7882"
+  },
+  {
+    "archivo": "real/02-dialogo-oscuro.png",
+    "sha256": "a7cbf40a61b10b02d41033a2af079cdbf0ed751502cb5dcbc7d9be7dafd175f0"
+  },
+  {
+    "archivo": "real/03-vendedor-oscuro.png",
+    "sha256": "31824fd207d7af07caf7a80ac50bffd569562f7ddef0a2636826d781ce82be86"
+  },
+  {
+    "archivo": "real/resultado.json",
+    "sha256": "b4c669bf74fd08b4ff8e397e96961d4b98031fc871966480f72d516c1528e33f"
+  },
+  {
+    "archivo": "referencia-visual-prototipo.md",
+    "sha256": "95b84af4d42f58cad3542f9ab630298bb897b3cedf146e529ec6f01825c595ff"
+  }
+]

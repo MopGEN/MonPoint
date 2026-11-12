@@ -1,0 +1,7 @@
+CONFIRMADA: OK (navegador con API simulada, sin errores JS, sin desborde móvil)
+CANCELADA: OK (navegador con API simulada, sin errores JS, sin desborde móvil)
+SIN_RESPUESTA: OK (navegador con API simulada, sin errores JS, sin desborde móvil)
+CANCELADA_HISTORICA: OK (navegador con API simulada, sin errores JS, sin desborde móvil)
+SESION_401: OK (navegador con API simulada, sin errores JS, sin desborde móvil)
+PRECIO_TRES_DECIMALES: OK (navegador con API simulada, sin errores JS, sin desborde móvil)
+PRECIO_INVALIDO: render estable y producto no cobrable

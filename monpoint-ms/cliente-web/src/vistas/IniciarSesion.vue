@@ -1,27 +1,15 @@
 <script setup>
-/**
- * Pantalla de inicio de sesion.
- *
- * ALCANCE DE ESTE ARCHIVO EN LA TAREA 5.1
- * Esta version es minima y FUNCIONAL a proposito: el criterio de aceptacion del
- * andamiaje es poder recorrer el circuito completo (token -> guarda -> peticion
- * autenticada), y para eso hace falta poder iniciar sesion de verdad. Lo que
- * hay aqui es la conexion con el almacen y el manejo de error.
- *
- * LO QUE AGREGA LA TAREA 5.3 (H-078, H-079)
- *   - Validacion en el cliente antes de enviar (formato de correo, campos
- *     vacios) con mensajes por campo.
- *   - Presentacion final segun el prototipo.
- *   - Mensaje diferenciado para credenciales incorrectas frente a servicio
- *     caido: el cliente HTTP ya distingue ambos casos
- *     (ErrorDeGateway.esDeRed), aqui solo se muestran igual.
- *   - Bloqueo o espera tras intentos fallidos repetidos, si se decide incluirlo.
+/** Inicio de sesion real, marca local y preferencia visual compartida.
+ * La autenticacion conserva el token en memoria; no se precargan credenciales.
  */
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useSesion } from '@/stores/sesion'
+import { usePreferencias } from '@/stores/preferencias'
+import MarcaMonPoint from '@/componentes/MarcaMonPoint.vue'
 
 const sesion = useSesion()
+const preferencias = usePreferencias()
 const router = useRouter()
 const route = useRoute()
 
@@ -48,9 +36,11 @@ async function enviar () {
 
 <template>
   <div class="envoltura">
+    <button type="button" class="icono-cabecera tema-login" :aria-label="preferencias.tema === 'claro' ? 'Cambiar a tema oscuro' : 'Cambiar a tema claro'" @click="preferencias.alternarTema"><span aria-hidden="true">{{ preferencias.tema === 'claro' ? '◐' : '◑' }}</span></button>
     <form class="mp-tarjeta tarjeta" @submit.prevent="enviar">
-      <h1>MonPoint</h1>
-      <p class="subtitulo">Punto de venta</p>
+      <MarcaMonPoint completa />
+      <h1>Iniciar sesión</h1>
+      <p class="subtitulo">Punto de venta · Auto Tachi Refacciones y Accesorios</p>
 
       <p v-if="expirada && !error" class="mp-aviso mp-aviso--pendiente">
         Su sesion termino. Inicie sesion de nuevo.
@@ -77,7 +67,7 @@ async function enviar () {
       </div>
 
       <div class="grupo">
-        <label class="mp-etiqueta" for="contrasena">Contrasena</label>
+        <label class="mp-etiqueta" for="contrasena">Contraseña</label>
         <input
           id="contrasena"
           v-model="contrasena"
@@ -92,27 +82,36 @@ async function enviar () {
       <button type="submit" class="mp-boton ancho" :disabled="sesion.entrando">
         {{ sesion.entrando ? 'Entrando...' : 'Entrar' }}
       </button>
+      <p class="nota-sesion">Por seguridad, la sesión se cierra al recargar la página.</p>
     </form>
   </div>
 </template>
 
 <style scoped>
 .envoltura {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 70vh;
+  min-height: 100dvh;
+  padding: 76px 16px 32px;
 }
 
 .tarjeta {
   width: 100%;
-  max-width: 380px;
-  padding: 1.75rem;
+  max-width: 432px;
+  padding: 32px;
 }
+
+.tarjeta :deep(.logo-completo) { margin: 0 auto 24px; }
+h1 { margin-bottom: 8px; font-size: 24px; font-weight: 600; text-align: center; }
+.tema-login { position: absolute; top: 20px; right: 20px; }
 
 .subtitulo {
   margin: 0 0 1.25rem;
   color: var(--mp-texto-suave);
+  font-size: 13px;
+  text-align: center;
 }
 
 .grupo {
@@ -122,5 +121,7 @@ async function enviar () {
 .ancho {
   width: 100%;
   margin-top: 0.5rem;
+  min-height: 52px;
 }
+.nota-sesion { margin: 20px 0 0; color: var(--mp-texto-auxiliar); font-size: 12px; text-align: center; }
 </style>

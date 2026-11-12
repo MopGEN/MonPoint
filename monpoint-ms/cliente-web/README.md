@@ -25,16 +25,17 @@ CORS sin causa visible.
 ```
 src/
 ├── main.js            arranque y cableado (inyecta el token al cliente HTTP)
-├── App.vue            barra superior, navegacion lateral y RouterView
+├── App.vue            lateral de marca, cabecera interior y RouterView
 ├── api/gateway.js     cliente HTTP unico: token, errores, expiracion
 ├── stores/sesion.js   sesion en Pinia (token EN MEMORIA)
+├── stores/preferencias.js tema del sistema o eleccion local del usuario
 ├── router/index.js    rutas y guarda de sesion y rol
 ├── assets/base.css    variables del prototipo, reinicio y primitivas
 ├── componentes/       navegacion, estados de carga y tabla accesible
 ├── composables/       useRecurso: cancelacion, ultima respuesta y errores
 │                     useAccion: guarda de escritura y errores por campo
 └── vistas/
-    ├── IniciarSesion.vue   minima y funcional; la 5.3 la completa
+    ├── IniciarSesion.vue   autenticacion real, marca y conmutador de tema
     ├── Caja.vue            catálogo, carrito y seguimiento del cobro (5.5)
     ├── Productos.vue       catálogo activo y CRUD por rol
     ├── Clientes.vue        altas/cambios para ambos roles; eliminación ADMIN
@@ -107,6 +108,62 @@ Los errores llegan como ProblemDetail (RFC 9457). `api/gateway.js` extrae
 al cajero; las vistas no deben reescribirlo.
 
 ## Navegación y notificaciones
+
+La concha sigue la referencia visual del prototipo: lateral marino de 232 px
+(64 px colapsada), marca local, cabecera interior con negocio, título y ruta,
+conmutador de tema y menú de usuario. «Salir» está dentro de ese menú. En móvil
+la navegación pasa a una fila desplazable para conservar el espacio del
+contenido. Los títulos de las seis pantallas se muestran una sola vez, en la
+cabecera compartida.
+
+Inter se sirve desde `src/assets/fuentes/`, con su licencia OFL, sin Google
+Fonts ni peticiones externas. Los dos subconjuntos variables pesan 133.324
+bytes en total. Los tokens conservan sus nombres `--mp-*`, incorporan los
+tríos de texto/fondo/borde para éxito, aviso, error y proceso, y separan radios
+de controles (8 px) y tarjetas/diálogos (12 px).
+
+El tema sigue `prefers-color-scheme` hasta elegir uno. Solo esa preferencia se
+persiste en `localStorage` (`monpoint.tema`); no se guarda la sesión. Si el
+almacenamiento está bloqueado, el interruptor funciona en la pestaña actual.
+
+La cabecera consulta `GET /reportes/configuracion`, permitido para ambos roles.
+Muestra el nombre registrado, «Auto Tachi» si responde 404 y «MonPoint» mientras
+carga o si falla. Guardar la configuración en Reportes invalida esta lectura.
+ADMIN tiene además la campana, que consulta `GET /notificaciones?leida=false`
+al iniciar, al abrir el panel y tras marcar una alerta en la pantalla. El número
+corresponde a la última lectura; **no hay actualización en tiempo real**. Ante
+carga o error se omite el número, sin convertir el fallo en cero alertas.
+VENDEDOR no monta la campana ni hace esas consultas.
+
+La rejilla de productos de Caja, sus atajos y stepper del prototipo quedan para
+otra intervención. No se añaden rutas de Proveedores, Historial, Ventas en
+proceso, Configuración ni Guía de estilo.
+
+Recorrido visual con API simulada, build y preview:
+
+```bash
+PLAYWRIGHT_MODULE=/ruta/a/playwright/index.mjs node test/concha.browser.mjs
+```
+
+Comprueba ambos temas y roles, geometría, móvil a 390 px, fuentes locales sin
+peticiones externas, menú con Escape, contador tras marcar, error/reintento de
+avisos, actualización del nombre de empresa y preferencia con almacenamiento
+bloqueado. Acepta las variables de navegador y salida de los recorridos de abajo.
+
+Con Vite en `http://localhost:5173` y servicios locales de prueba:
+
+```bash
+PLAYWRIGHT_MODULE=/ruta/a/playwright/index.mjs node test/concha.real.browser.mjs
+```
+
+Este recorrido lee las seis pantallas, contrasta negocio/contador con la API,
+abre y cancela un diálogo y comprueba VENDEDOR y F5. **Crea una cuenta temporal
+de vendedor y la desactiva al terminar**; no crea ventas, productos ni alertas.
+No es idempotente ni se ejecuta con `npm test`. Usa las mismas variables de
+credenciales y navegador de los demás recorridos reales. Su evidencia no
+acredita ejecución en Windows ni empaquetado nginx.
+
+[Capturas claras/oscuras y resultados de la concha](../../docs/aceptacion/cliente-concha-visual-2026-11-12/RESULTADOS.md).
 
 La barra deriva sus enlaces de `meta.nav` y comparte `rolPermitido` con la
 guarda. Ambos roles ven Caja, Productos y Clientes; ADMIN ve además Reportes,

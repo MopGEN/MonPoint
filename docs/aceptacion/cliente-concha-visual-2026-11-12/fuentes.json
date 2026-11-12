@@ -1,0 +1,222 @@
+{
+  "base": "2204da541653f111be727dc9d51db8d3fafda542",
+  "entradas": [
+    {
+      "archivo": "referencia-visual-prototipo.md",
+      "bytes": 6218,
+      "sha256": "95b84af4d42f58cad3542f9ab630298bb897b3cedf146e529ec6f01825c595ff"
+    },
+    {
+      "archivo": "prototipo-capturas.tgz",
+      "bytes": 1675162,
+      "sha256": "9fabc191d624614121e8b85911056ecc5032504f8e582b41098826051ac3cb77"
+    },
+    {
+      "archivo": "index.html",
+      "bytes": 1836307,
+      "sha256": "fbeaa4f673cb5e1cfb1428c7ddba8655029a6bb9a6696250fe10022d4ea5b5e0"
+    }
+  ],
+  "cliente": [
+    {
+      "archivo": "monpoint-ms/cliente-web/README.md",
+      "bytes": 32317,
+      "sha256": "dfc7ed88d129f3d5bde1aa8592373706eda0bc387e312a4a5f94ebc92d36f73e"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/App.vue",
+      "bytes": 2586,
+      "sha256": "2fb3c97097ada58f18254f4162b68e94722f6d55473fb29a5a1855c7ee8c717c"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/assets/base.css",
+      "bytes": 9674,
+      "sha256": "fd42dee5d8f9c2de10f0a2eb3115d49f35e4fe1751eb9aede795c5585953d467"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/assets/fuentes/OFL.txt",
+      "bytes": 4380,
+      "sha256": "262481e844521b326f5ecd053e59b98c8b2da78c8ee1bdbb6e8174305e54935a"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/assets/fuentes/README.md",
+      "bytes": 788,
+      "sha256": "70a194f70e1f8252a5fd1df5edcdf7a4a6e7a76540a8674e447a73d3e63f9c1f"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/assets/fuentes/inter-latin-ext.woff2",
+      "bytes": 85068,
+      "sha256": "34b9c504cab7a73e37b746343a449132e56cf7b5481af2cb81dc74dcff25c956"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/assets/fuentes/inter-latin.woff2",
+      "bytes": 48256,
+      "sha256": "3100e775e8616cd2611beecfa23a4263d7037586789b43f035236a2e6fbd4c62"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/assets/logo.png",
+      "bytes": 867073,
+      "sha256": "15ebb186cb232e23209039bd99077245e3eccf4ea1a969334af022c1558a38a7"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/componentes/CabeceraAplicacion.vue",
+      "bytes": 5043,
+      "sha256": "5723132834de8d335a74fa3dcc6604ceeee5d9ec7e302aad4766d17826dbfa38"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/componentes/CampanaNotificaciones.vue",
+      "bytes": 3111,
+      "sha256": "93fdec3e468e06a3deb02e0fcf61deef371859ecf3cf7a038a8f45b94a033284"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/componentes/DialogoModal.vue",
+      "bytes": 3510,
+      "sha256": "9429891017fda8bc6fc062966b50a4c845722c6f1ae70c8a63cb7099b1c8e4e1"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/componentes/MarcaMonPoint.vue",
+      "bytes": 843,
+      "sha256": "3dd2f15fa74122bafae88173e4344f0824d71ed173a8363933df5c5fcf25f6a9"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/componentes/NavegacionLateral.vue",
+      "bytes": 3359,
+      "sha256": "70f8a3c9cbd33ac13129525bbde17fb66fbfb63046082671d1f2f5b7b15f4136"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/composables/actualizacionesInterfaz.js",
+      "bytes": 393,
+      "sha256": "52b98e7c688df77a07b43e4c7a3cb038e397b242521767c5dce8503e457ec7f2"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/composables/useDesplegable.js",
+      "bytes": 899,
+      "sha256": "056c00d46b890a400b4fc2dd0e5a446aa73e698bc547a92b76dcc1c853815144"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/stores/preferencias.js",
+      "bytes": 1236,
+      "sha256": "4b76df3b694af286566fd9d5b0d156dda1ec3691ccad65497011c10017abbba2"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/vistas/Caja.vue",
+      "bytes": 13482,
+      "sha256": "dcea0279df2696f562aac6b88cddef8f8e58f11300dfa4af3d33fd05a7be2a4a"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/vistas/Clientes.vue",
+      "bytes": 11891,
+      "sha256": "a3a36d4afafe21931d4c61eb19dbad2b1fca1171093d7bdc102f25bb44273c8d"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/vistas/IniciarSesion.vue",
+      "bytes": 3762,
+      "sha256": "4e343ec81a7b079d07b59774513cdee1b2671354a9f25a44dd9b98b8f1c5caa5"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/vistas/NoEncontrada.vue",
+      "bytes": 658,
+      "sha256": "baa3075b8f9ee95dfc0d1d5642071d33a3d7d1f3f66f02e14b24e74610c98b41"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/vistas/Notificaciones.vue",
+      "bytes": 7586,
+      "sha256": "938435de8081d1ddabd91e831d68e4f3b71afdf1e11d9ca83e087c85558b71f6"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/vistas/Productos.vue",
+      "bytes": 13903,
+      "sha256": "69071add15c0ce39933cbe8c07849aa146700ddcb265ef928a10cb6d3bc662a5"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/vistas/Reportes.vue",
+      "bytes": 14900,
+      "sha256": "a6ebe6bed8448710be58606625e41248edd4b36f14b4a7a93079fb5fba0b149e"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/vistas/Usuarios.vue",
+      "bytes": 14281,
+      "sha256": "68189a25c708d4c743dd948071b1ea91fb1b589299c3b0f3877dcee01d192e59"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/test/caja.browser.mjs",
+      "bytes": 7024,
+      "sha256": "b76d877107824cd654d7fd9e59ba8d4fbb7ec9cd1646ee03af77864a574ae987"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/test/clientes.browser.mjs",
+      "bytes": 8073,
+      "sha256": "87313307186a3770ba6915bf030a88616229416a79caf0591c7e8d7dd7b1af6e"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/test/clientes.real.browser.mjs",
+      "bytes": 9534,
+      "sha256": "4f2e65cd57dd8c8ac738f7717456402448299307e370405d6a97e835232ab838"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/test/concha-fixture.mjs",
+      "bytes": 996,
+      "sha256": "086d06c76805f3de08fee242df0564178dac279c0c0fa465a5533dffe806c65f"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/test/concha.browser.mjs",
+      "bytes": 13388,
+      "sha256": "ba9a0609fc5177ab48f01d7e5f9165c262174201828f0e2d153813d554dc12b7"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/test/concha.real.browser.mjs",
+      "bytes": 6750,
+      "sha256": "62e015443f9e7cc53c3be3e0d3314d15f8594caafb4355adac0ab34503f6a72f"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/test/empaquetado.browser.mjs",
+      "bytes": 4415,
+      "sha256": "e75119249321f95463332c626c5eb59054b0ff1fd3975fca0b1f0fe4a02295f2"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/test/notificaciones.browser.mjs",
+      "bytes": 9613,
+      "sha256": "d33bef8b209cec39d5e6b00bb5ffb7cc941cfb8ad12ea9c9e330f80161eda17b"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/test/notificaciones.real.browser.mjs",
+      "bytes": 7245,
+      "sha256": "8fb2652554dec177820c8f9969a3d1589a13285ae50c5ea4ea9cc317e3844217"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/test/productos.browser.mjs",
+      "bytes": 9845,
+      "sha256": "8d1f872699956eb3631682b9bf92c05a2e6e3c822ce4de970a320b0ae451da46"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/test/productos.real.browser.mjs",
+      "bytes": 9037,
+      "sha256": "482f20f1c2fa8d9323799763c3483662ab34f8d3f6c5e267d250dc8d150ff8f8"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/test/reportes.browser.mjs",
+      "bytes": 10804,
+      "sha256": "9a26c8fbe8ac29284833ec64990df4b0a06e5edfe4b74879da34b173d32231a7"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/test/reportes.real.browser.mjs",
+      "bytes": 15745,
+      "sha256": "93766fa7813d39516d58baa0a26445e1c97fcd9e91a09d5353fac5e1d313b78f"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/test/ticket.browser.mjs",
+      "bytes": 7332,
+      "sha256": "1de16e6b2691531924760e344d4324b5b33874f051cd6a3c56c767684841ab83"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/test/usuarios-ticket.real.browser.mjs",
+      "bytes": 17626,
+      "sha256": "a972fd68f46599a9dcd861e2c0221eee3c9c82b138f4eac848d5a39e64bf30f5"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/test/usuarios.browser.mjs",
+      "bytes": 10963,
+      "sha256": "b6f94b0ff951033a983f63e40a0d9300b4c90d18c2329eebb57f2d88265f79be"
+    }
+  ]
+}

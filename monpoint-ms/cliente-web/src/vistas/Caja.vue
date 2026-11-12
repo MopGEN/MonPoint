@@ -81,8 +81,6 @@ onUnmounted(() => {
   <section class="caja">
     <header class="cabecera">
       <div>
-        <p class="sobre">PUNTO DE VENTA</p>
-        <h1>Caja</h1>
         <p class="suave">Arma el carrito y consulta el resultado del cobro.</p>
       </div>
       <button class="mp-boton mp-boton--secundario" :disabled="cargando" @click="cargar">
@@ -363,7 +361,7 @@ onUnmounted(() => {
 }
 .rechazada {
   border-left: 4px solid var(--mp-rojo);
-  background: rgb(192 57 43 / 8%);
+  background: var(--mp-error-fondo);
 }
 .marca-rechazo {
   font-size: 0.875rem;
@@ -392,30 +390,34 @@ onUnmounted(() => {
 .resultado {
   margin-top: 1rem;
   padding: 1.25rem;
-  border-radius: var(--mp-radio);
+  border-radius: var(--mp-radio-tarjeta);
 }
 .icono {
   font-size: 2rem;
   display: block;
 }
 .proceso {
-  border: 2px dashed var(--mp-ambar);
-  background: rgb(183 121 31 / 8%);
+  border: 1px solid var(--mp-proceso-borde);
+  color: var(--mp-proceso);
+  background: var(--mp-proceso-fondo);
 }
 .confirmada {
-  color: white;
-  background: #17795a;
+  background: var(--mp-exito-fondo);
+  color: var(--mp-exito);
+  border: 1px solid var(--mp-exito-borde);
 }
 .confirmada button {
-  color: white;
-  border-color: white;
+  color: var(--mp-exito);
+  border-color: var(--mp-exito-borde);
 }
 .confirmada button:hover {
   color: var(--mp-texto);
 }
 .cancelada {
-  border-left: 5px solid var(--mp-rojo);
-  background: rgb(192 57 43 / 8%);
+  color: var(--mp-error);
+  border: 1px solid var(--mp-error-borde);
+  border-left-width: 5px;
+  background: var(--mp-error-fondo);
 }
 .bandeja {
   margin-top: 1.5rem;

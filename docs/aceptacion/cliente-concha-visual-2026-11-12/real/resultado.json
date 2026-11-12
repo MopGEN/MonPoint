@@ -1,0 +1,97 @@
+{
+  "inicio": "2026-11-12T06:49:02.478Z",
+  "cliente": "http://localhost:5173",
+  "gateway": "http://localhost:8080",
+  "casos": [
+    "seis rutas ADMIN con lecturas reales",
+    "nombre de empresa coincide con API",
+    "badge coincide con sin leer de API",
+    "dialogo oscuro abre y cancela",
+    "VENDEDOR: tres rutas sin campana",
+    "F5 cierra sesion y conserva tema"
+  ],
+  "errores": [],
+  "lecturas": [
+    {
+      "ruta": "/reportes/configuracion",
+      "estado": 200
+    },
+    {
+      "ruta": "/notificaciones?leida=false",
+      "estado": 200
+    },
+    {
+      "ruta": "/clientes",
+      "estado": 200
+    },
+    {
+      "ruta": "/inventario/productos",
+      "estado": 200
+    },
+    {
+      "ruta": "/notificaciones?leida=false",
+      "estado": 200
+    },
+    {
+      "ruta": "/inventario/productos",
+      "estado": 200
+    },
+    {
+      "ruta": "/clientes",
+      "estado": 200
+    },
+    {
+      "ruta": "/reportes/configuracion",
+      "estado": 200
+    },
+    {
+      "ruta": "/reportes/ventas/agregado?periodo=DIA&desde=2026-10-14&hasta=2026-11-12",
+      "estado": 200
+    },
+    {
+      "ruta": "/notificaciones?leida=false",
+      "estado": 200
+    },
+    {
+      "ruta": "/auth/usuarios",
+      "estado": 200
+    },
+    {
+      "ruta": "/auth/me",
+      "estado": 200
+    },
+    {
+      "ruta": "/inventario/productos",
+      "estado": 200
+    },
+    {
+      "ruta": "/inventario/productos",
+      "estado": 200
+    },
+    {
+      "ruta": "/reportes/configuracion",
+      "estado": 200
+    },
+    {
+      "ruta": "/clientes",
+      "estado": 200
+    },
+    {
+      "ruta": "/inventario/productos",
+      "estado": 200
+    },
+    {
+      "ruta": "/clientes",
+      "estado": 200
+    }
+  ],
+  "empresaVisible": "Revision Reportes 1794411680561",
+  "sinLeer": 2,
+  "cuentaTemporal": {
+    "id": "6af5616037c4c1cab6cc601c",
+    "correo": "concha.1794466144302@monpoint.test"
+  },
+  "resultado": "PASS",
+  "desactivacionTemporal": 204,
+  "fin": "2026-11-12T06:49:05.126Z"
+}

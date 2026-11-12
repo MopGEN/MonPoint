@@ -16,15 +16,11 @@ import { rolPermitido } from '@/router'
  * - Una entrada no puede ofrecer algo que la guarda rechazaria, porque ambas
  *   preguntan a la misma funcion.
  *
- * El nombre de la clase raiz no es `barra` a proposito: App.vue tiene una regla
- * `.barra` para la cabecera y los estilos de ambito de un padre SI alcanzan al
- * elemento raiz de su hijo. Compartir el nombre pintaba esta barra con el fondo
- * marino y la disposicion de la cabecera.
- *
  * Las pantallas del prototipo que no existen todavia simplemente no aparecen.
  * Se descarto mostrarlas deshabilitadas: un enlace que nunca se activa ocupa
  * espacio, invita a pulsarlo y no ensena nada que el usuario pueda usar.
  */
+defineProps({ colapsada: { type: Boolean, default: false } })
 const router = useRouter()
 const sesion = useSesion()
 
@@ -43,10 +39,10 @@ const entradas = computed(() =>
 </script>
 
 <template>
-  <nav class="navegacion" aria-label="Secciones">
+  <nav class="navegacion" :class="{ compacta: colapsada }" aria-label="Secciones">
     <ul>
       <li v-for="e in entradas" :key="e.nombre">
-        <RouterLink :to="{ name: e.nombre }" class="enlace" active-class="activo">
+        <RouterLink :to="{ name: e.nombre }" class="enlace" active-class="activo" :aria-label="e.titulo" :title="colapsada ? e.titulo : undefined">
           <!-- El icono es decorativo: el nombre de la seccion ya esta en el
                texto, asi que anunciarlo seria ruido para un lector. -->
           <span class="icono" aria-hidden="true">{{ e.icono }}</span>
@@ -59,13 +55,13 @@ const entradas = computed(() =>
 
 <style scoped>
 .navegacion {
-  padding: 0.75rem 0.5rem;
+  padding: 8px 12px;
 }
 
 ul {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: 4px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -75,26 +71,25 @@ ul {
   display: flex;
   align-items: center;
   gap: 0.7rem;
-  padding: 0.55rem 0.75rem;
+  min-height: 44px;
+  padding: 0 12px;
   border-radius: var(--mp-radio);
-  color: var(--mp-texto-suave);
+  color: var(--mp-barra-texto);
   text-decoration: none;
-  font-weight: 550;
+  font-weight: 400;
 }
 
 .enlace:hover {
-  background: var(--mp-fondo);
-  color: var(--mp-texto);
+  background: var(--mp-barra-activo);
+  color: var(--mp-barra-texto);
 }
 
-/* La seccion activa no se distingue solo por color: lleva ademas una barra a
-   la izquierda y mas peso tipografico, para que se lea sin depender de la
-   percepcion del color. */
+/* aria-current identifica la ruta activa; el peso tipografico tambien cambia. */
 .enlace.activo {
-  background: var(--mp-fondo);
-  color: var(--mp-verde);
-  font-weight: 700;
-  box-shadow: inset 3px 0 0 var(--mp-verde);
+  background: var(--mp-barra-activo);
+  color: #8fe3c0;
+  font-weight: 600;
+
 }
 
 .icono {
@@ -102,6 +97,9 @@ ul {
   text-align: center;
   font-size: 1.05rem;
 }
+
+.compacta .texto { display: none; }
+.compacta .enlace { justify-content: center; padding: 0; }
 
 /* En pantalla estrecha la barra pasa a ser una fila desplazable sobre el
    contenido, que es lo unico que cabe sin robarle sitio a una tabla. */
@@ -115,9 +113,8 @@ ul {
     flex-direction: row;
   }
 
-  .texto {
-    white-space: nowrap;
-  }
+  .texto, .compacta .texto { display: inline; white-space: nowrap; }
+  .compacta .enlace { justify-content: flex-start; padding: 0 12px; }
 
   .enlace.activo {
     box-shadow: inset 0 -3px 0 var(--mp-verde);

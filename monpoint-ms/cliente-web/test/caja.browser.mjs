@@ -1,5 +1,7 @@
+import { simularConcha } from './concha-fixture.mjs'
 // Ejecutar con Vite activo. Ver README para instalar Playwright fuera del checkout.
 import assert from 'node:assert/strict'
+const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:5173'
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE ?? 'playwright')
 const browser = await chromium.launch({
   executablePath: process.env.CHROMIUM_PATH ?? '/usr/bin/chromium',
@@ -17,6 +19,7 @@ try {
     'PRECIO_INVALIDO',
   ]) {
     const page = await browser.newPage({ viewport: { width: 1280, height: 900 } })
+    await simularConcha(page, 'http://localhost:8080')
     const errores = []
     page.on('pageerror', (e) => errores.push(e.message))
     let posts = 0,
@@ -24,6 +27,7 @@ try {
     await page.route('http://localhost:8080/**', async (route) => {
       const req = route.request(),
         ruta = new URL(req.url()).pathname
+      if (['/reportes/configuracion', '/notificaciones'].includes(ruta)) { await route.fallback(); return }
       let body,
         status = 200
       if (ruta === '/auth/login')
@@ -88,9 +92,9 @@ try {
         body: JSON.stringify(body),
       })
     })
-    await page.goto('http://127.0.0.1:5173/login')
+    await page.goto(`${BASE}/login`)
     await page.getByLabel('Correo', { exact: true }).fill('admin@example.test')
-    await page.getByLabel('Contrasena', { exact: true }).fill('prueba')
+    await page.getByLabel('Contraseña', { exact: true }).fill('prueba')
     await page.getByRole('button', { name: 'Entrar', exact: true }).click()
     if (escenario === 'PRECIO_INVALIDO') {
       await page.getByText('Importe no disponible', { exact: true }).waitFor()
@@ -120,7 +124,7 @@ try {
       await page.waitForURL('**/login?expirada=1')
       resolver = true
       await page.getByLabel('Correo', { exact: true }).fill('admin@example.test')
-      await page.getByLabel('Contrasena', { exact: true }).fill('prueba')
+      await page.getByLabel('Contraseña', { exact: true }).fill('prueba')
       await page.getByRole('button', { name: 'Entrar', exact: true }).click()
       await page.getByRole('heading', { name: 'Seguimiento de operaciones' }).waitFor()
       assert.equal(await page.locator('.operacion').count(), 1)
