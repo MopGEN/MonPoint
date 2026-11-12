@@ -1,3 +1,4 @@
+import { simularConcha, salirDesdeMenu, menuUsuario } from './concha-fixture.mjs'
 /**
  * Recorrido de la pantalla de usuarios con el Gateway simulado.
  *
@@ -31,6 +32,7 @@ const navegador = await chromium.launch({
   args: process.env.CHROMIUM_NO_SANDBOX === '1' ? ['--no-sandbox'] : [],
 })
 const pagina = await (await navegador.newContext({ viewport: { width: 1280, height: 900 } })).newPage()
+await simularConcha(pagina, API)
 const erroresJs = []
 pagina.on('pageerror', (e) => erroresJs.push(e.message))
 
@@ -191,7 +193,7 @@ const propiaModificada = pagina.locator('table.mp-tabla tbody tr', { hasText: 'a
 await propiaModificada.waitFor()
 assert.equal(await propiaModificada.getByText('usted', { exact: true }).count(), 1)
 assert.equal(await propiaModificada.getByRole('button', { name: 'Desactivar', exact: true }).count(), 0)
-assert.equal(await pagina.locator('header.barra .usuario').innerText(), 'Administrador General\nADMIN')
+assert.equal(await pagina.locator('header.barra .nombre-usuario').innerText(), 'Administrador General')
 await propiaModificada.getByRole('button', { name: 'Editar', exact: true }).click()
 assert.equal(await pagina.isDisabled('#rol'), true, 'el correo cambiado sigue siendo la cuenta propia')
 await pagina.getByRole('dialog', { name: 'Editar usuario', exact: true }).getByRole('button', { name: 'Cancelar', exact: true }).click()
@@ -215,7 +217,7 @@ assert.equal(peticiones.at(-1).tipo, 'baja')
 await pagina.getByRole('link', { name: 'Caja', exact: false }).click()
 await pagina.waitForURL('**/caja')
 rol = 'VENDEDOR'
-await pagina.click('button:has-text("Salir")')
+await salirDesdeMenu(pagina)
 await pagina.waitForURL('**/login')
 await entrar(null)
 const secciones = await pagina.locator('nav[aria-label="Secciones"] a').allInnerTexts()
@@ -227,7 +229,7 @@ await pagina.evaluate(() => window.addEventListener('popstate', (e) => {
 await pagina.goBack()
 await pagina.waitForURL('**/caja')
 assert.equal(await pagina.evaluate(() => window.destinoUsuarioEnPrueba), '/usuarios')
-assert.equal(await pagina.getByRole('button', { name: 'Salir', exact: true }).count(), 1)
+assert.equal(await menuUsuario(pagina).count(), 1)
 await pagina.screenshot({ path: `${SALIDA}-05-vendedor.png` })
 
 assert.deepEqual(erroresJs, [])

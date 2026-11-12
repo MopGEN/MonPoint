@@ -52,7 +52,7 @@ try {
   assert.equal((await page.goto(origen + '/caja')).status(), 200)
   await page.waitForURL(u => u.pathname === '/login' && u.searchParams.get('regresarA') === '/caja')
   await page.getByLabel('Correo', { exact: true }).fill(process.env.ADMIN_CORREO ?? 'admin@monpoint.com')
-  await page.getByLabel('Contrasena', { exact: true }).fill(process.env.ADMIN_DEFAULT_PASSWORD ?? 'Admin123!')
+  await page.getByLabel('Contraseña', { exact: true }).fill(process.env.ADMIN_DEFAULT_PASSWORD ?? 'Admin123!')
   const login = page.waitForResponse(r => r.url() === api + '/auth/login')
   const productos = page.waitForResponse(r => r.url() === api + '/inventario/productos')
   const clientes = page.waitForResponse(r => r.url() === api + '/clientes')

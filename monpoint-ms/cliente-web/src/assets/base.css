@@ -1,59 +1,140 @@
-/*
- * Base del cliente web: variables, reinicio y unas pocas primitivas.
- *
- * ALCANCE: esto es el andamiaje (tarea 5.1). El diseno de la pantalla de caja
- * es la tarea 5.5 y vive en su propio componente. Aqui solo se fijan los
- * valores que deben ser iguales en todas las pantallas, tomados del prototipo
- * aprobado (docs/prototipo/index.html) para que el cliente real y el prototipo
- * no divergan.
- */
-
+/* Tokens reconciliados con referencia-visual-prototipo.md. Se conservan los
+ * nombres mp existentes; los aliases apuntan a un solo valor semantico. */
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('./fuentes/inter-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('./fuentes/inter-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
 :root {
-  /* Paleta del prototipo */
+  color-scheme: light;
   --mp-marino: #12233f;
+  --mp-marino-700: #1b3559;
+  --mp-marino-500: #2a4a75;
+  --mp-marino-suave: #dce4ef;
   --mp-verde: #1f9d6e;
-  --mp-tinta: #0a1422;
-
-  --mp-verde-oscuro: #17805a;
-  --mp-rojo: #c0392b;
-  --mp-ambar: #b7791f;
-
-  /* Superficies y texto, modo claro */
-  --mp-fondo: #f4f6f9;
+  --mp-verde-oscuro: #17795a;
+  --mp-verde-suave: #e1f3eb;
+  --mp-gris-50: #f7f9fb;
+  --mp-gris-100: #edf1f6;
+  --mp-gris-200: #dfe5ec;
+  --mp-gris-300: #c8d1dc;
+  --mp-gris-400: #a3afbe;
+  --mp-gris-500: #7a8798;
+  --mp-gris-600: #5c6878;
+  --mp-gris-700: #43505f;
+  --mp-gris-800: #2b3643;
+  --mp-gris-900: #18212b;
+  --mp-tinta: #16202b;
+  --mp-fondo: #f2f5f8;
   --mp-superficie: #ffffff;
-  --mp-borde: #d8dee8;
-  --mp-texto: var(--mp-tinta);
-  --mp-texto-suave: #5a6677;
-
+  --mp-superficie-2: #edf1f6;
+  --mp-superficie-3: #e2e8f0;
+  --mp-borde: #c8d1dc;
+  --mp-borde-suave: #dfe5ec;
+  --mp-borde-fuerte: #94a2b4;
+  --mp-texto: #16202b;
+  --mp-texto-suave: #4e5a6b;
+  --mp-texto-auxiliar: #6c7889;
+  --mp-exito: #177955;
+  --mp-exito-fondo: #e1f3eb;
+  --mp-exito-borde: #9cd6be;
+  --mp-aviso: #8a5200;
+  --mp-aviso-fondo: #fbf0dc;
+  --mp-aviso-borde: #e2be7c;
+  --mp-error: #b3261e;
+  --mp-error-fondo: #fce9e7;
+  --mp-error-borde: #e8a19b;
+  --mp-proceso: #1b4f8f;
+  --mp-proceso-fondo: #e3ecf8;
+  --mp-proceso-borde: #9cbce4;
+  --mp-rojo: var(--mp-error);
+  --mp-ambar: var(--mp-aviso);
+  --mp-barra: #12233f;
+  --mp-barra-texto: #e7edf5;
+  --mp-barra-activo: #1f3a63;
   --mp-radio: 8px;
-  --mp-sombra: 0 1px 2px rgb(10 20 34 / 8%), 0 4px 12px rgb(10 20 34 / 6%);
-
-  --mp-tipografia: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
-    Arial, sans-serif;
-  /* Para importes y folios: cifras de ancho fijo para que las columnas no
-     bailen al cambiar el numero. */
-  --mp-tipografia-cifras: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo,
-    Consolas, monospace;
+  --mp-radio-tarjeta: 12px;
+  --mp-sombra: 0 1px 2px rgb(10 20 34 / 4%);
+  --mp-tipografia: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mp-tipografia-cifras: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-tema='claro']) {
-    --mp-fondo: var(--mp-tinta);
-    --mp-superficie: #132238;
-    --mp-borde: #24364f;
-    --mp-texto: #e8edf4;
-    --mp-texto-suave: #9aa8bb;
-    --mp-sombra: 0 1px 2px rgb(0 0 0 / 40%), 0 4px 12px rgb(0 0 0 / 30%);
+    color-scheme: dark;
+    --mp-fondo: #0c131c;
+    --mp-superficie: #141e29;
+    --mp-superficie-2: #1b2733;
+    --mp-superficie-3: #23313f;
+    --mp-borde: #33424f;
+    --mp-borde-suave: #263340;
+    --mp-borde-fuerte: #5a6b7c;
+    --mp-texto: #e9eef4;
+    --mp-texto-suave: #afbcca;
+    --mp-texto-auxiliar: #8a98a8;
+    --mp-verde: #2fbe88;
+    --mp-verde-oscuro: #249b6e;
+    --mp-verde-suave: #10362a;
+    --mp-exito: #4ed09b;
+    --mp-exito-fondo: #0f3328;
+    --mp-exito-borde: #1e6b4f;
+    --mp-aviso: #e9b45c;
+    --mp-aviso-fondo: #35270d;
+    --mp-aviso-borde: #7a5c1e;
+    --mp-error: #f3867d;
+    --mp-error-fondo: #3a1714;
+    --mp-error-borde: #7e2d27;
+    --mp-proceso: #7fb2ee;
+    --mp-proceso-fondo: #0f2740;
+    --mp-proceso-borde: #2a527f;
+    --mp-marino-suave: #1b2a3d;
+    --mp-barra: #0a111a;
+    --mp-barra-texto: #dce5ef;
+    --mp-sombra: 0 1px 2px rgb(0 0 0 / 20%);
   }
 }
-
 :root[data-tema='oscuro'] {
-  --mp-fondo: var(--mp-tinta);
-  --mp-superficie: #132238;
-  --mp-borde: #24364f;
-  --mp-texto: #e8edf4;
-  --mp-texto-suave: #9aa8bb;
-  --mp-sombra: 0 1px 2px rgb(0 0 0 / 40%), 0 4px 12px rgb(0 0 0 / 30%);
+  color-scheme: dark;
+  --mp-fondo: #0c131c;
+  --mp-superficie: #141e29;
+  --mp-superficie-2: #1b2733;
+  --mp-superficie-3: #23313f;
+  --mp-borde: #33424f;
+  --mp-borde-suave: #263340;
+  --mp-borde-fuerte: #5a6b7c;
+  --mp-texto: #e9eef4;
+  --mp-texto-suave: #afbcca;
+  --mp-texto-auxiliar: #8a98a8;
+  --mp-verde: #2fbe88;
+  --mp-verde-oscuro: #249b6e;
+  --mp-verde-suave: #10362a;
+  --mp-exito: #4ed09b;
+  --mp-exito-fondo: #0f3328;
+  --mp-exito-borde: #1e6b4f;
+  --mp-aviso: #e9b45c;
+  --mp-aviso-fondo: #35270d;
+  --mp-aviso-borde: #7a5c1e;
+  --mp-error: #f3867d;
+  --mp-error-fondo: #3a1714;
+  --mp-error-borde: #7e2d27;
+  --mp-proceso: #7fb2ee;
+  --mp-proceso-fondo: #0f2740;
+  --mp-proceso-borde: #2a527f;
+  --mp-marino-suave: #1b2a3d;
+  --mp-barra: #0a111a;
+  --mp-barra-texto: #dce5ef;
+  --mp-sombra: 0 1px 2px rgb(0 0 0 / 20%);
 }
 
 *,
@@ -73,7 +154,7 @@ body {
   background: var(--mp-fondo);
   color: var(--mp-texto);
   font-family: var(--mp-tipografia);
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
@@ -98,7 +179,7 @@ textarea {
 /* Foco visible y uniforme. No se elimina el contorno: es el unico indicador
    para quien navega con teclado, que en una caja es el caso normal. */
 :focus-visible {
-  outline: 2px solid var(--mp-verde);
+  outline: 3px solid var(--mp-proceso);
   outline-offset: 2px;
 }
 
@@ -110,7 +191,7 @@ textarea {
 .mp-tarjeta {
   background: var(--mp-superficie);
   border: 1px solid var(--mp-borde);
-  border-radius: var(--mp-radio);
+  border-radius: var(--mp-radio-tarjeta);
   box-shadow: var(--mp-sombra);
 }
 
@@ -119,12 +200,13 @@ textarea {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  min-height: 44px;
   padding: 0.6rem 1.1rem;
   border: 1px solid transparent;
   border-radius: var(--mp-radio);
   background: var(--mp-verde);
   color: #fff;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
 }
 
@@ -150,8 +232,9 @@ textarea {
 .mp-campo {
   display: block;
   width: 100%;
+  min-height: 48px;
   padding: 0.6rem 0.75rem;
-  border: 1px solid var(--mp-borde);
+  border: 1px solid var(--mp-borde-fuerte);
   border-radius: var(--mp-radio);
   background: var(--mp-superficie);
 }
@@ -206,46 +289,63 @@ textarea {
   display: inline-block;
   padding: 0.1rem 0.55rem;
   border: 1px solid var(--mp-borde);
-  border-radius: 999px;
+  border-radius: var(--mp-radio);
   font-size: 0.75rem;
   font-weight: 650;
   letter-spacing: 0.02em;
   white-space: nowrap;
 }
 
-.mp-insignia--aviso {
-  border-color: var(--mp-ambar);
-  color: var(--mp-ambar);
-  background: rgb(183 121 31 / 10%);
-}
+.mp-insignia--aviso { color: var(--mp-aviso); background: var(--mp-aviso-fondo); border-color: var(--mp-aviso-borde); }
+.mp-insignia--exito { color: var(--mp-exito); background: var(--mp-exito-fondo); border-color: var(--mp-exito-borde); }
+.mp-insignia--error { color: var(--mp-error); background: var(--mp-error-fondo); border-color: var(--mp-error-borde); }
+.mp-insignia--proceso { color: var(--mp-proceso); background: var(--mp-proceso-fondo); border-color: var(--mp-proceso-borde); }
+.mp-insignia--apagada { color: var(--mp-texto-suave); background: var(--mp-superficie-2); border-color: var(--mp-borde-suave); }
 
-.mp-insignia--apagada {
-  color: var(--mp-texto-suave);
-}
-
-/* Avisos. El color NO es el unico portador del significado: cada variante
-   lleva texto que lo nombra, por accesibilidad. */
 .mp-aviso {
   padding: 0.7rem 0.9rem;
-  border-left: 4px solid var(--mp-borde);
-  border-radius: 4px;
-  background: var(--mp-fondo);
+  border: 1px solid var(--mp-borde);
+  border-left-width: 4px;
+  border-radius: var(--mp-radio);
+  background: var(--mp-superficie-2);
   font-size: 0.9375rem;
 }
+.mp-aviso--error { color: var(--mp-error); background: var(--mp-error-fondo); border-color: var(--mp-error-borde); }
+.mp-aviso--pendiente { color: var(--mp-aviso); background: var(--mp-aviso-fondo); border-color: var(--mp-aviso-borde); }
+.mp-aviso--exito { color: var(--mp-exito); background: var(--mp-exito-fondo); border-color: var(--mp-exito-borde); }
+.mp-aviso--proceso { color: var(--mp-proceso); background: var(--mp-proceso-fondo); border-color: var(--mp-proceso-borde); }
 
-.mp-aviso--error {
-  border-left-color: var(--mp-rojo);
-  background: rgb(192 57 43 / 8%);
+a { color: var(--mp-verde-oscuro); }
+a:hover { color: var(--mp-verde); }
+.icono-cabecera {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--mp-borde-suave);
+  border-radius: var(--mp-radio);
+  background: var(--mp-superficie);
+  color: var(--mp-texto);
+  cursor: pointer;
 }
-
-.mp-aviso--pendiente {
-  border-left-color: var(--mp-ambar);
-  background: rgb(183 121 31 / 10%);
+.icono-cabecera:hover { background: var(--mp-superficie-2); }
+.desplegable {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 30;
+  max-width: calc(100vw - 32px);
+  border: 1px solid var(--mp-borde);
+  border-radius: var(--mp-radio-tarjeta);
+  background: var(--mp-superficie);
+  color: var(--mp-texto);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 16%);
 }
-
-.mp-aviso--exito {
-  border-left-color: var(--mp-verde);
-  background: rgb(31 157 110 / 10%);
+@media (max-width: 720px) {
+  .desplegable { position: fixed; top: auto; right: 16px; margin-top: 8px; }
 }
 
 /* Visible solo para lectores de pantalla. */

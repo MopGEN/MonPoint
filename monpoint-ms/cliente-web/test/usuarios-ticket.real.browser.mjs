@@ -1,3 +1,4 @@
+import { salirDesdeMenu } from './concha-fixture.mjs'
 /** Usuarios y ticket con servicios vivos, sin intercepciones.
  * Solo prueba: crea dos cuentas y un producto, cobra dos ventas y desactiva
  * unicamente sus cuentas al terminar. No es idempotente ni parte de npm test. */
@@ -37,7 +38,7 @@ pagina.on('request', (r) => { if (r.url() === `${API}/ventas` && r.method() === 
 async function entrar (correo, password) {
   const respuesta = pagina.waitForResponse((r) => r.url() === `${API}/auth/login` && r.request().method() === 'POST')
   await pagina.getByLabel('Correo', { exact: true }).fill(correo)
-  await pagina.getByLabel('Contrasena', { exact: true }).fill(password)
+  await pagina.getByLabel('Contraseña', { exact: true }).fill(password)
   await pagina.getByRole('button', { name: 'Entrar', exact: true }).click()
   const r = await respuesta
   assert.equal(r.status(), 200)
@@ -45,7 +46,7 @@ async function entrar (correo, password) {
   return (await r.json()).token
 }
 async function salir () {
-  await pagina.getByRole('button', { name: 'Salir', exact: true }).click()
+  await salirDesdeMenu(pagina)
   await pagina.waitForURL('**/login')
 }
 async function usuarios () {

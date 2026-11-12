@@ -118,8 +118,6 @@ function pedirEliminar (cliente) {
   <section class="pantalla">
     <header class="encabezado">
       <div>
-        <p class="seccion">DIRECTORIO</p>
-        <h1>Clientes</h1>
         <p class="descripcion">
           Contactos disponibles en la caja. Altas y cambios para ambos roles.
         </p>
@@ -383,11 +381,14 @@ function pedirEliminar (cliente) {
 }
 
 .peligro {
-  background: var(--mp-rojo);
+  background: var(--mp-error-fondo);
+  color: var(--mp-error);
+  border-color: var(--mp-error-borde);
 }
 
 .peligro:hover:not(:disabled) {
-  background: #a03024;
+  background: var(--mp-error-fondo);
+  border-color: var(--mp-error);
 }
 
 .confirmacion {

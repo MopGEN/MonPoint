@@ -82,7 +82,7 @@ onBeforeUnmount(() => {
   width: min(32rem, calc(100vw - 2rem));
   padding: 0;
   border: 1px solid var(--mp-borde);
-  border-radius: var(--mp-radio);
+  border-radius: var(--mp-radio-tarjeta);
   background: var(--mp-superficie);
   color: var(--mp-texto);
   box-shadow: var(--mp-sombra);

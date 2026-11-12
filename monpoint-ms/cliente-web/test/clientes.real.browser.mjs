@@ -1,3 +1,4 @@
+import { salirDesdeMenu } from './concha-fixture.mjs'
 /**
  * CRUD real de Clientes. Sin intercepciones; requiere Vite y el conjunto vivo.
  * Crea un vendedor y dos clientes, y elimina solo esos clientes con ADMIN.
@@ -32,7 +33,7 @@ pagina.on('pageerror', (e) => resultado.errores.push(e.message))
 async function entrar (correo, password) {
   const respuesta = pagina.waitForResponse((r) => r.url() === `${API}/auth/login` && r.request().method() === 'POST')
   await pagina.getByLabel('Correo', { exact: true }).fill(correo)
-  await pagina.getByLabel('Contrasena', { exact: true }).fill(password)
+  await pagina.getByLabel('Contraseña', { exact: true }).fill(password)
   await pagina.getByRole('button', { name: 'Entrar', exact: true }).click()
   const r = await respuesta
   assert.equal(r.status(), 200)
@@ -45,7 +46,7 @@ async function abrirClientes () {
   await pagina.locator('.estado[aria-busy="false"]').waitFor()
 }
 async function salir () {
-  await pagina.getByRole('button', { name: 'Salir', exact: true }).click()
+  await salirDesdeMenu(pagina)
   await pagina.waitForURL('**/login')
 }
 async function guardar (metodo, ruta, modal) {

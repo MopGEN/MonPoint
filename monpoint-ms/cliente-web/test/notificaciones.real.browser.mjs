@@ -1,3 +1,4 @@
+import { salirDesdeMenu } from './concha-fixture.mjs'
 /**
  * Recorrido contra el Gateway real, sin interceptar peticiones.
  * Crea un producto, una venta de cinco unidades y un vendedor de prueba.
@@ -46,7 +47,7 @@ const pagina = await navegador.newPage({ viewport: { width: 1280, height: 900 } 
 pagina.on('pageerror', (e) => datos.errores.push(e.message))
 async function entrar (correo, password) {
   await pagina.getByLabel('Correo', { exact: true }).fill(correo)
-  await pagina.getByLabel('Contrasena', { exact: true }).fill(password)
+  await pagina.getByLabel('Contraseña', { exact: true }).fill(password)
   await pagina.getByRole('button', { name: 'Entrar', exact: true }).click()
   await pagina.waitForURL('**/caja')
 }
@@ -122,7 +123,7 @@ try {
     nombre: 'Vendedor prueba concha', correo, password: clave, rol: 'VENDEDOR',
   } })
   assert.equal(vendedor.estado, 201)
-  await pagina.getByRole('button', { name: 'Salir', exact: true }).click()
+  await salirDesdeMenu(pagina)
   await pagina.waitForURL('**/login')
   const loginVendedor = pagina.waitForResponse((r) => r.url() === `${API}/auth/login` && r.request().method() === 'POST')
   await entrar(correo, clave)

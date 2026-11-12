@@ -1,3 +1,4 @@
+import { simularConcha, salirDesdeMenu, menuUsuario } from './concha-fixture.mjs'
 /**
  * Recorrido de la pantalla de reportes con el Gateway simulado.
  *
@@ -28,6 +29,7 @@ const contexto = await navegador.newContext({
   viewport: { width: 1280, height: 980 }, acceptDownloads: true,
 })
 const pagina = await contexto.newPage()
+await simularConcha(pagina, API)
 const erroresJs = []
 pagina.on('pageerror', (e) => erroresJs.push(e.message))
 
@@ -203,7 +205,7 @@ await pagina.waitForURL('**/caja')
 
 // VENDEDOR: la seccion no se ofrece y la guarda rechaza volver por historial.
 rol = 'VENDEDOR'
-await pagina.click('button:has-text("Salir")')
+await salirDesdeMenu(pagina)
 await pagina.waitForURL('**/login')
 await entrar(null)
 const secciones = await pagina.locator('nav[aria-label="Secciones"] a').allInnerTexts()
@@ -221,7 +223,7 @@ await pagina.evaluate(() => window.addEventListener('popstate', (evento) => {
 await pagina.goBack()
 await pagina.waitForFunction(() => window.location.pathname === '/caja')
 assert.equal(await pagina.evaluate(() => window.rutaIntentadaEnPrueba), '/reportes')
-assert.equal(await pagina.getByRole('button', { name: 'Salir', exact: true }).count(), 1)
+assert.equal(await menuUsuario(pagina).count(), 1)
 assert.equal(peticiones.filter((p) => p.tipo === 'agregado').length, lecturas)
 
 assert.deepEqual(erroresJs, [])

@@ -1,0 +1,85 @@
+{
+  "inicio": "2026-11-12T06:56:53.798Z",
+  "casos": [
+    "geometria 232/64 y cabecera interior",
+    "seis rutas, ambos temas, un h1",
+    "menu por teclado y cierre de sesion",
+    "badge actualizado tras marcar",
+    "nombre de empresa actualizado tras guardar",
+    "movil 390 px sin desbordamiento",
+    "tema persistido, token en memoria",
+    "VENDEDOR sin campana ni solicitudes de avisos",
+    "fallo de avisos sin falso cero; reintento manual recupera contador",
+    "preferencia del sistema y almacenamiento bloqueado"
+  ],
+  "errores": [],
+  "externos": [],
+  "fuentes": [
+    {
+      "ruta": "/assets/inter-latin-Dx4kXJAl.woff2",
+      "estado": 200
+    },
+    {
+      "ruta": "/assets/inter-latin-Dx4kXJAl.woff2",
+      "estado": 200
+    }
+  ],
+  "geometriaClara": {
+    "lateral": {
+      "x": 0,
+      "y": 0,
+      "ancho": 232,
+      "alto": 900
+    },
+    "cabecera": {
+      "x": 232,
+      "y": 0,
+      "ancho": 1208,
+      "alto": 61
+    },
+    "viewport": 1440,
+    "documento": 1440,
+    "tema": "claro",
+    "tokens": {
+      "fondo": "#f2f5f8",
+      "borde": "#c8d1dc",
+      "texto": "#16202b",
+      "texto-suave": "#4e5a6b",
+      "verde-oscuro": "#17795a",
+      "proceso": "#1b4f8f",
+      "proceso-fondo": "#e3ecf8",
+      "radio": "8px",
+      "radio-tarjeta": "12px"
+    }
+  },
+  "geometriaOscura": {
+    "lateral": {
+      "x": 0,
+      "y": 0,
+      "ancho": 232,
+      "alto": 900
+    },
+    "cabecera": {
+      "x": 232,
+      "y": 0,
+      "ancho": 1208,
+      "alto": 61
+    },
+    "viewport": 1440,
+    "documento": 1440,
+    "tema": "oscuro",
+    "tokens": {
+      "fondo": "#0c131c",
+      "borde": "#33424f",
+      "texto": "#e9eef4",
+      "texto-suave": "#afbcca",
+      "verde-oscuro": "#249b6e",
+      "proceso": "#7fb2ee",
+      "proceso-fondo": "#0f2740",
+      "radio": "8px",
+      "radio-tarjeta": "12px"
+    }
+  },
+  "resultado": "PASS",
+  "fin": "2026-11-12T06:56:57.019Z"
+}

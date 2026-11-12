@@ -1,3 +1,4 @@
+import { salirDesdeMenu } from './concha-fixture.mjs'
 /**
  * CRUD de Productos contra el Gateway real, sin interceptar peticiones.
  * Requiere Vite en localhost:5173 y los servicios ya levantados.
@@ -33,7 +34,7 @@ pagina.on('pageerror', (e) => resultado.errores.push(e.message))
 async function entrar (correo, password) {
   const respuesta = pagina.waitForResponse((r) => r.url() === `${API}/auth/login` && r.request().method() === 'POST')
   await pagina.getByLabel('Correo', { exact: true }).fill(correo)
-  await pagina.getByLabel('Contrasena', { exact: true }).fill(password)
+  await pagina.getByLabel('Contraseña', { exact: true }).fill(password)
   await pagina.getByRole('button', { name: 'Entrar', exact: true }).click()
   const r = await respuesta
   assert.equal(r.status(), 200)
@@ -106,7 +107,7 @@ try {
     nombre: 'Vendedor prueba productos', correo, password: claveVendedor, rol: 'VENDEDOR',
   } })
   assert.equal(vendedor.estado, 201)
-  await pagina.getByRole('button', { name: 'Salir', exact: true }).click()
+  await salirDesdeMenu(pagina)
   await pagina.waitForURL('**/login')
   const tokenVendedor = await entrar(correo, claveVendedor)
   await abrirProductos()
@@ -125,7 +126,7 @@ try {
   }
   resultado.casos.push('VENDEDOR: lectura 200, sin acciones/dialogos y POST/PUT/DELETE 403')
 
-  await pagina.getByRole('button', { name: 'Salir', exact: true }).click()
+  await salirDesdeMenu(pagina)
   await pagina.waitForURL('**/login')
   token = await entrar('admin@monpoint.com', claveAdmin)
   await abrirProductos()

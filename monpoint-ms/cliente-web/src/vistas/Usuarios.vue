@@ -157,8 +157,6 @@ async function confirmarBaja () {
   <section class="pantalla">
     <header class="encabezado">
       <div>
-        <p class="seccion">ACCESO</p>
-        <h1>Usuarios</h1>
         <p class="descripcion">
           Cuentas activas del sistema. Una cuenta desactivada no vuelve a aparecer aquí.
         </p>
@@ -467,11 +465,14 @@ async function confirmarBaja () {
 }
 
 .peligro {
-  background: var(--mp-rojo);
+  background: var(--mp-error-fondo);
+  color: var(--mp-error);
+  border-color: var(--mp-error-borde);
 }
 
 .peligro:hover:not(:disabled) {
-  background: #a03024;
+  background: var(--mp-error-fondo);
+  border-color: var(--mp-error);
 }
 
 .confirmacion {

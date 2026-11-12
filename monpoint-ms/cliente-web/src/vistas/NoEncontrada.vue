@@ -6,7 +6,7 @@ const sesion = useSesion()
 
 <template>
   <section class="mp-tarjeta panel">
-    <h1>Pagina no encontrada</h1>
+    <h1 v-if="!sesion.autenticado">Pagina no encontrada</h1>
     <p class="nota">La direccion que abrio no corresponde a ninguna pantalla.</p>
     <RouterLink class="mp-boton" :to="sesion.autenticado ? '/caja' : '/login'">
       {{ sesion.autenticado ? 'Ir a caja' : 'Iniciar sesion' }}
