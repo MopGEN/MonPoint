@@ -1,0 +1,29 @@
+{
+  "plataforma": "Linux; navegador automatizado, Vite de desarrollo con CORS real",
+  "node": "v24.19.0",
+  "chromium": "Chromium 154.0.8037.57 built on Debian GNU/Linux 13 (trixie)",
+  "reportes": {
+    "imagen": "monpoint-semilla32-ms-reportes:latest",
+    "imagenId": "sha256:f97a04226c365cf28626394d63146bd6e30da0af041a68b8aee374af70cea4cf",
+    "estado": "healthy",
+    "creacion": "2026-11-11T15:29:52.420273369Z",
+    "fuenteSinDiferenciasEntre": [
+      "884aa00",
+      "bb529e0"
+    ]
+  },
+  "jarSha256": "d8023db21b9fc78fa4540d5678040a52b2f40a2101db45da8e265d7a602f4e3d",
+  "contenedores": [
+    "monpoint-reportes Up 15 minutes (healthy)",
+    "monpoint-notificaciones Up 23 hours (healthy)",
+    "monpoint-cliente Up 23 hours (healthy)",
+    "monpoint-gateway Up 23 hours (healthy)",
+    "monpoint-eureka Up 23 hours (healthy)",
+    "monpoint-ventas Up 23 hours (healthy)",
+    "monpoint-inventario Up 23 hours (healthy)",
+    "monpoint-clientes Up 23 hours (healthy)",
+    "monpoint-auth Up 23 hours (healthy)",
+    "monpoint-rabbitmq Up 23 hours (healthy)",
+    "monpoint-mongodb Up 23 hours (healthy)"
+  ]
+}

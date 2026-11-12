@@ -141,8 +141,70 @@ async function peticion (metodo, ruta, opciones = {}) {
   })
 }
 
+/**
+ * Descarga un documento binario, tipicamente un PDF de ms-reportes.
+ *
+ * No se puede usar un enlace directo: el token vive solo en memoria (H-080) y
+ * una navegacion del navegador no lleva la cabecera `Authorization`, asi que
+ * el Gateway responderia 401. Hay que pedirlo con `fetch` y entregar el
+ * resultado como objeto en memoria.
+ *
+ * NO devuelve el nombre del archivo que manda el servidor. El Gateway solo
+ * expone la cabecera de request-id en su configuracion CORS, de modo que
+ * `Content-Disposition` es ilegible para JavaScript aunque viaje en la
+ * respuesta. Quien llame debe nombrar el archivo. Exponer esa cabecera seria
+ * una linea en CorsConfig del Gateway; mientras no se haga, lo honesto es que
+ * esta funcion no finja saber el nombre.
+ *
+ * @returns {Promise<Blob>}
+ */
+async function descargar (ruta, { senal } = {}) {
+  const cabeceras = {}
+  const token = obtenerToken()
+  if (token) cabeceras.Authorization = `Bearer ${token}`
+
+  let respuesta
+  try {
+    respuesta = await fetch(`${BASE}${ruta}`, {
+      method: 'GET',
+      headers: cabeceras,
+      signal: senal,
+      credentials: 'omit',
+    })
+  } catch (causa) {
+    if (causa?.name === 'AbortError') throw causa
+    throw new ErrorDeGateway(
+      'No se pudo contactar al servidor. Revise que la infraestructura este levantada.',
+      { estado: 0 },
+    )
+  }
+
+  if (respuesta.ok) {
+    try {
+      return await respuesta.blob()
+    } catch (causa) {
+      if (causa?.name === 'AbortError') throw causa
+      throw new ErrorDeGateway('No se pudo completar la descarga. Revise la conexión e inténtelo de nuevo.', { estado: 0 })
+    }
+  }
+
+  if (respuesta.status === 401) {
+    alExpirarSesion()
+    throw new ErrorDeGateway('Su sesion termino. Inicie sesion de nuevo.', { estado: 401 })
+  }
+
+  // Un fallo llega como ProblemDetail en JSON aunque se pidiera un PDF.
+  const datos = await leerCuerpo(respuesta)
+  throw new ErrorDeGateway(mensajeDeProblema(datos, respuesta.status), {
+    estado: respuesta.status,
+    titulo: datos?.title ?? null,
+    cuerpo: datos,
+  })
+}
+
 export const gateway = {
   base: BASE,
+  descargar,
   obtener: (ruta, opciones) => peticion('GET', ruta, opciones),
   enviar: (ruta, cuerpo, opciones) => peticion('POST', ruta, { ...opciones, cuerpo }),
   reemplazar: (ruta, cuerpo, opciones) => peticion('PUT', ruta, { ...opciones, cuerpo }),

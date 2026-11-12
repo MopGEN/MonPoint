@@ -1,0 +1,35 @@
+
+> monpoint-cliente-web@3.0.0 build
+> vite build
+
+vite v6.4.5 building for production...
+transforming...
+✓ 68 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                             0.45 kB │ gzip:  0.29 kB
+dist/assets/EstadoRecurso-C76TSJuj.css      0.16 kB │ gzip:  0.13 kB
+dist/assets/NoEncontrada-C_5VKvss.css       0.18 kB │ gzip:  0.15 kB
+dist/assets/TablaDatos-BEUZXPwg.css         0.20 kB │ gzip:  0.14 kB
+dist/assets/IniciarSesion-C85ZFr_B.css      0.34 kB │ gzip:  0.22 kB
+dist/assets/Notificaciones-CBa04c2p.css     1.18 kB │ gzip:  0.43 kB
+dist/assets/CampoFormulario-inuP1SRg.css    1.18 kB │ gzip:  0.48 kB
+dist/assets/Clientes-DWoRfh6-.css           1.48 kB │ gzip:  0.52 kB
+dist/assets/Productos-DQ08bTYt.css          1.49 kB │ gzip:  0.53 kB
+dist/assets/Reportes-CPbvfaK-.css           2.59 kB │ gzip:  0.83 kB
+dist/assets/Caja-DBr8adfe.css               2.89 kB │ gzip:  0.89 kB
+dist/assets/index-Bcx7yV9a.css              5.68 kB │ gzip:  1.80 kB
+dist/assets/filtro-B-TzLMKy.js              0.23 kB │ gzip:  0.20 kB
+dist/assets/useAccion-C8fSM6oR.js           0.57 kB │ gzip:  0.36 kB
+dist/assets/NoEncontrada-DdaJpdLZ.js        0.62 kB │ gzip:  0.42 kB
+dist/assets/TablaDatos-DDy8fTnY.js          0.96 kB │ gzip:  0.53 kB
+dist/assets/IniciarSesion-CPsfZA-k.js       1.74 kB │ gzip:  0.91 kB
+dist/assets/EstadoRecurso-BhCpk2iG.js       1.79 kB │ gzip:  0.97 kB
+dist/assets/CampoFormulario-CG47yxIT.js     1.86 kB │ gzip:  0.95 kB
+dist/assets/Notificaciones-DscU_YQR.js      3.61 kB │ gzip:  1.72 kB
+dist/assets/Clientes-Du1VvdoS.js            7.38 kB │ gzip:  2.89 kB
+dist/assets/Caja-D8lnR2oR.js                9.10 kB │ gzip:  3.46 kB
+dist/assets/Productos-DIPFF68V.js           9.41 kB │ gzip:  3.48 kB
+dist/assets/Reportes-CyPqWzGs.js           13.13 kB │ gzip:  5.02 kB
+dist/assets/index-BnjBUk4v.js             114.26 kB │ gzip: 44.50 kB
+✓ built in 712ms

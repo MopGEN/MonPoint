@@ -84,6 +84,19 @@ const rutas = [
     },
   },
   {
+    path: '/reportes',
+    name: 'reportes',
+    component: () => import('@/vistas/Reportes.vue'),
+    // Solo ADMIN: la agregacion y los listados en PDF lo exigen en ms-reportes.
+    // La configuracion de empresa la podria leer un vendedor, pero no se le da
+    // una pantalla cuyo resto no puede usar.
+    meta: {
+      titulo: 'Reportes',
+      roles: ['ADMIN'],
+      nav: { orden: 50, icono: '▮' },
+    },
+  },
+  {
     path: '/notificaciones',
     name: 'notificaciones',
     component: () => import('@/vistas/Notificaciones.vue'),

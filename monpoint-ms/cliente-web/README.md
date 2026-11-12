@@ -38,6 +38,7 @@ src/
     ├── Caja.vue            catálogo, carrito y seguimiento del cobro (5.5)
     ├── Productos.vue       catálogo activo y CRUD por rol
     ├── Clientes.vue        altas/cambios para ambos roles; eliminación ADMIN
+    ├── Reportes.vue        agregación, tres PDF y datos de empresa (ADMIN)
     ├── Notificaciones.vue  alertas, filtros de lectura y marcado (solo ADMIN)
     └── NoEncontrada.vue
 ```
@@ -81,6 +82,12 @@ abrirla.
 | POST | `/clientes` | alta para ambos roles; 201 |
 | PUT | `/clientes/{id}` | modificación para ambos roles; 200 |
 | DELETE | `/clientes/{id}` | eliminación física, solo ADMIN; 204 |
+| GET | `/reportes/ventas/agregado?periodo=DIA&desde=YYYY-MM-DD&hasta=YYYY-MM-DD` | ADMIN; DIA, MES o ANIO |
+| GET | `/reportes/ventas/historial?desde=YYYY-MM-DD&hasta=YYYY-MM-DD` | ADMIN; PDF, hasta 366 días inclusivos |
+| GET | `/reportes/productos/listado` | ADMIN; PDF del catálogo activo proyectado |
+| GET | `/reportes/clientes/listado` | ADMIN; PDF del directorio proyectado |
+| GET | `/reportes/configuracion` | ambos roles; 404 si todavía no existe |
+| PUT | `/reportes/configuracion` | ADMIN; registra o modifica; 200 |
 | GET | `/notificaciones?leida=false` | solo ADMIN; omitir el filtro para todas o usar `true` para leídas |
 | PUT | `/notificaciones/{id}/leida` | solo ADMIN; sin cuerpo; 204; el servidor cierra la alerta |
 
@@ -95,7 +102,8 @@ al cajero; las vistas no deben reescribirlo.
 ## Navegación y notificaciones
 
 La barra deriva sus enlaces de `meta.nav` y comparte `rolPermitido` con la
-guarda. ADMIN ve Caja y Notificaciones; VENDEDOR solo Caja. Las pantallas que
+guarda. Ambos roles ven Caja, Productos y Clientes; ADMIN ve además Reportes y
+Notificaciones. Las pantallas que
 todavía no existen no se anuncian. El Gateway valida el token y cada servicio
 autoriza las operaciones; ocultar un enlace no protege la API.
 
@@ -242,6 +250,59 @@ clientes con ADMIN y conserva el usuario. No es idempotente ni se ejecuta con
 400 real presentado en el campo, además de la ausencia final por listado y 404.
 
 [Revisión y evidencia de Clientes](../../docs/aceptacion/cliente-clientes-2026-11-11/RESULTADOS.md).
+
+## Reportes y descargas
+
+La pantalla es de ADMIN. Consulta ventas confirmadas por día, mes o año, con
+fechas inclusivas en la zona que devuelve el servicio. El rango inicial son
+treinta días del calendario del navegador. Cambiar los controles no cambia los
+datos ni la descripción de la gráfica hasta consultar; el resultado muestra sus
+propias fechas. Las alturas SVG son aproximadas y los importes se formatean con
+`comun/importe.js`. La misma serie está en una tabla para lectores de pantalla;
+los periodos en cero conservan su posición.
+
+Hay dos límites distintos: la API admite hasta 1.000 puntos de agregación y la
+pantalla elige 370 como límite visual; el historial PDF admite hasta 366 días,
+independientemente de la granularidad. El botón de historial explica y bloquea
+rangos inválidos aunque la gráfica pueda consultarse por mes o año. El historial
+usa las fechas actuales de los controles, indicadas junto al botón.
+
+`gateway.descargar` usa fetch con el Bearer de memoria y entrega el Blob solo
+cuando terminó de leerlo. Conserva el tratamiento de 401 y ProblemDetail; una
+conexión interrumpida antes o después de las cabeceras se presenta como error de
+red. La pantalla descarga mediante URL de objeto y la revoca diez segundos
+después. El nombre se construye en el cliente: CORS del Gateway no expone
+Content-Disposition. No cambian las cabeceras del servidor.
+
+Un GET 404 de configuración permite registrar los primeros datos. Nombre y RFC
+son obligatorios; el **servidor sí valida el formato del RFC** y normaliza a
+mayúsculas. Sus errores aparecen en el campo correspondiente. Los máximos del
+DTO son 120 para nombre, 200 para dirección y 30 para teléfono. La configuración
+es única para la empresa, no por usuario.
+
+Con build y preview, `test/reportes.browser.mjs` prueba la presentación con API
+simulada, rangos, descarga, configuración ausente y navegación por historial
+con sesión de vendedor. El PDF simulado prueba transporte, no validez documental.
+Con Vite y servicios vivos, el recorrido independiente es:
+
+```bash
+PLAYWRIGHT_MODULE=/ruta/a/playwright/index.mjs node test/reportes.real.browser.mjs
+```
+
+Requiere también `pdftotext` en PATH (o `PDFTOTEXT_PATH`) y acepta las variables
+de Gateway, navegador, salida y credenciales de los recorridos anteriores.
+**Solo entornos de prueba:** crea producto, cliente, vendedor y dos ventas;
+los conserva. Modifica la configuración y restaura sus campos anteriores si
+existían; la fecha de actualización cambia. Si antes respondía 404, conserva la
+empresa de prueba porque no hay DELETE. No es idempotente ni parte de npm test.
+Verifica proyecciones nuevas, tres PDF legibles y permisos con token real.
+
+Estos listados salen de proyecciones asíncronas de ms-reportes. No aseguran
+actualización inmediata ni reconstruyen eventos anteriores a sus colas. La
+pantalla incluye tres exportaciones y configuración; **no incorpora el ticket
+por venta**, ni un listado paginado nuevo en ms-ventas.
+
+[Revisión, PDF y capturas](../../docs/aceptacion/cliente-reportes-2026-11-11/RESULTADOS.md).
 
 ## Cliente empaquetado con nginx (5.6)
 

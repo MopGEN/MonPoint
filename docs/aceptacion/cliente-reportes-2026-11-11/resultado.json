@@ -1,0 +1,289 @@
+{
+  "inicio": "2026-11-11T15:41:56.821Z",
+  "cliente": "http://localhost:5173",
+  "gateway": "http://localhost:8080",
+  "casos": [
+    "Configuracion: GET 200, RFC invalido 400 junto al campo y PUT 200 con RFC normalizado",
+    "Venta confirmada 82.30 incrementa el agregado; cancelada 4073.85 llega a reportes y no suma",
+    "Grafica/tabla con tres periodos cero; cambiar el borrador no cambia la descripcion del resultado",
+    "Tres descargas UI: PDF real legible con empresa y registro; Content-Disposition solo visible fuera del navegador",
+    "Rango anual valido para grafica, bloqueado para historial; limites reales 366 dias y 1000 puntos devuelven 400",
+    "VENDEDOR sin enlace; agregado y tres PDF 403 reales; configuracion GET 200 y PUT 403"
+  ],
+  "errores": [],
+  "configuracionInicial": {
+    "estado": 200
+  },
+  "rfcRechazado": {
+    "detail": "Uno o más campos no cumplen las validaciones",
+    "instance": "/reportes/configuracion",
+    "status": 400,
+    "title": "Datos inválidos",
+    "requestId": "f7840063-49a8-4ea3-8e7e-b4d3271963cd",
+    "campos": {
+      "rfc": "El RFC no tiene un formato válido"
+    }
+  },
+  "configuracionGuardada": {
+    "nombreEmpresa": "Revision Reportes 1794411717670",
+    "rfc": "XAXX010101000",
+    "direccion": "Calle de prueba 1",
+    "telefono": "5512345678",
+    "fechaActualizacion": "2026-11-11T15:41:57.855Z"
+  },
+  "fixtures": {
+    "producto": {
+      "id": "6af48cc557cdec548cbc93ab",
+      "nombre": "Producto reportes 1794411717670",
+      "descripcion": null,
+      "precio": 41.15,
+      "existencia": 10,
+      "umbralStock": 5,
+      "activo": true,
+      "fechaRegistro": "2026-11-11T15:41:57.909454188Z",
+      "fechaActualizacion": "2026-11-11T15:41:57.909454188Z"
+    },
+    "cliente": {
+      "id": "6af48cc5ca3cccd0ca939c11",
+      "nombre": "Cliente reportes 1794411717670",
+      "correo": null,
+      "telefono": null,
+      "direccion": null,
+      "fechaRegistro": "2026-11-11T15:41:57.925541389Z",
+      "fechaActualizacion": "2026-11-11T15:41:57.925541389Z"
+    }
+  },
+  "antes": {
+    "periodo": "DIA",
+    "desde": "2026-11-11",
+    "hasta": "2026-11-11",
+    "zonaHoraria": "America/Mexico_City",
+    "total": 82.3,
+    "puntos": [
+      {
+        "inicio": "2026-11-11",
+        "total": 82.3
+      }
+    ]
+  },
+  "confirmada": {
+    "POST": 202,
+    "venta": {
+      "id": "6af48cc57fb0a867b5c17455",
+      "folio": 56,
+      "estado": "CONFIRMADA",
+      "clienteId": "6af48cc5ca3cccd0ca939c11",
+      "clienteNombre": "Cliente reportes 1794411717670",
+      "lineas": [
+        {
+          "productoId": "6af48cc557cdec548cbc93ab",
+          "nombreProducto": "Producto reportes 1794411717670",
+          "precioUnitario": 41.15,
+          "cantidad": 2,
+          "subtotal": 82.3
+        }
+      ],
+      "total": 82.3,
+      "motivo": null,
+      "productoIdRechazado": null,
+      "fechaCreacion": "2026-11-11T15:41:57.970Z",
+      "fechaResolucion": "2026-11-11T15:41:57.990Z"
+    }
+  },
+  "despues": {
+    "periodo": "DIA",
+    "desde": "2026-11-11",
+    "hasta": "2026-11-11",
+    "zonaHoraria": "America/Mexico_City",
+    "total": 164.6,
+    "puntos": [
+      {
+        "inicio": "2026-11-11",
+        "total": 164.6
+      }
+    ]
+  },
+  "cancelada": {
+    "POST": 202,
+    "venta": {
+      "id": "6af48cc67fb0a867b5c17457",
+      "folio": 57,
+      "estado": "CANCELADA",
+      "clienteId": "6af48cc5ca3cccd0ca939c11",
+      "clienteNombre": "Cliente reportes 1794411717670",
+      "lineas": [
+        {
+          "productoId": "6af48cc557cdec548cbc93ab",
+          "nombreProducto": "Producto reportes 1794411717670",
+          "precioUnitario": 41.15,
+          "cantidad": 99,
+          "subtotal": 4073.85
+        }
+      ],
+      "total": 4073.85,
+      "motivo": "existencia insuficiente de Producto reportes 1794411717670, solicitado 99",
+      "productoIdRechazado": "6af48cc557cdec548cbc93ab",
+      "fechaCreacion": "2026-11-11T15:41:58.525Z",
+      "fechaResolucion": "2026-11-11T15:41:58.548Z"
+    }
+  },
+  "ticketCancelada": {
+    "estado": 409,
+    "datos": {
+      "detail": "La venta con folio 57 fue cancelada y no tiene comprobante",
+      "instance": "/reportes/ventas/6af48cc67fb0a867b5c17457/ticket",
+      "status": 409,
+      "title": "Venta cancelada",
+      "requestId": "83340335-d4e9-4cfe-997d-9401eeb4e067"
+    }
+  },
+  "trasCancelada": {
+    "periodo": "DIA",
+    "desde": "2026-11-11",
+    "hasta": "2026-11-11",
+    "zonaHoraria": "America/Mexico_City",
+    "total": 164.6,
+    "puntos": [
+      {
+        "inicio": "2026-11-11",
+        "total": 164.6
+      }
+    ]
+  },
+  "consultaUI": {
+    "periodo": "DIA",
+    "desde": "2026-11-11",
+    "hasta": "2026-11-11",
+    "zonaHoraria": "America/Mexico_City",
+    "total": 164.6,
+    "puntos": [
+      {
+        "inicio": "2026-11-11",
+        "total": 164.6
+      }
+    ]
+  },
+  "ceros": {
+    "periodo": "DIA",
+    "desde": "2000-01-01",
+    "hasta": "2000-01-03",
+    "zonaHoraria": "America/Mexico_City",
+    "total": 0,
+    "puntos": [
+      {
+        "inicio": "2000-01-01",
+        "total": 0
+      },
+      {
+        "inicio": "2000-01-02",
+        "total": 0
+      },
+      {
+        "inicio": "2000-01-03",
+        "total": 0
+      }
+    ]
+  },
+  "documentos": [
+    {
+      "archivo": "historial-ventas-2026-11-11_2026-11-11.pdf",
+      "bytes": 1894,
+      "sha256": "21cb6fea361c69015a0f26ee7a2ad59b8d976f161c289dd3402104a6e1f8ac36",
+      "textoEmpresaYRegistro": true
+    },
+    {
+      "archivo": "listado-productos.pdf",
+      "bytes": 1692,
+      "sha256": "4bbd72f85a0072c885d7ce6403ef5093118f1415f89aebe829a9adc299bbfbdd",
+      "textoEmpresaYRegistro": true
+    },
+    {
+      "archivo": "listado-clientes.pdf",
+      "bytes": 1858,
+      "sha256": "f7d31bcd73116b78e0395d90c3f494cd42309161f1d53d9ce5508a08a5a9fe01",
+      "textoEmpresaYRegistro": true
+    }
+  ],
+  "cors": {
+    "servidor": "inline; filename=\"listado-productos-2026-11-11.pdf\"",
+    "navegador": null
+  },
+  "historialExcesivo": {
+    "estado": 400,
+    "datos": {
+      "detail": "El historial abarca como máximo 366 días; divide el periodo en partes",
+      "instance": "/reportes/ventas/historial",
+      "status": 400,
+      "title": "Rango inválido",
+      "requestId": "47e7bd38-0fa9-4e33-a883-baead34da410"
+    }
+  },
+  "agregadoExcesivo": {
+    "estado": 400,
+    "datos": {
+      "detail": "El rango genera más de 1000 puntos; usa un periodo más grande o acorta las fechas",
+      "instance": "/reportes/ventas/agregado",
+      "status": 400,
+      "title": "Rango inválido",
+      "requestId": "5e9e2f66-419f-47ea-9ce1-bcaa2e6fbbbd"
+    }
+  },
+  "vendedor": {
+    "/reportes/ventas/agregado?periodo=DIA&desde=2026-11-11&hasta=2026-11-11": {
+      "estado": 403,
+      "datos": {
+        "detail": "Solo un ADMIN puede consultar los reportes de ventas",
+        "instance": "/reportes/ventas/agregado",
+        "status": 403,
+        "title": "Acceso denegado",
+        "requestId": "74209bd3-a225-4c00-8107-5200ad9b03ff"
+      }
+    },
+    "/reportes/productos/listado": {
+      "estado": 403,
+      "datos": {
+        "detail": "Solo un ADMIN puede exportar el listado de productos",
+        "instance": "/reportes/productos/listado",
+        "status": 403,
+        "title": "Acceso denegado",
+        "requestId": "18e39dc2-e682-4186-89c7-b87e4c46270d"
+      }
+    },
+    "/reportes/clientes/listado": {
+      "estado": 403,
+      "datos": {
+        "detail": "Solo un ADMIN puede exportar el listado de clientes",
+        "instance": "/reportes/clientes/listado",
+        "status": 403,
+        "title": "Acceso denegado",
+        "requestId": "2a482a25-f08e-4184-8175-544db0c4f11a"
+      }
+    },
+    "/reportes/ventas/historial?desde=2026-11-11&hasta=2026-11-11": {
+      "estado": 403,
+      "datos": {
+        "detail": "Solo un ADMIN puede exportar el historial de ventas",
+        "instance": "/reportes/ventas/historial",
+        "status": 403,
+        "title": "Acceso denegado",
+        "requestId": "593c5637-a04f-4176-ba44-5a581a67a1c9"
+      }
+    },
+    "configuracion": {
+      "GET": 200,
+      "PUT": {
+        "estado": 403,
+        "datos": {
+          "detail": "Solo un ADMIN puede modificar la configuración de la empresa",
+          "instance": "/reportes/configuracion",
+          "status": 403,
+          "title": "Acceso denegado",
+          "requestId": "bcc1ee2d-ed73-444c-91c0-1596a53171fe"
+        }
+      }
+    }
+  },
+  "resultado": "PASS",
+  "restauracionConfiguracion": 200,
+  "fin": "2026-11-11T15:42:00.398Z"
+}
