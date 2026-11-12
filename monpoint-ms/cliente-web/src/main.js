@@ -6,17 +6,6 @@ import router from '@/router'
 import { useSesion } from '@/stores/sesion'
 import { configurarGateway } from '@/api/gateway'
 import '@/assets/base.css'
-import licenciaInter from '@/assets/fuentes/OFL.txt?url'
-import licenciaMono from '@/assets/fuentes/IBM-Plex-Mono-OFL.txt?url'
-
-// Las licencias acompanan a los WOFF2 tambien en dist/nginx, no solo en Git.
-for (const [nombre, href] of [['Inter', licenciaInter], ['IBM Plex Mono', licenciaMono]]) {
-  const enlace = document.createElement('link')
-  enlace.rel = 'license'
-  enlace.href = href
-  enlace.title = `SIL Open Font License: ${nombre}`
-  document.head.append(enlace)
-}
 
 const app = createApp(App)
 const pinia = createPinia()

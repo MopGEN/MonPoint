@@ -28,9 +28,11 @@ continúa cargándose; no se deduce su ausencia de index.html. Todos los importe
 de Caja usan Inter con cifras tabulares. Chips e identificadores usan la pila
 IBM Plex Mono.
 
-Ambas licencias se importan como assets y se enlazan desde head mediante
-rel="license"; la compilación conserva los dos archivos OFL junto a los WOFF2.
-Se comprobó su presencia y contenido en dist, sin ejecutar el empaquetado nginx.
+Tras la revisión, ambas licencias viven en `public/fuentes/`: Vite las copia
+sin modificar a `dist/fuentes/`, con rutas estables y sin depender de ejecutar
+JavaScript. Se retiraron los imports y la inyección de enlaces de main.js.
+La [comprobación estática](pruebas/licencias-estaticas.json) contrasta los bytes
+y su entrega HTTP con JavaScript deshabilitado. No se ejecutó el empaquetado nginx.
 
 ## Defectos corregidos durante la revisión
 

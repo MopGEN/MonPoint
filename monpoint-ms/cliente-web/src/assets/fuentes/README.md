@@ -8,7 +8,7 @@ pesos 100–900; base.css declara sus subconjuntos Unicode.
 No se enlaza Google Fonts. Vite incluye ambos archivos en dist y el navegador
 solicita los subconjuntos que necesita al mismo origen del cliente.
 
-La licencia SIL Open Font License 1.1 se conserva en [OFL.txt](OFL.txt),
+La licencia SIL Open Font License 1.1 se conserva en [Inter-OFL.txt](../../../public/fuentes/Inter-OFL.txt),
 obtenida del [repositorio oficial de Inter](https://github.com/rsms/inter/blob/master/LICENSE.txt).
 Los hashes de estos recursos y del logo están en `fuentes.json` de la evidencia
 de la concha; su procedencia es el prototipo, no una reconstrucción del logo.
@@ -21,10 +21,12 @@ IBM Plex Mono regular y medium incluidos en el mismo HTML del prototipo.
 Se extrajeron sin modificar los WOFF2. Se usan en la pila monoespaciada;
 Caja presenta sus importes con Inter y cifras tabulares.
 
-La licencia [IBM-Plex-Mono-OFL.txt](IBM-Plex-Mono-OFL.txt) procede de la
+La licencia [IBM-Plex-Mono-OFL.txt](../../../public/fuentes/IBM-Plex-Mono-OFL.txt) procede de la
 [distribución oficial en Google Fonts](https://github.com/google/fonts/blob/main/ofl/ibmplexmono/OFL.txt).
 Los hashes de esta incorporación están en el expediente de Caja visual del
 12 de noviembre de 2026.
 
-main.js importa ambas licencias como assets y las enlaza con rel="license".
-Así se incluyen también en dist y en la distribución nginx de las fuentes.
+Ambas licencias viven en `public/fuentes/`. Vite las copia sin modificar a
+`dist/fuentes/`, con rutas estables `/fuentes/Inter-OFL.txt` y
+`/fuentes/IBM-Plex-Mono-OFL.txt`. Acompañan a la distribución estática aunque
+JavaScript esté deshabilitado; no se inyectan enlaces en el DOM.

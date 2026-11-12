@@ -4,12 +4,10 @@
 
 vite v6.4.5 building for production...
 transforming...
-✓ 86 modules transformed.
+✓ 84 modules transformed.
 rendering chunks...
 computing gzip size...
 dist/index.html                                       0.45 kB │ gzip:  0.29 kB
-dist/assets/IBM-Plex-Mono-OFL-BJZk5MFB.txt            4.36 kB │ gzip:  1.96 kB
-dist/assets/OFL-CkXC2-KD.txt                          4.38 kB │ gzip:  1.97 kB
 dist/assets/ibm-plex-mono-latin-400-DMJ8VG8y.woff2   14.71 kB
 dist/assets/ibm-plex-mono-latin-500-DSY6xOcd.woff2   14.89 kB
 dist/assets/inter-latin-Dx4kXJAl.woff2               48.26 kB
@@ -28,19 +26,19 @@ dist/assets/Caja-wjrLiXug.css                         6.91 kB │ gzip:  1.79 kB
 dist/assets/index-DP2wj9LQ.css                       14.19 kB │ gzip:  3.66 kB
 dist/assets/filtro-B-TzLMKy.js                        0.23 kB │ gzip:  0.20 kB
 dist/assets/documento-D3NJHhor.js                     0.24 kB │ gzip:  0.20 kB
-dist/assets/useAccion-DpusqLW5.js                     0.57 kB │ gzip:  0.37 kB
-dist/assets/NoEncontrada-BIDITfCM.js                  0.65 kB │ gzip:  0.44 kB
-dist/assets/TablaDatos-C8U52Wki.js                    0.96 kB │ gzip:  0.53 kB
-dist/assets/CampoFormulario-BZTiywiY.js               1.86 kB │ gzip:  0.95 kB
-dist/assets/IniciarSesion-bl902oZR.js                 2.25 kB │ gzip:  1.19 kB
-dist/assets/Notificaciones-CdLmL9ZA.js                3.51 kB │ gzip:  1.68 kB
-dist/assets/Clientes-EHkWrrPA.js                      7.27 kB │ gzip:  2.84 kB
-dist/assets/Usuarios-CiscBjHZ.js                      9.08 kB │ gzip:  3.58 kB
-dist/assets/Productos-BD1damxe.js                     9.27 kB │ gzip:  3.43 kB
-dist/assets/Reportes-CimX4FKP.js                     12.88 kB │ gzip:  4.89 kB
-dist/assets/Caja-CdfWObVn.js                         12.89 kB │ gzip:  4.93 kB
-dist/assets/index-5dEM7PYK.js                       123.13 kB │ gzip: 47.90 kB
-✓ built in 1.12s
+dist/assets/useAccion-CX__15ij.js                     0.57 kB │ gzip:  0.36 kB
+dist/assets/NoEncontrada-DlO31ZcR.js                  0.65 kB │ gzip:  0.44 kB
+dist/assets/TablaDatos-dZpGNEAp.js                    0.96 kB │ gzip:  0.53 kB
+dist/assets/CampoFormulario-GM5ZPozA.js               1.86 kB │ gzip:  0.95 kB
+dist/assets/IniciarSesion-CrylQCNF.js                 2.25 kB │ gzip:  1.19 kB
+dist/assets/Notificaciones-DyzBb0Rc.js                3.51 kB │ gzip:  1.68 kB
+dist/assets/Clientes-A_zCEuAm.js                      7.27 kB │ gzip:  2.84 kB
+dist/assets/Usuarios-CKDRiRX1.js                      9.08 kB │ gzip:  3.58 kB
+dist/assets/Productos-CA5KRR2R.js                     9.27 kB │ gzip:  3.43 kB
+dist/assets/Reportes-CtZmce9z.js                     12.88 kB │ gzip:  4.89 kB
+dist/assets/Caja-Bj-YgrZ3.js                         12.89 kB │ gzip:  4.93 kB
+dist/assets/index-C87cDIfG.js                       122.87 kB │ gzip: 47.78 kB
+✓ built in 1.03s
 npm notice
 npm notice New major version of npm available! 11.9.0 -> 12.2.2
 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.2

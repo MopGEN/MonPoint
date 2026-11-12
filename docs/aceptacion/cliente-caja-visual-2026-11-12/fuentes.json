@@ -24,6 +24,14 @@
       "sha256": "b687b606d3509b09c06199d13fef60b5ed3c4f4ddd3c59d535bbcac79f391f20"
     },
     {
+      "archivo": "monpoint-ms/cliente-web/public/fuentes/IBM-Plex-Mono-OFL.txt",
+      "sha256": "d741e57d5f865e294df801f96b7b5161a88b211df65887e4358d271c9fc5fb4f"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/public/fuentes/Inter-OFL.txt",
+      "sha256": "262481e844521b326f5ecd053e59b98c8b2da78c8ee1bdbb6e8174305e54935a"
+    },
+    {
       "archivo": "monpoint-ms/cliente-web/src/App.vue",
       "sha256": "2a3fbfa76212eab8f54501055b24bab736fbe75ef31a70f33e529a3e8a69af35"
     },
@@ -32,12 +40,8 @@
       "sha256": "5ec60f096aa63f1f7538cfbdb771e0ef09f39939eb95700a352f068803260cf3"
     },
     {
-      "archivo": "monpoint-ms/cliente-web/src/assets/fuentes/IBM-Plex-Mono-OFL.txt",
-      "sha256": "d741e57d5f865e294df801f96b7b5161a88b211df65887e4358d271c9fc5fb4f"
-    },
-    {
       "archivo": "monpoint-ms/cliente-web/src/assets/fuentes/README.md",
-      "sha256": "de9ae85d01fdbcb9dd18f8b5cbb37d31c46091c03bf13283ee43c11a0a6fa83f"
+      "sha256": "4640274d2dcbe30c133a644a06c00ec459e15b779c6f0991bcc0580dcf628c58"
     },
     {
       "archivo": "monpoint-ms/cliente-web/src/assets/fuentes/ibm-plex-mono-latin-400.woff2",
@@ -46,10 +50,6 @@
     {
       "archivo": "monpoint-ms/cliente-web/src/assets/fuentes/ibm-plex-mono-latin-500.woff2",
       "sha256": "01d285447409c8a588692162439a038b8cbd7871309ee20267b0d2d91c6e8e22"
-    },
-    {
-      "archivo": "monpoint-ms/cliente-web/src/main.js",
-      "sha256": "1510db483f05983481d4c52e93fb33b9e65d65c1e338a3b00a7fa90f4aeb5d51"
     },
     {
       "archivo": "monpoint-ms/cliente-web/src/vistas/Caja.vue",
@@ -78,6 +78,13 @@
     {
       "archivo": "monpoint-ms/cliente-web/test/usuarios-ticket.real.browser.mjs",
       "sha256": "09cd7df693631b06c6fdf5c900fef5734987fdb347d223155f5d480264d03ceb"
+    }
+  ],
+  "retirados_del_cliente_desde_base": [
+    {
+      "archivo": "monpoint-ms/cliente-web/src/assets/fuentes/OFL.txt",
+      "estado": "eliminado",
+      "sha256_base": "262481e844521b326f5ecd053e59b98c8b2da78c8ee1bdbb6e8174305e54935a"
     }
   ]
 }

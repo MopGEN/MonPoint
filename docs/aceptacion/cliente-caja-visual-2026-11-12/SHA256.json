@@ -1,7 +1,7 @@
 [
   {
     "archivo": "RESULTADOS.md",
-    "sha256": "715bfbcd140dc50755cc48027be731b6b333abb8af53e02caa24e1c7e8df6b4a"
+    "sha256": "9ad6043c78627b87263c6603b418ac0e8c844e106a4f9ec1573ed4dd871a3933"
   },
   {
     "archivo": "capturas/01-claro-carrito.png",
@@ -33,7 +33,7 @@
   },
   {
     "archivo": "fuentes.json",
-    "sha256": "569c9fdf5736a84af35dddcd621e50a7d119c647c16109b4eb508aa67c1153b2"
+    "sha256": "272068338a3efb0b389eecf025b121bb520bdb99c5999b7001d214bb0fd39885"
   },
   {
     "archivo": "pruebas/atajos-antes.json",
@@ -45,7 +45,7 @@
   },
   {
     "archivo": "pruebas/build.txt",
-    "sha256": "5d17bcfe90ee276f700beb1e2cd7a9b3b3b3123ceed32c881fc626f4fe1790ce"
+    "sha256": "8113b384c2b22671502d2817f57beea9d877c906c89f2d082644a219916ef31d"
   },
   {
     "archivo": "pruebas/caja-atajos.txt",
@@ -74,6 +74,10 @@
   {
     "archivo": "pruebas/geometria.json",
     "sha256": "85270c0fbcdd3fe76064c6dd930ff62c7a8c8d5f40fc248f23a86103906edc5c"
+  },
+  {
+    "archivo": "pruebas/licencias-estaticas.json",
+    "sha256": "0fc20dc5cd5dc3d49b5fd75921698df65ded661d4e97837fb77a5e9d53941dfa"
   },
   {
     "archivo": "pruebas/notificaciones.txt",
