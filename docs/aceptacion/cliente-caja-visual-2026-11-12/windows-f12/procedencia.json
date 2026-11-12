@@ -1,0 +1,79 @@
+{
+  "sesion": "Ejecucion manual aportada por el usuario; Windows, Chrome 157 segun user agent, cliente Vite en localhost:5173 conforme al recorrido guiado",
+  "revision_windows_reportada": "0a7f48e",
+  "revision_local_previa_al_expediente": "bdde228",
+  "entradas": [
+    {
+      "archivo": "entrada/prueba-f12.rar",
+      "bytes": 311213,
+      "sha256": "7e02907f9c5acb590ee038c493399e6323a315f0e3be70225a07525c6a3de3e7"
+    },
+    {
+      "archivo": "f12-windows.json",
+      "bytes": 448,
+      "sha256": "b304dcff3d9c1321cca99bc433bfcb19b9379c9a2038920448d3ab999e89adb4"
+    }
+  ],
+  "capturas": [
+    {
+      "nombre_en_rar": "prueba-f12/Captura de pantalla 2026-11-12 024921.png",
+      "archivo": "capturas/01-observador-preparado.png",
+      "bytes": 54542,
+      "ancho": 893,
+      "alto": 688,
+      "sha256": "86be8e63b91fad7629626d9ecf6a6a30bec6c5ab0a9c9c65442b82a3a5259b51"
+    },
+    {
+      "nombre_en_rar": "prueba-f12/Captura de pantalla 2026-11-12 025216.png",
+      "archivo": "capturas/02-carrito-antes.png",
+      "bytes": 84385,
+      "ancho": 1272,
+      "alto": 1262,
+      "sha256": "ff894d823b1a1712eec6923cc2f4e1ef6f14851f2359eda86f3c1fb222cdf5db"
+    },
+    {
+      "nombre_en_rar": "prueba-f12/Captura de pantalla 2026-11-12 025256.png",
+      "archivo": "capturas/03-en-proceso.png",
+      "bytes": 95042,
+      "ancho": 1272,
+      "alto": 1257,
+      "sha256": "3725a736e7ef75a4683bbdf8e037cf964ab8cc2a8c964127ca5312e9ff1d28c1"
+    },
+    {
+      "nombre_en_rar": "prueba-f12/Captura de pantalla 2026-11-12 025305.png",
+      "archivo": "capturas/04-confirmada.png",
+      "bytes": 87717,
+      "ancho": 1278,
+      "alto": 1272,
+      "sha256": "ca2d45792d87db41c360196487710c01085ccf58832d1dfdf96abdb13fafcce9"
+    },
+    {
+      "nombre_en_rar": "prueba-f12/Captura de pantalla 2026-11-12 025335.png",
+      "archivo": "capturas/05-registro-f12.png",
+      "bytes": 21821,
+      "ancho": 884,
+      "alto": 420,
+      "sha256": "fba816e7f894ec8a64898f47a4be4c80833229ec6684a53f470c9696e56892fb"
+    }
+  ],
+  "observacion_manual": {
+    "declaracion_del_usuario": "DevTools no se abrio.",
+    "devtools_se_abrio": false,
+    "origen": "Declaracion del usuario en el chat; no es un campo del observador"
+  },
+  "resultado_mostrado_en_caja": {
+    "folio": 7,
+    "secuencia": [
+      "Venta en proceso",
+      "Venta confirmada"
+    ],
+    "producto": "Semilla 3.1 - Sello",
+    "cantidad": 1,
+    "total_mostrado": "$120.00",
+    "origen": "Capturas 02, 03 y 04"
+  },
+  "interpretacion_del_registro": {
+    "fecha": "Instante de preparacion del observador, no de la pulsacion",
+    "foco": "Cadena vacia; no identifica el elemento enfocado al recibir F12"
+  }
+}

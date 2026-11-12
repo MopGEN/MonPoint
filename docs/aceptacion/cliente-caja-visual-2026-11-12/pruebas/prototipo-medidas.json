@@ -1,0 +1,410 @@
+{
+  "reparto": [
+    {
+      "tag": "SECTION",
+      "clase": "",
+      "ancho": 816,
+      "alto": 1088,
+      "x": 232,
+      "y": 60,
+      "padding": "20px",
+      "gap": "16px",
+      "columnas": "none",
+      "fuente": "Inter, system-ui, sans-serif",
+      "tamano": "14px",
+      "peso": "400"
+    },
+    {
+      "tag": "ASIDE",
+      "clase": "",
+      "ancho": 392,
+      "alto": 840,
+      "x": 1048,
+      "y": 60,
+      "padding": "20px",
+      "gap": "16px",
+      "columnas": "none",
+      "fuente": "Inter, system-ui, sans-serif",
+      "tamano": "14px",
+      "peso": "400"
+    }
+  ],
+  "tarjeta": {
+    "tag": "BUTTON",
+    "clase": "scp2 scp1",
+    "ancho": 185,
+    "alto": 147,
+    "x": 252,
+    "y": 167,
+    "padding": "14px",
+    "gap": "6px",
+    "columnas": "none",
+    "fuente": "Inter, system-ui, sans-serif",
+    "tamano": "14px",
+    "peso": "400"
+  },
+  "partes": [
+    {
+      "tag": "SPAN",
+      "clase": "",
+      "ancho": 155,
+      "alto": 14,
+      "x": 267,
+      "y": 182,
+      "padding": "0px",
+      "gap": "normal",
+      "columnas": "none",
+      "fuente": "\"IBM Plex Mono\", monospace",
+      "tamano": "11px",
+      "peso": "400"
+    },
+    {
+      "tag": "SPAN",
+      "clase": "",
+      "ancho": 155,
+      "alto": 38,
+      "x": 267,
+      "y": 202,
+      "padding": "0px",
+      "gap": "normal",
+      "columnas": "none",
+      "fuente": "Inter, system-ui, sans-serif",
+      "tamano": "14px",
+      "peso": "500"
+    },
+    {
+      "tag": "SPAN",
+      "clase": "",
+      "ancho": 155,
+      "alto": 24,
+      "x": 267,
+      "y": 246,
+      "padding": "0px",
+      "gap": "normal",
+      "columnas": "none",
+      "fuente": "Inter, system-ui, sans-serif",
+      "tamano": "20px",
+      "peso": "600"
+    },
+    {
+      "tag": "SPAN",
+      "clase": "",
+      "ancho": 105.421875,
+      "alto": 23,
+      "x": 267,
+      "y": 276,
+      "padding": "3px 7px",
+      "gap": "5px",
+      "columnas": "none",
+      "fuente": "Inter, system-ui, sans-serif",
+      "tamano": "12px",
+      "peso": "500"
+    }
+  ],
+  "padres": [
+    {
+      "tag": "BUTTON",
+      "clase": "scp2 scp1",
+      "ancho": 185,
+      "alto": 147,
+      "x": 252,
+      "y": 167,
+      "padding": "14px",
+      "gap": "6px",
+      "columnas": "none",
+      "fuente": "Inter, system-ui, sans-serif",
+      "tamano": "14px",
+      "peso": "400"
+    },
+    {
+      "tag": "DIV",
+      "clase": "",
+      "ancho": 776,
+      "alto": 961,
+      "x": 252,
+      "y": 167,
+      "padding": "0px",
+      "gap": "12px",
+      "columnas": "185px 185px 185px 185px",
+      "fuente": "Inter, system-ui, sans-serif",
+      "tamano": "14px",
+      "peso": "400"
+    },
+    {
+      "tag": "SECTION",
+      "clase": "",
+      "ancho": 816,
+      "alto": 1088,
+      "x": 232,
+      "y": 60,
+      "padding": "20px",
+      "gap": "16px",
+      "columnas": "none",
+      "fuente": "Inter, system-ui, sans-serif",
+      "tamano": "14px",
+      "peso": "400"
+    },
+    {
+      "tag": "DIV",
+      "clase": "",
+      "ancho": 1208,
+      "alto": 1088,
+      "x": 232,
+      "y": 60,
+      "padding": "0px",
+      "gap": "0px",
+      "columnas": "none",
+      "fuente": "Inter, system-ui, sans-serif",
+      "tamano": "14px",
+      "peso": "400"
+    },
+    {
+      "tag": "MAIN",
+      "clase": "",
+      "ancho": 1208,
+      "alto": 1088,
+      "x": 232,
+      "y": 60,
+      "padding": "0px",
+      "gap": "normal",
+      "columnas": "none",
+      "fuente": "Inter, system-ui, sans-serif",
+      "tamano": "14px",
+      "peso": "400"
+    },
+    {
+      "tag": "DIV",
+      "clase": "",
+      "ancho": 1208,
+      "alto": 1148,
+      "x": 232,
+      "y": 0,
+      "padding": "0px",
+      "gap": "normal",
+      "columnas": "none",
+      "fuente": "Inter, system-ui, sans-serif",
+      "tamano": "14px",
+      "peso": "400"
+    },
+    {
+      "tag": "DIV",
+      "clase": "",
+      "ancho": 1440,
+      "alto": 1148,
+      "x": 0,
+      "y": 0,
+      "padding": "0px",
+      "gap": "normal",
+      "columnas": "none",
+      "fuente": "Inter, system-ui, sans-serif",
+      "tamano": "14px",
+      "peso": "400"
+    },
+    {
+      "tag": "DIV",
+      "clase": "",
+      "ancho": 1440,
+      "alto": 1148,
+      "x": 0,
+      "y": 0,
+      "padding": "0px",
+      "gap": "normal",
+      "columnas": "none",
+      "fuente": "Inter, system-ui, sans-serif",
+      "tamano": "14px",
+      "peso": "400"
+    }
+  ],
+  "fuentes": [
+    {
+      "familia": "IBM Plex Mono",
+      "peso": "400",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "IBM Plex Mono",
+      "peso": "400",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "IBM Plex Mono",
+      "peso": "400",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "IBM Plex Mono",
+      "peso": "400",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "IBM Plex Mono",
+      "peso": "400",
+      "estado": "loaded"
+    },
+    {
+      "familia": "IBM Plex Mono",
+      "peso": "500",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "IBM Plex Mono",
+      "peso": "500",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "IBM Plex Mono",
+      "peso": "500",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "IBM Plex Mono",
+      "peso": "500",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "IBM Plex Mono",
+      "peso": "500",
+      "estado": "loaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "400",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "400",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "400",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "400",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "400",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "400",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "400",
+      "estado": "loaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "500",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "500",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "500",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "500",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "500",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "500",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "500",
+      "estado": "loaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "600",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "600",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "600",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "600",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "600",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "600",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "600",
+      "estado": "loaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "700",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "700",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "700",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "700",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "700",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "700",
+      "estado": "unloaded"
+    },
+    {
+      "familia": "Inter",
+      "peso": "700",
+      "estado": "loaded"
+    }
+  ]
+}

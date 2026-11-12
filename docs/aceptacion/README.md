@@ -1,5 +1,15 @@
 # Evidencia de aceptación
 
+## Cliente — Caja visual y F12 físico en Windows
+
+[Revisión de Caja del 12 de noviembre](cliente-caja-visual-2026-11-12/RESULTADOS.md):
+rejilla, indicador de pasos, atajos y regresión del contenido del cobro.
+La [ejecución física en Windows/Chrome 157](cliente-caja-visual-2026-11-12/windows-f12/RESULTADOS.md)
+conserva cinco PNG, el RAR y el JSON originales: folio 7 mostrado En proceso →
+Confirmada, Sello × 1 y $120.00; DevTools no se abrió según el usuario.
+Es una ejecución posterior a la del 11 de noviembre; no modifica sus observaciones
+ni declara cerrado CONTROL 3 o el empaquetado Windows/nginx.
+
 ## Cliente — Usuarios y ticket en Caja
 
 [Revisión e integración real del 11 de noviembre](cliente-usuarios-ticket-2026-11-11/RESULTADOS.md):

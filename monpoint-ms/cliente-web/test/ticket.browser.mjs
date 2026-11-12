@@ -63,7 +63,11 @@ try {
     await pagina.getByLabel('Correo', { exact: true }).fill('caja@example.test')
     await pagina.getByLabel('Contraseña', { exact: true }).fill('simulada')
     await pagina.getByRole('button', { name: 'Entrar', exact: true }).click()
-    await pagina.getByRole('button', { name: 'Agregar Tinta', exact: true }).click()
+    // La tarjeta del catalogo se anuncia con precio y existencia ademas del
+    // nombre, porque en una rejilla esos dos datos son parte de lo que se esta
+    // eligiendo. El patron queda anclado al inicio para seguir distinguiendo
+    // un producto de otro.
+    await pagina.getByRole('button', { name: /^Agregar Tinta,/ }).click()
     await pagina.clock.install()
     await pagina.getByRole('button', { name: 'Cobrar', exact: true }).click()
     await pagina.getByRole('heading', { name: 'Venta en proceso', exact: true }).waitFor()

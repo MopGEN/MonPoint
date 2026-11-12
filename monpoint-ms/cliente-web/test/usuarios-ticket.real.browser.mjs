@@ -178,14 +178,16 @@ try {
   resultado.producto = altaProducto.datos
   resultado.tickets = []
   async function cobrarYDescargar (rol) {
-    await pagina.getByLabel('Buscar por nombre', { exact: true }).fill(resultado.producto.nombre)
+    await pagina.getByLabel('Buscar producto', { exact: true }).fill(resultado.producto.nombre)
     await pagina.getByRole('button', { name: 'Actualizar catálogo', exact: true }).click()
-    await pagina.getByRole('button', { name: `Agregar ${resultado.producto.nombre}`, exact: true }).click()
+    await pagina.getByRole('button').filter({ has: pagina.locator('.nombre', { hasText: resultado.producto.nombre }) }).click()
     const intentos = []
     let venta
     for (let i = 0; i < 20; i++) {
       const respuesta = pagina.waitForResponse((r) => r.url() === `${API}/ventas` && r.request().method() === 'POST')
-      await pagina.getByRole('button', { name: 'Cobrar', exact: true }).click()
+      // El buscador conserva el foco: Ctrl+Enter debe cobrar la cantidad ya
+      // elegida, sin volver a agregar el resultado que sigue visible.
+      await pagina.getByLabel('Buscar producto', { exact: true }).press('Control+Enter')
       const r = await respuesta
       intentos.push(r.status())
       const datos = await r.json()

@@ -1,0 +1,27 @@
+{
+  "comprobacion": "Licencias estaticas desde build/preview",
+  "JavaScriptHabilitado": false,
+  "fecha": "2026-11-12T08:17:10.182Z",
+  "archivos": [
+    {
+      "ruta": "/fuentes/Inter-OFL.txt",
+      "bytes": 4380,
+      "sha256": "262481e844521b326f5ecd053e59b98c8b2da78c8ee1bdbb6e8174305e54935a",
+      "navegacionSinJS": 200,
+      "HTTP": 200,
+      "distIdentico": true,
+      "HTTPIdentico": true
+    },
+    {
+      "ruta": "/fuentes/IBM-Plex-Mono-OFL.txt",
+      "bytes": 4362,
+      "sha256": "d741e57d5f865e294df801f96b7b5161a88b211df65887e4358d271c9fc5fb4f",
+      "navegacionSinJS": 200,
+      "HTTP": 200,
+      "distIdentico": true,
+      "HTTPIdentico": true
+    }
+  ],
+  "resultado": "PASS",
+  "comprobacionBytesHTTP": "APIRequestContext; navegacion sin JavaScript comprobada por separado"
+}

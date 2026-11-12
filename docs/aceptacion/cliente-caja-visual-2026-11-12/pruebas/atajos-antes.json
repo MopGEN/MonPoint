@@ -1,0 +1,25 @@
+{
+  "inicio": "2026-11-12T07:47:43.949Z",
+  "casos": [],
+  "cobros": [
+    {
+      "clienteId": null,
+      "lineas": [
+        {
+          "productoId": "p2",
+          "cantidad": 1
+        },
+        {
+          "productoId": "p1",
+          "cantidad": 1
+        }
+      ]
+    }
+  ],
+  "errores": [],
+  "inesperadas": [],
+  "teclas": [],
+  "resultado": "FAIL",
+  "fallo": "Ctrl+Enter desde el buscador debe cobrar el carrito existente, sin agregar el primer resultado\n+ actual - expected\n... Skipped lines\n\n  [\n    {\n      clienteId: null,\n      lineas: [\n        {\n...\n        },\n+       {\n+         cantidad: 1,\n+         productoId: 'p1'\n+       }\n      ]\n    }\n  ]\n",
+  "fin": "2026-11-12T07:47:44.470Z"
+}

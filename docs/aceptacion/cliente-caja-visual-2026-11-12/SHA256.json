@@ -1,0 +1,178 @@
+[
+  {
+    "archivo": "RESULTADOS.md",
+    "sha256": "ce8d492b01167674672594f42231ca4a8891f77d59ba3f34cf5047bec8920c69"
+  },
+  {
+    "archivo": "capturas/01-claro-carrito.png",
+    "sha256": "a13b84143fb7a26224452ff4394c9ee33c5d2e461af5ac2df20214c1bf28e39d"
+  },
+  {
+    "archivo": "capturas/02-confirmada.png",
+    "sha256": "d6734cd38d6d070f83b90b3b923420d2bb95ab2e215825afe3716f18dd60aace"
+  },
+  {
+    "archivo": "capturas/02-oscuro-carrito.png",
+    "sha256": "ea05c4f8478f8683cda28f57b4db8dabbc01e8a9d53772e3a94e39102798d112"
+  },
+  {
+    "archivo": "capturas/03-cancelada.png",
+    "sha256": "a0ae065541146b2c5c4e102bd546a2372d54d30164dfdca4e4c16436e7019715"
+  },
+  {
+    "archivo": "capturas/ancho-320.png",
+    "sha256": "558baff02a5d4edc785ffba642d848cd19f8475991b26463dc1c761f6d1188a4"
+  },
+  {
+    "archivo": "capturas/ancho-390.png",
+    "sha256": "4b2b1f22147868dc72e0dd39bf7970be54e5173a1aea4357b33ec5be2cc44ffc"
+  },
+  {
+    "archivo": "capturas/ancho-820.png",
+    "sha256": "36ad8fa4415ea3829120ded23effd7d2918f97c3f1c8bf2f9febc101dc4af706"
+  },
+  {
+    "archivo": "fuentes.json",
+    "sha256": "272068338a3efb0b389eecf025b121bb520bdb99c5999b7001d214bb0fd39885"
+  },
+  {
+    "archivo": "pruebas/atajos-antes.json",
+    "sha256": "87d1571c8913c51c40abe635f89288aa2fe070c08a973349e4c54cbf444cc000"
+  },
+  {
+    "archivo": "pruebas/atajos.json",
+    "sha256": "e395b0d752b2788369e0ff7712ba1ff415cc746af1ed9abbbaf8f75a580204b9"
+  },
+  {
+    "archivo": "pruebas/build.txt",
+    "sha256": "8113b384c2b22671502d2817f57beea9d877c906c89f2d082644a219916ef31d"
+  },
+  {
+    "archivo": "pruebas/caja-atajos.txt",
+    "sha256": "9bad3a4e2228f123e199680b695fc111c1d55c4762c5ab93d8a726f273b4b4a3"
+  },
+  {
+    "archivo": "pruebas/caja-geometria.txt",
+    "sha256": "105ad6a5d4ee3477a42659001c4e6f4e028c272d7e80b5b8e520bc37b1d0959a"
+  },
+  {
+    "archivo": "pruebas/caja-visual.txt",
+    "sha256": "0c6cba29c7a71447d16c7d5e10771b85a1d175a5f72766d5ad83a4c0553d7cfa"
+  },
+  {
+    "archivo": "pruebas/caja.txt",
+    "sha256": "5873a05b1491aadacaef3b71a0ac086667c492a7ed174c37395a0129312018ff"
+  },
+  {
+    "archivo": "pruebas/clientes.txt",
+    "sha256": "d88f8a5961bde577ff783b5bca1c4075a89eca5b6f949338508d67622131256d"
+  },
+  {
+    "archivo": "pruebas/concha.txt",
+    "sha256": "dd5a9c3be719a48c3cb03b0013f2d63305dd093a81656ce8a5c61df5e60c3cea"
+  },
+  {
+    "archivo": "pruebas/geometria.json",
+    "sha256": "85270c0fbcdd3fe76064c6dd930ff62c7a8c8d5f40fc248f23a86103906edc5c"
+  },
+  {
+    "archivo": "pruebas/licencias-estaticas.json",
+    "sha256": "0fc20dc5cd5dc3d49b5fd75921698df65ded661d4e97837fb77a5e9d53941dfa"
+  },
+  {
+    "archivo": "pruebas/notificaciones.txt",
+    "sha256": "86d05caf09a6a057ec7c7c677436be527466afdea533544a478f13c46da25749"
+  },
+  {
+    "archivo": "pruebas/productos.txt",
+    "sha256": "35e75518cc5358304d91ec4ce311fd1d7588ded31e2ab64e2f105e9fea68d3e5"
+  },
+  {
+    "archivo": "pruebas/prototipo-medidas.json",
+    "sha256": "bdd9144a0c7b202232f99f67e44eef3f68ac0670ce237b9320b1b3d9f8dee1de"
+  },
+  {
+    "archivo": "pruebas/reportes.txt",
+    "sha256": "ae5ba7eb6aa4765ca17104ce4d810d8e00c6783e9b8c26e3db087021025850a7"
+  },
+  {
+    "archivo": "pruebas/ticket.txt",
+    "sha256": "86281c42e7c72b7c0fc271bd4838572cfa0b03586b5dd3b3ff390ea73a0801af"
+  },
+  {
+    "archivo": "pruebas/unitarias.txt",
+    "sha256": "409ebcbb925990e07f8e107b82f69f581f503c26dce318b2e57e86eb47152ec7"
+  },
+  {
+    "archivo": "pruebas/usuarios.txt",
+    "sha256": "ae4c0066e85b61fb9d73a5c47da854c8fe4ba1f2643fe04846f2c0aafe159ff9"
+  },
+  {
+    "archivo": "real/01-politica.png",
+    "sha256": "dc8018eac91b9c9a8b0ad2f423e4943e512948c1d9259daaf9d0f73dcf3efe82"
+  },
+  {
+    "archivo": "real/02-perfil-propio.png",
+    "sha256": "6e90e4c3e1f30a3ae80be3ba0aac74995b8be5ea663a1b92de30cd3a331e799a"
+  },
+  {
+    "archivo": "real/03-desactivar.png",
+    "sha256": "c943d2a46a0ce0b3777685e9004f068da4ef2bb5a443b85c03006097e2a0b394"
+  },
+  {
+    "archivo": "real/resultado.json",
+    "sha256": "ae53c63fe3270b643d0f65935c14af3dd9a506e6ba60303df5e3f24f0b0a5ad9"
+  },
+  {
+    "archivo": "real/ticket-ADMIN.png",
+    "sha256": "42b7b7adba1508102d4f96fc314b796c34ae2e9186740314d67a75bc97b12683"
+  },
+  {
+    "archivo": "real/ticket-VENDEDOR.png",
+    "sha256": "17c559c2455b0c5038122844080cafcbc05840a4b07f3d5a7ff18a793d584361"
+  },
+  {
+    "archivo": "real/ticket-folio-61.pdf",
+    "sha256": "e39cd15b6bcd694fd1759711ec68d973b379a121b50bf4681bc1d80561d36b43"
+  },
+  {
+    "archivo": "real/ticket-folio-62.pdf",
+    "sha256": "61efe94f5fbf74bd72d05882d26def18962ffc8de046d5da0144c2c50f46832d"
+  },
+  {
+    "archivo": "windows-f12/RESULTADOS.md",
+    "sha256": "01edf4b1aa3f1888c219b6fe93e48e3c29f79a4394cfe02bd36d488e2a20067e"
+  },
+  {
+    "archivo": "windows-f12/capturas/01-observador-preparado.png",
+    "sha256": "86be8e63b91fad7629626d9ecf6a6a30bec6c5ab0a9c9c65442b82a3a5259b51"
+  },
+  {
+    "archivo": "windows-f12/capturas/02-carrito-antes.png",
+    "sha256": "ff894d823b1a1712eec6923cc2f4e1ef6f14851f2359eda86f3c1fb222cdf5db"
+  },
+  {
+    "archivo": "windows-f12/capturas/03-en-proceso.png",
+    "sha256": "3725a736e7ef75a4683bbdf8e037cf964ab8cc2a8c964127ca5312e9ff1d28c1"
+  },
+  {
+    "archivo": "windows-f12/capturas/04-confirmada.png",
+    "sha256": "ca2d45792d87db41c360196487710c01085ccf58832d1dfdf96abdb13fafcce9"
+  },
+  {
+    "archivo": "windows-f12/capturas/05-registro-f12.png",
+    "sha256": "fba816e7f894ec8a64898f47a4be4c80833229ec6684a53f470c9696e56892fb"
+  },
+  {
+    "archivo": "windows-f12/entrada/prueba-f12.rar",
+    "sha256": "7e02907f9c5acb590ee038c493399e6323a315f0e3be70225a07525c6a3de3e7"
+  },
+  {
+    "archivo": "windows-f12/f12-windows.json",
+    "sha256": "b304dcff3d9c1321cca99bc433bfcb19b9379c9a2038920448d3ab999e89adb4"
+  },
+  {
+    "archivo": "windows-f12/procedencia.json",
+    "sha256": "8117fb573077877981beb53b3ec66ddeda817096124d7faa30d4ea9a8efe8cc3"
+  }
+]

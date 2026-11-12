@@ -1,0 +1,44 @@
+Ticket simulado: PASS [
+  {
+    rol: 'ADMIN',
+    caso: 'descarga',
+    POST_ventas: 1,
+    GET_ticket: 2,
+    archivos: [ 'ticket-folio-1042.pdf' ]
+  },
+  {
+    rol: 'VENDEDOR',
+    caso: 'descarga',
+    POST_ventas: 1,
+    GET_ticket: 2,
+    archivos: [ 'ticket-folio-1042.pdf' ]
+  },
+  {
+    rol: 'ADMIN',
+    caso: 'cancelada',
+    POST_ventas: 1,
+    GET_ticket: 0,
+    archivos: []
+  },
+  {
+    rol: 'VENDEDOR',
+    caso: 'seguimiento',
+    POST_ventas: 1,
+    GET_ticket: 1,
+    archivos: [ 'ticket-folio-1042.pdf' ]
+  },
+  {
+    rol: 'ADMIN',
+    caso: 'desmontaje',
+    POST_ventas: 1,
+    GET_ticket: 1,
+    archivos: []
+  },
+  {
+    rol: 'ADMIN',
+    caso: 'sesion401',
+    POST_ventas: 1,
+    GET_ticket: 1,
+    archivos: []
+  }
+]
