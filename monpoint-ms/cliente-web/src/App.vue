@@ -1,11 +1,13 @@
 <script setup>
 import { useSesion } from '@/stores/sesion'
 import { usePreferencias } from '@/stores/preferencias'
+import { useRoute } from 'vue-router'
 import NavegacionLateral from '@/componentes/NavegacionLateral.vue'
 import CabeceraAplicacion from '@/componentes/CabeceraAplicacion.vue'
 import MarcaMonPoint from '@/componentes/MarcaMonPoint.vue'
 const sesion = useSesion()
 const preferencias = usePreferencias()
+const ruta = useRoute()
 </script>
 
 <template>
@@ -17,7 +19,7 @@ const preferencias = usePreferencias()
         <span aria-hidden="true">{{ preferencias.colapsada ? '»' : '«' }}</span><span v-if="!preferencias.colapsada">Colapsar barra</span>
       </button>
     </aside>
-    <div class="cuerpo"><CabeceraAplicacion /><main id="contenido" class="contenido"><RouterView /></main></div>
+    <div class="cuerpo"><CabeceraAplicacion /><main id="contenido" class="contenido" :class="{ 'contenido--caja': ruta.name === 'caja' }"><RouterView /></main></div>
   </div>
   <main v-else class="sin-sesion"><RouterView /></main>
 </template>
@@ -32,6 +34,7 @@ const preferencias = usePreferencias()
 .colapsar:hover { background: var(--mp-barra-activo); }
 .cuerpo { min-width: 0; }
 .contenido { min-width: 0; padding: 24px 20px; }
+.contenido.contenido--caja { padding: 0; container-type: inline-size; container-name: area-caja; }
 .sin-sesion { min-height: 100dvh; }
 @media (max-width: 720px) {
   .app, .app.colapsada { display: flex; flex-direction: column; }

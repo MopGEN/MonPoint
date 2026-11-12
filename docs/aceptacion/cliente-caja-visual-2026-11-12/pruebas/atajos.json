@@ -1,0 +1,39 @@
+{
+  "inicio": "2026-11-12T07:54:35.704Z",
+  "casos": [
+    "Ctrl+Enter no agrega productos; pendiente bloquea; resultado confirmado y nueva venta",
+    "IME, modificadores, repeticion, foco en menu y cantidades invalidas; F12 recibido; cancelacion",
+    "Enter solo agrega resultados visibles, despues de una carga correcta"
+  ],
+  "cobros": [
+    {
+      "clienteId": null,
+      "lineas": [
+        {
+          "productoId": "p2",
+          "cantidad": 1
+        }
+      ]
+    },
+    {
+      "clienteId": null,
+      "lineas": [
+        {
+          "productoId": "p2",
+          "cantidad": 1
+        }
+      ]
+    }
+  ],
+  "errores": [],
+  "inesperadas": [],
+  "teclas": [
+    {
+      "cancelable": true,
+      "prevenido": true,
+      "confiable": true
+    }
+  ],
+  "resultado": "PASS",
+  "fin": "2026-11-12T07:54:38.156Z"
+}

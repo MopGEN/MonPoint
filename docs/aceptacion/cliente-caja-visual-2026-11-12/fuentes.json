@@ -1,0 +1,83 @@
+{
+  "base": "1cd0bc7",
+  "commit_declarado_del_parche": "e6b4c65728201ff044442dc0a6fe721bba5275d9",
+  "commit_importado": "eb72d6b",
+  "entradas": [
+    {
+      "archivo": "0001-5.5-Rejilla-de-catalogo-indicador-de-pasos-y-atajos-.patch",
+      "bytes": 28493,
+      "sha256": "039426d65d91a4f078a226b0a9b534f1aa6a4930894fd9efe0c9e43f6e7f86d4"
+    },
+    {
+      "archivo": "index.html",
+      "bytes": 1836307,
+      "sha256": "fbeaa4f673cb5e1cfb1428c7ddba8655029a6bb9a6696250fe10022d4ea5b5e0"
+    }
+  ],
+  "recursos_IBM_Plex_Mono": {
+    "400": "9a22a393-5b05-465d-bf78-3d081f32ebd2",
+    "500": "0ca27ed3-628e-43be-89a7-d36f940e8651"
+  },
+  "cliente": [
+    {
+      "archivo": "monpoint-ms/cliente-web/README.md",
+      "sha256": "b687b606d3509b09c06199d13fef60b5ed3c4f4ddd3c59d535bbcac79f391f20"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/App.vue",
+      "sha256": "2a3fbfa76212eab8f54501055b24bab736fbe75ef31a70f33e529a3e8a69af35"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/assets/base.css",
+      "sha256": "5ec60f096aa63f1f7538cfbdb771e0ef09f39939eb95700a352f068803260cf3"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/assets/fuentes/IBM-Plex-Mono-OFL.txt",
+      "sha256": "d741e57d5f865e294df801f96b7b5161a88b211df65887e4358d271c9fc5fb4f"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/assets/fuentes/README.md",
+      "sha256": "de9ae85d01fdbcb9dd18f8b5cbb37d31c46091c03bf13283ee43c11a0a6fa83f"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/assets/fuentes/ibm-plex-mono-latin-400.woff2",
+      "sha256": "08949f728dc52d528e69b1667d15c89a5686a4ee9a296ff90983985f99c380f7"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/assets/fuentes/ibm-plex-mono-latin-500.woff2",
+      "sha256": "01d285447409c8a588692162439a038b8cbd7871309ee20267b0d2d91c6e8e22"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/main.js",
+      "sha256": "1510db483f05983481d4c52e93fb33b9e65d65c1e338a3b00a7fa90f4aeb5d51"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/src/vistas/Caja.vue",
+      "sha256": "36b99d4492107628c972e8fa99c3d8ffb1e5ba672d00ddf9194fe4fec67a818c"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/test/caja-atajos.browser.mjs",
+      "sha256": "ed060ecab3154e319825cc3846e111a7ca8b5a891e7e1780f59cb562d62b7d29"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/test/caja-geometria.browser.mjs",
+      "sha256": "40da68aaee5c09067152caa6eed84aea79604852348239a5832cf08b34b11614"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/test/caja-visual.browser.mjs",
+      "sha256": "5460a7566f1ac319e63dfdd2521279eb9bc78d926626aab90602f149c803b12e"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/test/caja.browser.mjs",
+      "sha256": "db44ee998694d0f4373867451361e4e70eeb6d1054ca5abb1d36368ae17ca6ed"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/test/ticket.browser.mjs",
+      "sha256": "8b4dc841e40ab7a6db54a462e71e2b4eba029092f83ef12eeaa9b37f4a0e4232"
+    },
+    {
+      "archivo": "monpoint-ms/cliente-web/test/usuarios-ticket.real.browser.mjs",
+      "sha256": "09cd7df693631b06c6fdf5c900fef5734987fdb347d223155f5d480264d03ceb"
+    }
+  ]
+}

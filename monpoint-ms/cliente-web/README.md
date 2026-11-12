@@ -135,8 +135,8 @@ corresponde a la última lectura; **no hay actualización en tiempo real**. Ante
 carga o error se omite el número, sin convertir el fallo en cero alertas.
 VENDEDOR no monta la campana ni hace esas consultas.
 
-La rejilla de productos de Caja, sus atajos y stepper del prototipo quedan para
-otra intervención. No se añaden rutas de Proveedores, Historial, Ventas en
+La Caja incorpora la rejilla, los atajos y el indicador de pasos descritos en
+la sección 5.5. No se añaden rutas de Proveedores, Historial, Ventas en
 proceso, Configuración ni Guía de estilo.
 
 Recorrido visual con API simulada, build y preview:
@@ -518,6 +518,33 @@ el montaje del certificado corresponden al entorno de compilación.
 
 ## Caja (5.5)
 
+El catálogo se presenta como tarjetas pulsables con nombre, precio y existencia:
+neutra sobre el umbral, aviso en o bajo el umbral y error cuando no queda
+existencia. Las tarjetas sin existencia siguen disponibles; la reserva la decide
+el servidor con sus datos actuales. La búsqueda local usa nombre y descripción,
+sin distinguir acentos o mayúsculas. El contrato no tiene código/SKU y la
+interfaz no genera uno a partir del id.
+
+F2 enfoca y selecciona la búsqueda; Enter sin modificadores agrega el primer
+resultado visible. Ctrl+Enter, ⌘+Enter o F12 cobran el carrito ya elegido, sin
+agregar resultados de la búsqueda. El atajo respeta las mismas validaciones del
+botón y no actúa durante composición de texto, repetición de tecla, menús o
+diálogos abiertos, ni después de navegar fuera de Caja. F12 depende de qué
+teclas entregue el navegador; no se promete controlar sus herramientas de
+desarrollo ni los atajos reservados por el sistema.
+
+El indicador ordenado distingue Carrito, En proceso y Resultado. Enviando y
+enProceso corresponden al segundo paso; confirmada/cancelada al tercero.
+sinRespuesta devuelve el carrito al primer paso y conserva la operación incierta
+en la bandeja, sin presentarla como resultado final.
+
+Solo Caja ocupa el ancho completo interior de la concha. A 1440 px se reparte en
+232 px de lateral, 816 de catálogo y 392 de cobro; cuatro tarjetas de 185 px,
+separación de 12 px y relleno de 14 px. Por debajo de 814 px disponibles pasa a
+una columna. Las demás pantallas conservan el relleno. IBM Plex Mono regular y
+medium se sirven localmente con licencia OFL para chips e identificadores;
+los importes de Caja usan Inter y cifras tabulares.
+
 La caja consulta `/inventario/productos` y `/clientes` mediante el Gateway. Permite
 buscar productos, indicar cantidades enteras y elegir un cliente opcional. La existencia
 mostrada es informativa: inventario decide la reserva al procesar la venta. El carrito
@@ -548,6 +575,28 @@ el 401. Recargar pierde este estado en memoria y exige iniciar sesión de nuevo.
 El navegador advierte antes de recargar si queda trabajo pendiente.
 
 ### Validación para revisión
+
+Los recorridos visuales y de teclado requieren build/preview como los demás:
+
+```bash
+PLAYWRIGHT_MODULE=/ruta/a/playwright/index.mjs node test/caja-visual.browser.mjs
+PLAYWRIGHT_MODULE=/ruta/a/playwright/index.mjs node test/caja-atajos.browser.mjs
+PLAYWRIGHT_MODULE=/ruta/a/playwright/index.mjs node test/caja-geometria.browser.mjs
+```
+
+Usan API simulada. El segundo comprueba el cuerpo exacto de cada cobro y cubre
+Ctrl+Enter desde el buscador, F12 recibido por Chromium, IME, repetición,
+cantidades inválidas, menús, carga/error de catálogo y desmontaje. El tercero
+compara geometría a 1440 px, comprueba anchos de 320 a 1280 px, lateral
+colapsada, temas y fuentes locales. No prueban por sí solos atajos de Windows.
+
+`usuarios-ticket.real.browser.mjs` cobra ahora con Ctrl+Enter desde la búsqueda
+para ambos roles y verifica cada total y PDF contra la venta real. Sigue siendo
+un recorrido de prueba con escrituras: crea dos cuentas, un producto y dos
+ventas; desactiva únicamente sus cuentas al terminar. No se ejecuta con npm
+test ni debe usarse en producción.
+
+[Revisión de Caja, capturas y resultados](../../docs/aceptacion/cliente-caja-visual-2026-11-12/RESULTADOS.md).
 
 ```bash
 npm test

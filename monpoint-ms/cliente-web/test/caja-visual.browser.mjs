@@ -13,6 +13,7 @@
  *      node test/caja-visual.browser.mjs
  */
 import assert from 'node:assert/strict'
+import { simularConcha } from './concha-fixture.mjs'
 const modulo = await import(process.env.PLAYWRIGHT_MODULE ?? 'playwright')
 const { chromium } = modulo.default ?? modulo
 
@@ -42,6 +43,7 @@ const navegador = await chromium.launch({
 })
 const contexto = await navegador.newContext({ viewport: { width: 1440, height: 980 } })
 const pagina = await contexto.newPage()
+await simularConcha(pagina, API)
 const erroresJs = []
 pagina.on('pageerror', (e) => erroresJs.push(e.message))
 
@@ -70,7 +72,7 @@ await pagina.route(`${API}/ventas**`, (r) => {
   if (r.request().method() === 'POST') {
     cobrosEnviados++
     folio++
-    return r.fulfill({ status: 201, contentType: 'application/json',
+    return r.fulfill({ status: 202, contentType: 'application/json',
       body: JSON.stringify(venta('PENDIENTE')) })
   }
   return r.fulfill({ status: 200, contentType: 'application/json',
@@ -134,9 +136,8 @@ await pagina.keyboard.press('F2')
 assert.equal(await pagina.evaluate(() => document.activeElement?.id), 'buscar',
   'F2 enfoca la busqueda')
 
-// Ctrl+Enter cobra. Se comprueba este y no F12 porque el atajo de las
-// herramientas del navegador no es cancelable desde la pagina y Playwright no
-// lo entrega de forma fiable; ambos entran por la misma rama de `atajos`.
+// Ctrl+Enter cobra. caja-atajos.browser.mjs comprueba tambien F12 recibido por
+// Chromium y el cuerpo de las peticiones; no acredita los atajos de Windows.
 await pagina.fill('#buscar', '')
 assert.equal(cobrosEnviados, 0)
 await pagina.keyboard.press('Control+Enter')

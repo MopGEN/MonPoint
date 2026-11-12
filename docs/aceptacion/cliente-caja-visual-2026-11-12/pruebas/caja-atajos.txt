@@ -1,0 +1,5 @@
+Caja atajos: PASS [
+  'Ctrl+Enter no agrega productos; pendiente bloquea; resultado confirmado y nueva venta',
+  'IME, modificadores, repeticion, foco en menu y cantidades invalidas; F12 recibido; cancelacion',
+  'Enter solo agrega resultados visibles, despues de una carga correcta'
+]

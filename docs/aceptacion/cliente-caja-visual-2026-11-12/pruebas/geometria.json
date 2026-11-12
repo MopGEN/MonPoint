@@ -1,0 +1,770 @@
+{
+  "inicio": "2026-11-12T08:02:40.831Z",
+  "anchos": [
+    {
+      "viewport": 1280,
+      "documento": 1280,
+      "columnas": "197.328px 197.328px 197.328px",
+      "lateral": {
+        "x": 0,
+        "y": 0,
+        "ancho": 232,
+        "alto": 900,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "0px",
+        "gap": "normal"
+      },
+      "main": {
+        "x": 232,
+        "y": 61,
+        "ancho": 1048,
+        "alto": 839,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "0px",
+        "gap": "normal"
+      },
+      "catalogo": {
+        "x": 232,
+        "y": 61,
+        "ancho": 656,
+        "alto": 587,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "20px",
+        "gap": "normal"
+      },
+      "cobro": {
+        "x": 888,
+        "y": 61,
+        "ancho": 392,
+        "alto": 839,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "20px",
+        "gap": "normal"
+      },
+      "tarjeta": {
+        "x": 252,
+        "y": 189.984375,
+        "ancho": 197.328125,
+        "alto": 132.96875,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "14px",
+        "gap": "6px"
+      },
+      "precio": {
+        "x": 267,
+        "y": 248.765625,
+        "ancho": 83.078125,
+        "alto": 30,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "20px",
+        "peso": "600",
+        "padding": "0px",
+        "gap": "normal"
+      },
+      "tecla": {
+        "x": 831.203125,
+        "y": 116.734375,
+        "ancho": 27.203125,
+        "alto": 22.5,
+        "fuente": "\"IBM Plex Mono\", ui-monospace, \"SF Mono\", \"Cascadia Mono\", Menlo, Consolas, monospace",
+        "tamano": "11px",
+        "peso": "500",
+        "padding": "2px 6px",
+        "gap": "normal"
+      },
+      "tarjetasDentro": true
+    },
+    {
+      "viewport": 1100,
+      "documento": 1100,
+      "columnas": "212px 212px",
+      "lateral": {
+        "x": 0,
+        "y": 0,
+        "ancho": 232,
+        "alto": 900,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "0px",
+        "gap": "normal"
+      },
+      "main": {
+        "x": 232,
+        "y": 61,
+        "ancho": 868,
+        "alto": 839,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "0px",
+        "gap": "normal"
+      },
+      "catalogo": {
+        "x": 232,
+        "y": 61,
+        "ancho": 476,
+        "alto": 713.078125,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "20px",
+        "gap": "normal"
+      },
+      "cobro": {
+        "x": 708,
+        "y": 61,
+        "ancho": 392,
+        "alto": 839,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "20px",
+        "gap": "normal"
+      },
+      "tarjeta": {
+        "x": 252,
+        "y": 189.984375,
+        "ancho": 212,
+        "alto": 132.96875,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "14px",
+        "gap": "6px"
+      },
+      "precio": {
+        "x": 267,
+        "y": 248.765625,
+        "ancho": 83.078125,
+        "alto": 30,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "20px",
+        "peso": "600",
+        "padding": "0px",
+        "gap": "normal"
+      },
+      "tecla": {
+        "x": 651.203125,
+        "y": 116.734375,
+        "ancho": 27.203125,
+        "alto": 22.5,
+        "fuente": "\"IBM Plex Mono\", ui-monospace, \"SF Mono\", \"Cascadia Mono\", Menlo, Consolas, monospace",
+        "tamano": "11px",
+        "peso": "500",
+        "padding": "2px 6px",
+        "gap": "normal"
+      },
+      "tarjetasDentro": true
+    },
+    {
+      "viewport": 960,
+      "documento": 960,
+      "columnas": "221.328px 221.328px 221.328px",
+      "lateral": {
+        "x": 0,
+        "y": 0,
+        "ancho": 232,
+        "alto": 900,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "0px",
+        "gap": "normal"
+      },
+      "main": {
+        "x": 232,
+        "y": 61,
+        "ancho": 728,
+        "alto": 1182.9375,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "0px",
+        "gap": "normal"
+      },
+      "catalogo": {
+        "x": 232,
+        "y": 61,
+        "ancho": 728,
+        "alto": 571,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "20px",
+        "gap": "normal"
+      },
+      "cobro": {
+        "x": 232,
+        "y": 632,
+        "ancho": 728,
+        "alto": 611.9375,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "20px",
+        "gap": "normal"
+      },
+      "tarjeta": {
+        "x": 252,
+        "y": 173.984375,
+        "ancho": 221.328125,
+        "alto": 132.96875,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "14px",
+        "gap": "6px"
+      },
+      "precio": {
+        "x": 267,
+        "y": 232.765625,
+        "ancho": 83.078125,
+        "alto": 30,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "20px",
+        "peso": "600",
+        "padding": "0px",
+        "gap": "normal"
+      },
+      "tecla": {
+        "x": 745.203125,
+        "y": 119.734375,
+        "ancho": 27.203125,
+        "alto": 22.5,
+        "fuente": "\"IBM Plex Mono\", ui-monospace, \"SF Mono\", \"Cascadia Mono\", Menlo, Consolas, monospace",
+        "tamano": "11px",
+        "peso": "500",
+        "padding": "2px 6px",
+        "gap": "normal"
+      },
+      "tarjetasDentro": true
+    },
+    {
+      "viewport": 820,
+      "documento": 820,
+      "columnas": "268px 268px",
+      "lateral": {
+        "x": 0,
+        "y": 0,
+        "ancho": 232,
+        "alto": 900,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "0px",
+        "gap": "normal"
+      },
+      "main": {
+        "x": 232,
+        "y": 61,
+        "ancho": 588,
+        "alto": 1287.234375,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "0px",
+        "gap": "normal"
+      },
+      "catalogo": {
+        "x": 232,
+        "y": 61,
+        "ancho": 588,
+        "alto": 675.296875,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "20px",
+        "gap": "normal"
+      },
+      "cobro": {
+        "x": 232,
+        "y": 736.296875,
+        "ancho": 588,
+        "alto": 611.9375,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "20px",
+        "gap": "normal"
+      },
+      "tarjeta": {
+        "x": 252,
+        "y": 189.984375,
+        "ancho": 268,
+        "alto": 114.078125,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "14px",
+        "gap": "6px"
+      },
+      "precio": {
+        "x": 267,
+        "y": 229.875,
+        "ancho": 83.078125,
+        "alto": 30,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "20px",
+        "peso": "600",
+        "padding": "0px",
+        "gap": "normal"
+      },
+      "tecla": {
+        "x": 763.203125,
+        "y": 116.734375,
+        "ancho": 27.203125,
+        "alto": 22.5,
+        "fuente": "\"IBM Plex Mono\", ui-monospace, \"SF Mono\", \"Cascadia Mono\", Menlo, Consolas, monospace",
+        "tamano": "11px",
+        "peso": "500",
+        "padding": "2px 6px",
+        "gap": "normal"
+      },
+      "tarjetasDentro": true
+    },
+    {
+      "viewport": 720,
+      "documento": 720,
+      "columnas": "338px 338px",
+      "lateral": {
+        "x": 0,
+        "y": 0,
+        "ancho": 720,
+        "alto": 60,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "0px",
+        "gap": "normal"
+      },
+      "main": {
+        "x": 0,
+        "y": 176,
+        "ancho": 720,
+        "alto": 1255.234375,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "0px",
+        "gap": "normal"
+      },
+      "catalogo": {
+        "x": 0,
+        "y": 176,
+        "ancho": 720,
+        "alto": 651.296875,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "16px",
+        "gap": "normal"
+      },
+      "cobro": {
+        "x": 0,
+        "y": 827.296875,
+        "ancho": 720,
+        "alto": 603.9375,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "16px",
+        "gap": "normal"
+      },
+      "tarjeta": {
+        "x": 16,
+        "y": 284.984375,
+        "ancho": 338,
+        "alto": 114.078125,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "14px",
+        "gap": "6px"
+      },
+      "precio": {
+        "x": 31,
+        "y": 324.875,
+        "ancho": 83.078125,
+        "alto": 30,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "20px",
+        "peso": "600",
+        "padding": "0px",
+        "gap": "normal"
+      },
+      "tecla": {
+        "x": 509.203125,
+        "y": 230.734375,
+        "ancho": 27.203125,
+        "alto": 22.5,
+        "fuente": "\"IBM Plex Mono\", ui-monospace, \"SF Mono\", \"Cascadia Mono\", Menlo, Consolas, monospace",
+        "tamano": "11px",
+        "peso": "500",
+        "padding": "2px 6px",
+        "gap": "normal"
+      },
+      "tarjetasDentro": true
+    },
+    {
+      "viewport": 390,
+      "documento": 390,
+      "columnas": "173px 173px",
+      "lateral": {
+        "x": 0,
+        "y": 0,
+        "ancho": 390,
+        "alto": 60,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "0px",
+        "gap": "normal"
+      },
+      "main": {
+        "x": 0,
+        "y": 176,
+        "ancho": 390,
+        "alto": 1345.90625,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "0px",
+        "gap": "normal"
+      },
+      "catalogo": {
+        "x": 0,
+        "y": 176,
+        "ancho": 390,
+        "alto": 741.96875,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "16px",
+        "gap": "normal"
+      },
+      "cobro": {
+        "x": 0,
+        "y": 917.96875,
+        "ancho": 390,
+        "alto": 603.9375,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "16px",
+        "gap": "normal"
+      },
+      "tarjeta": {
+        "x": 16,
+        "y": 318.984375,
+        "ancho": 173,
+        "alto": 132.96875,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "14px",
+        "gap": "6px"
+      },
+      "precio": {
+        "x": 31,
+        "y": 377.765625,
+        "ancho": 83.078125,
+        "alto": 30,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "20px",
+        "peso": "600",
+        "padding": "0px",
+        "gap": "normal"
+      },
+      "tecla": {
+        "x": 337.203125,
+        "y": 227.734375,
+        "ancho": 27.203125,
+        "alto": 22.5,
+        "fuente": "\"IBM Plex Mono\", ui-monospace, \"SF Mono\", \"Cascadia Mono\", Menlo, Consolas, monospace",
+        "tamano": "11px",
+        "peso": "500",
+        "padding": "2px 6px",
+        "gap": "normal"
+      },
+      "tarjetasDentro": true
+    },
+    {
+      "viewport": 320,
+      "documento": 320,
+      "columnas": "138px 138px",
+      "lateral": {
+        "x": 0,
+        "y": 0,
+        "ancho": 320,
+        "alto": 60,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "0px",
+        "gap": "normal"
+      },
+      "main": {
+        "x": 0,
+        "y": 176,
+        "ancho": 320,
+        "alto": 1466.578125,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "0px",
+        "gap": "normal"
+      },
+      "catalogo": {
+        "x": 0,
+        "y": 176,
+        "ancho": 320,
+        "alto": 816.640625,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "16px",
+        "gap": "normal"
+      },
+      "cobro": {
+        "x": 0,
+        "y": 992.640625,
+        "ancho": 320,
+        "alto": 649.9375,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "16px",
+        "gap": "normal"
+      },
+      "tarjeta": {
+        "x": 16,
+        "y": 318.984375,
+        "ancho": 138,
+        "alto": 170.75,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "14px",
+        "peso": "400",
+        "padding": "14px",
+        "gap": "6px"
+      },
+      "precio": {
+        "x": 31,
+        "y": 415.546875,
+        "ancho": 83.078125,
+        "alto": 30,
+        "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+        "tamano": "20px",
+        "peso": "600",
+        "padding": "0px",
+        "gap": "normal"
+      },
+      "tecla": {
+        "x": 267.203125,
+        "y": 227.734375,
+        "ancho": 27.203125,
+        "alto": 22.5,
+        "fuente": "\"IBM Plex Mono\", ui-monospace, \"SF Mono\", \"Cascadia Mono\", Menlo, Consolas, monospace",
+        "tamano": "11px",
+        "peso": "500",
+        "padding": "2px 6px",
+        "gap": "normal"
+      },
+      "tarjetasDentro": true
+    }
+  ],
+  "fuentes": [
+    {
+      "ruta": "/assets/inter-latin-Dx4kXJAl.woff2",
+      "estado": 200
+    },
+    {
+      "ruta": "/assets/ibm-plex-mono-latin-400-DMJ8VG8y.woff2",
+      "estado": 200
+    },
+    {
+      "ruta": "/assets/ibm-plex-mono-latin-500-DSY6xOcd.woff2",
+      "estado": 200
+    }
+  ],
+  "errores": [],
+  "externas": [],
+  "escritorio": {
+    "viewport": 1440,
+    "documento": 1440,
+    "columnas": "185px 185px 185px 185px",
+    "lateral": {
+      "x": 0,
+      "y": 0,
+      "ancho": 232,
+      "alto": 900,
+      "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+      "tamano": "14px",
+      "peso": "400",
+      "padding": "0px",
+      "gap": "normal"
+    },
+    "main": {
+      "x": 232,
+      "y": 61,
+      "ancho": 1208,
+      "alto": 839,
+      "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+      "tamano": "14px",
+      "peso": "400",
+      "padding": "0px",
+      "gap": "normal"
+    },
+    "catalogo": {
+      "x": 232,
+      "y": 61,
+      "ancho": 816,
+      "alto": 438.921875,
+      "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+      "tamano": "14px",
+      "peso": "400",
+      "padding": "20px",
+      "gap": "normal"
+    },
+    "cobro": {
+      "x": 1048,
+      "y": 61,
+      "ancho": 392,
+      "alto": 839,
+      "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+      "tamano": "14px",
+      "peso": "400",
+      "padding": "20px",
+      "gap": "normal"
+    },
+    "tarjeta": {
+      "x": 252,
+      "y": 167.984375,
+      "ancho": 185,
+      "alto": 132.96875,
+      "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+      "tamano": "14px",
+      "peso": "400",
+      "padding": "14px",
+      "gap": "6px"
+    },
+    "precio": {
+      "x": 267,
+      "y": 226.765625,
+      "ancho": 83.078125,
+      "alto": 30,
+      "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+      "tamano": "20px",
+      "peso": "600",
+      "padding": "0px",
+      "gap": "normal"
+    },
+    "tecla": {
+      "x": 745.203125,
+      "y": 116.734375,
+      "ancho": 27.203125,
+      "alto": 22.5,
+      "fuente": "\"IBM Plex Mono\", ui-monospace, \"SF Mono\", \"Cascadia Mono\", Menlo, Consolas, monospace",
+      "tamano": "11px",
+      "peso": "500",
+      "padding": "2px 6px",
+      "gap": "normal"
+    },
+    "tarjetasDentro": true
+  },
+  "colapsada": {
+    "viewport": 1440,
+    "documento": 1440,
+    "columnas": "203px 203px 203px 203px",
+    "lateral": {
+      "x": 0,
+      "y": 0,
+      "ancho": 64,
+      "alto": 900,
+      "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+      "tamano": "14px",
+      "peso": "400",
+      "padding": "0px",
+      "gap": "normal"
+    },
+    "main": {
+      "x": 64,
+      "y": 61,
+      "ancho": 1376,
+      "alto": 839,
+      "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+      "tamano": "14px",
+      "peso": "400",
+      "padding": "0px",
+      "gap": "normal"
+    },
+    "catalogo": {
+      "x": 112,
+      "y": 61,
+      "ancho": 888,
+      "alto": 438.921875,
+      "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+      "tamano": "14px",
+      "peso": "400",
+      "padding": "20px",
+      "gap": "normal"
+    },
+    "cobro": {
+      "x": 1000,
+      "y": 61,
+      "ancho": 392,
+      "alto": 839,
+      "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+      "tamano": "14px",
+      "peso": "400",
+      "padding": "20px",
+      "gap": "normal"
+    },
+    "tarjeta": {
+      "x": 132,
+      "y": 167.984375,
+      "ancho": 203,
+      "alto": 132.96875,
+      "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+      "tamano": "14px",
+      "peso": "400",
+      "padding": "14px",
+      "gap": "6px"
+    },
+    "precio": {
+      "x": 147,
+      "y": 226.765625,
+      "ancho": 83.078125,
+      "alto": 30,
+      "fuente": "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+      "tamano": "20px",
+      "peso": "600",
+      "padding": "0px",
+      "gap": "normal"
+    },
+    "tecla": {
+      "x": 625.203125,
+      "y": 116.734375,
+      "ancho": 27.203125,
+      "alto": 22.5,
+      "fuente": "\"IBM Plex Mono\", ui-monospace, \"SF Mono\", \"Cascadia Mono\", Menlo, Consolas, monospace",
+      "tamano": "11px",
+      "peso": "500",
+      "padding": "2px 6px",
+      "gap": "normal"
+    },
+    "tarjetasDentro": true
+  },
+  "resultado": "PASS",
+  "fin": "2026-11-12T08:02:41.623Z"
+}

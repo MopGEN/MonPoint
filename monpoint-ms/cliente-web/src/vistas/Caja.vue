@@ -5,6 +5,8 @@ import TicketVenta from '@/componentes/TicketVenta.vue'
 import { useCaja } from '@/stores/caja'
 import { crearCobro, editable, cantidadValida, precioValido, dinero, estimado } from '@/caja/cobro'
 import { filtrarPor } from '@/comun/filtro'
+import { useRoute } from 'vue-router'
+const ruta = useRoute()
 const s = useCaja().cobro
 const cobro = crearCobro(s, gateway)
 const productos = ref([]),
@@ -68,27 +70,30 @@ const pasoActual = computed(() => {
 const puedeCobrar = computed(() => puedeEditar.value && s.lineas.length > 0 && validas.value)
 
 function agregarPrimero () {
+  if (cargando.value || errorCatalogo.value) return
   const primero = visibles.value[0]
   if (primero) agregar(primero)
 }
 
-/**
- * Atajos de teclado anunciados en la interfaz.
- *
- * F2 enfoca la busqueda. F12 cobra, que es lo que rotula el boton, pero el
- * navegador se queda tambien con la pulsacion para abrir sus herramientas de
- * desarrollo: ese atajo no es cancelable desde la pagina, asi que
- * `preventDefault` no lo evita. Por eso se acepta ademas Ctrl+Enter, que si es
- * exclusivo de la aplicacion y es el que conviene usar en una demostracion.
- */
+function agregarConEnter (e) {
+  if (e.key !== 'Enter' || e.ctrlKey || e.metaKey || e.altKey || e.shiftKey || e.isComposing || e.repeat || e.defaultPrevented) return
+  e.preventDefault()
+  agregarPrimero()
+}
+
+// F12 puede estar reservado por el navegador o sistema. Se ofrece tambien
+// Ctrl+Enter/Meta+Enter, sin prometer control de las herramientas del navegador.
 function atajos (e) {
-  if (e.key === 'F2') {
+  if (ruta.name !== 'caja' || e.defaultPrevented || e.isComposing || e.repeat || document.querySelector('dialog[open], .desplegable')) return
+  const sinModificadores = !e.ctrlKey && !e.metaKey && !e.altKey && !e.shiftKey
+  if (e.key === 'F2' && sinModificadores) {
     e.preventDefault()
     campoBusqueda.value?.focus()
     campoBusqueda.value?.select()
     return
   }
-  const cobrarConTeclado = e.key === 'F12' || (e.key === 'Enter' && (e.ctrlKey || e.metaKey))
+  const cobrarConTeclado = (e.key === 'F12' && sinModificadores) ||
+    (e.key === 'Enter' && (e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey)
   if (cobrarConTeclado && puedeCobrar.value) {
     e.preventDefault()
     void cobro.cobrar()
@@ -146,37 +151,35 @@ onUnmounted(() => {
 
 <template>
   <section class="caja">
-    <header class="cabecera">
-      <div>
-        <p class="suave">Arma el carrito y consulta el resultado del cobro.</p>
-      </div>
-      <button class="mp-boton mp-boton--secundario" :disabled="cargando" @click="cargar">
-        {{ cargando ? 'Actualizando…' : 'Actualizar catálogo' }}
-      </button>
-    </header>
     <div class="columnas">
-      <section class="mp-tarjeta panel" aria-labelledby="titulo-catalogo">
-        <h2 id="titulo-catalogo">Productos</h2>
-        <label class="mp-etiqueta" for="buscar">Buscar producto</label>
-        <div class="busqueda">
-          <input
-            id="buscar"
-            ref="campoBusqueda"
-            v-model="busqueda"
-            class="mp-campo campo-busqueda"
-            type="search"
-            placeholder="Nombre o descripción"
-            aria-describedby="pista-busqueda"
-            @keydown.enter.prevent="agregarPrimero"
-          />
-          <!-- El chip no es interactivo: rotula el atajo que escucha la vista.
-               Se marca `aria-hidden` porque la pista de abajo ya lo nombra en
-               una frase, y leerlo dos veces solo estorba. -->
-          <span class="tecla" aria-hidden="true">F2</span>
+      <section class="panel catalogo" aria-labelledby="titulo-catalogo">
+        <h2 id="titulo-catalogo" class="mp-solo-lectores">Catálogo de productos</h2>
+        <div class="cabecera-catalogo">
+          <label class="mp-etiqueta" for="buscar">Buscar producto</label>
+          <button class="actualizar" :disabled="cargando" @click="cargar">{{ cargando ? 'Actualizando…' : 'Actualizar catálogo' }}</button>
         </div>
-        <p id="pista-busqueda" class="pista">
-          F2 enfoca la búsqueda. Enter agrega el primer resultado al carrito.
-        </p>
+        <div class="busqueda-fila">
+          <div class="busqueda">
+            <input
+              id="buscar"
+              ref="campoBusqueda"
+              v-model="busqueda"
+              class="mp-campo campo-busqueda"
+              type="search"
+              placeholder="Nombre o descripción"
+              aria-describedby="pista-busqueda"
+              aria-keyshortcuts="F2"
+              @keydown="agregarConEnter"
+            />
+            <!-- El chip no es interactivo: rotula el atajo que escucha la vista.
+                 Se marca `aria-hidden` porque la pista de abajo ya lo nombra en
+                 una frase, y leerlo dos veces solo estorba. -->
+            <span class="tecla" aria-hidden="true">F2</span>
+          </div>
+          <p id="pista-busqueda" class="pista">
+            F2 enfoca la búsqueda. Enter agrega el primer resultado al carrito.
+          </p>
+        </div>
         <p v-if="errorCatalogo" role="alert" class="mp-aviso mp-aviso--error">
           {{ errorCatalogo }}
         </p>
@@ -201,11 +204,11 @@ onUnmounted(() => {
         </ul>
         <p class="pista">La existencia puede cambiar. Se confirma al procesar el cobro.</p>
       </section>
-      <section class="mp-tarjeta panel" aria-labelledby="titulo-carrito">
+      <section class="panel panel-cobro" aria-labelledby="titulo-carrito">
         <!-- Lista ordenada y no una fila de `div`: son etapas numeradas de un
              mismo proceso, y asi un lector de pantalla las anuncia con su
              posicion y su total sin que haya que repetirlo en el texto. -->
-        <ol class="pasos">
+        <ol class="pasos" role="list" aria-label="Estado del cobro">
           <li
             v-for="(nombre, i) in PASOS"
             :key="nombre"
@@ -213,6 +216,7 @@ onUnmounted(() => {
             :aria-current="i + 1 === pasoActual ? 'step' : undefined"
           >
             <span class="numero" aria-hidden="true">{{ i + 1 }}</span>{{ nombre }}
+            <span v-if="i < PASOS.length - 1" class="separador" aria-hidden="true">→</span>
           </li>
         </ol>
         <h2 id="titulo-carrito">
@@ -226,7 +230,10 @@ onUnmounted(() => {
         <p v-if="errorClientes" role="alert" class="mp-aviso mp-aviso--error">
           {{ errorClientes }} Puede registrar una venta sin cliente.
         </p>
-        <p v-if="!s.lineas.length" class="vacio">Agrega productos para comenzar una venta.</p>
+        <div v-if="!s.lineas.length && s.estado !== 'confirmada'" class="carrito-vacio">
+          <span aria-hidden="true">▤</span><h3>Carrito vacío</h3>
+          <p>Busca un producto o toca una tarjeta del catálogo para agregar la primera línea.</p>
+        </div>
         <ul class="lineas">
           <li
             v-for="l in s.lineas"
@@ -308,7 +315,7 @@ onUnmounted(() => {
           <div>
             <span>Total estimado</span><strong class="mp-cifra total">{{ total }}</strong>
           </div>
-          <button class="mp-boton cobrar" :disabled="!puedeCobrar" @click="cobro.cobrar">
+          <button class="mp-boton cobrar" :disabled="!puedeCobrar" aria-keyshortcuts="Control+Enter Meta+Enter F12" @click="cobro.cobrar">
             {{
               s.estado === 'enviando'
                 ? 'Enviando…'
@@ -318,6 +325,7 @@ onUnmounted(() => {
             }}
             <span v-if="puedeCobrar" class="tecla tecla--clara" aria-hidden="true">F12</span>
           </button>
+          <p class="pista">Ctrl+Enter o ⌘+Enter también cobran.</p>
         </div>
       </section>
     </div>
@@ -378,49 +386,48 @@ onUnmounted(() => {
   color: var(--mp-texto-suave);
   margin: 0.4rem 0;
 }
-/* El panel de cobro mide 392px en el prototipo y no una fraccion: es una
-   columna de trabajo cuyo contenido no crece con la pantalla, mientras el
-   catalogo si debe aprovechar el ancho que sobre. El minimo de 320px le
-   permite ceder antes de que el diseno pase a una sola columna. */
+/* Caja ocupa el ancho interior de la concha; las demas rutas conservan su
+   relleno. A 1440px: 232 lateral + 816 catalogo + 392 cobro. */
 .columnas {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(320px, 392px);
-  gap: 1.5rem;
+  grid-template-columns: minmax(0, 1fr) 392px;
   align-items: start;
 }
-.panel {
-  padding: 20px;
+.panel { min-width: 0; padding: 20px; }
+.catalogo { background: var(--mp-fondo); container-type: inline-size; container-name: catalogo; }
+.panel-cobro {
+  position: sticky;
+  top: 61px;
+  min-height: calc(100dvh - 61px);
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--mp-borde-suave);
+  background: var(--mp-superficie);
 }
-.rejilla,
-.lineas,
-.detalle {
-  list-style: none;
-  padding: 0;
-  margin: 1rem 0;
-}
-
-/* `auto-fill` y no cuatro columnas fijas: el minimo da cuatro columnas al
-   ancho de trabajo y baja a tres y a dos sin puntos de ruptura escritos a
-   mano. El minimo es 165px y no los 185px que mide la tarjeta del prototipo
-   porque la concha de la aplicacion gasta 64px que el prototipo no gasta:
-   20px de relleno a cada lado de `main` y 24px de hueco entre los dos
-   paneles. Con 185px de minimo la cuarta columna no entra y la rejilla cae a
-   tres, que es la diferencia que de verdad se nota; las tarjetas quedan en
-   ~168px. Recuperar los 185px exige tocar la concha, no esta vista. */
+.cabecera-catalogo { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.cabecera-catalogo .mp-etiqueta { font-weight: 500; line-height: 1.3; }
+.busqueda-fila { display: grid; grid-template-columns: minmax(0, 530px) minmax(140px, 1fr); gap: 16px; align-items: center; }
+.busqueda-fila .pista { margin: 0; }
+.actualizar { padding: 0; border: 0; background: transparent; color: var(--mp-texto-suave); font-size: 12px; text-decoration: underline; cursor: pointer; }
+.actualizar:disabled { opacity: .55; cursor: wait; }
+.rejilla, .lineas, .detalle { list-style: none; padding: 0; margin: 1rem 0; }
 .rejilla {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(185px, 100%), 1fr));
   gap: 12px;
-  max-height: 60vh;
-  overflow: auto;
 }
-
+.carrito-vacio { margin: 16px 0; padding: 32px 20px; text-align: center; border: 1px dashed var(--mp-borde); border-radius: var(--mp-radio-tarjeta); }
+.carrito-vacio > span { display: block; margin-bottom: 8px; color: var(--mp-texto-auxiliar); }
+.carrito-vacio h3 { font-size: 16px; }
+.carrito-vacio p { margin: 0; color: var(--mp-texto-suave); }
 .tarjeta {
   display: flex;
   flex-direction: column;
   align-items: start;
   gap: 6px;
   width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
   height: 100%;
   padding: 14px;
   border: 1px solid var(--mp-borde-suave);
@@ -459,8 +466,7 @@ onUnmounted(() => {
    importes: cifras del mismo ancho para que los puntos decimales se alineen.
    Asi se obtiene la alineacion sin cambiar de familia. */
 .precio,
-.total,
-.definitivo {
+.mp-cifra {
   font-family: var(--mp-tipografia);
   font-variant-numeric: tabular-nums;
 }
@@ -526,10 +532,7 @@ onUnmounted(() => {
   gap: 6px;
   align-items: center;
 }
-/* La flecha separadora es decorativa y se genera en CSS, no en el marcado: asi
-   no la lee un lector de pantalla entre los nombres de los pasos. */
-.pasos li:not(:last-child)::after {
-  content: '→';
+.separador {
   margin-left: 6px;
   color: var(--mp-texto-auxiliar);
 }
@@ -598,6 +601,7 @@ onUnmounted(() => {
   font-weight: 600;
 }
 .pie-carrito {
+  margin-top: auto;
   border-top: 1px solid var(--mp-borde);
   padding-top: 1rem;
 }
@@ -656,16 +660,17 @@ onUnmounted(() => {
   padding: 1rem 0;
   border-top: 1px solid var(--mp-borde);
 }
-@media (max-width: 760px) {
-  .columnas {
-    grid-template-columns: 1fr;
-  }
-  .cabecera {
-    align-items: start;
-    flex-direction: column;
-  }
-  .panel {
-    padding: 1rem;
-  }
+/* Se decide por ancho del contenido, tambien con la lateral colapsada.
+   Dos tarjetas de 185 + hueco 12 + padding 40 + cobro 392 requieren 814px. */
+@container area-caja (max-width: 813px) {
+  .columnas { grid-template-columns: 1fr; }
+  .panel-cobro { position: static; min-height: auto; border-left: 0; border-top: 1px solid var(--mp-borde-suave); }
+}
+@container catalogo (max-width: 680px) {
+  .busqueda-fila { grid-template-columns: 1fr; gap: 4px; }
+}
+@media (max-width: 720px) {
+  .panel { padding: 16px; }
+  .rejilla { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 </style>
