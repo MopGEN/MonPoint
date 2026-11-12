@@ -8,6 +8,7 @@ import DialogoModal from '@/componentes/DialogoModal.vue'
 import CampoFormulario from '@/componentes/CampoFormulario.vue'
 import GraficaBarras from '@/componentes/GraficaBarras.vue'
 import { dinero } from '@/comun/importe'
+import { guardarDocumento } from '@/comun/documento'
 import {
   PERIODOS,
   etiquetaPunto,
@@ -76,20 +77,7 @@ async function consultar () {
  */
 const documento = useAccion(async (ruta, nombre) => {
   const blob = await gateway.descargar(ruta)
-  const url = URL.createObjectURL(blob)
-  try {
-    const enlace = document.createElement('a')
-    enlace.href = url
-    enlace.download = nombre
-    enlace.rel = 'noopener'
-    document.body.appendChild(enlace)
-    enlace.click()
-    enlace.remove()
-  } finally {
-    // Se conservan diez segundos: revocar en el mismo instante puede cancelar
-    // la descarga que se acaba de iniciar.
-    setTimeout(() => URL.revokeObjectURL(url), 10_000)
-  }
+  guardarDocumento(blob, nombre)
 })
 
 const DOCUMENTOS = computed(() => [

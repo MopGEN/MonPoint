@@ -1,5 +1,13 @@
 # Evidencia de aceptación
 
+## Cliente — Usuarios y ticket en Caja
+
+[Revisión e integración real del 11 de noviembre](cliente-usuarios-ticket-2026-11-11/RESULTADOS.md):
+alta, cambios de perfil/rol/contraseña, desactivación y errores de ms-auth;
+ticket de confirmadas desde ADMIN y VENDEDOR. Conserva los PDF y el intento que
+detectó el desbordamiento móvil. No incluye empaquetado Windows ni historial
+de ventas paginado, ni declara cerrados controles.
+
 ## Cliente — Reportes y documentos
 
 [Revisión e integración real del 11 de noviembre](cliente-reportes-2026-11-11/RESULTADOS.md):
@@ -100,10 +108,11 @@ prueba por defecto del proyecto y puede reemplazarse mediante variable.
 - Segunda alerta de stock bajo del mismo producto, para observar el índice
   parcial de ms-notificaciones actualizando la notificación activa en lugar de
   crear otra.
-- Para 6.1, contrastar el alcance vigente del tablero con H-094: ticket y
-  gráfica de historial siguen sin evidencia en pantalla. La notificación y la
-  reentrega sí tienen evidencia; los límites sobre el arranque limpio y el
-  estado visual En proceso se detallan en el informe del 11 de noviembre.
+- Para 6.1, contrastar el alcance vigente del tablero con H-094. Los recorridos
+  complementarios de Reportes y Usuarios/ticket aportan evidencia de gráfica y
+  ticket en pantalla desde Linux; no forman parte del recorrido manual único
+  en Windows. Los límites sobre arranque limpio y estado visual En proceso
+  de aquel recorrido siguen detallados en su informe.
 
 El avance y las fechas se mantienen en Asana; este directorio conserva pruebas,
 no replica el tablero.

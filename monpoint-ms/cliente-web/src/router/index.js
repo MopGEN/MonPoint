@@ -97,6 +97,18 @@ const rutas = [
     },
   },
   {
+    path: '/usuarios',
+    name: 'usuarios',
+    component: () => import('@/vistas/Usuarios.vue'),
+    // Solo ADMIN. Un VENDEDOR puede modificar su propio perfil por API, pero
+    // no listar usuarios, asi que no tendria con que empezar en esta pantalla.
+    meta: {
+      titulo: 'Usuarios',
+      roles: ['ADMIN'],
+      nav: { orden: 70, icono: '◈' },
+    },
+  },
+  {
     path: '/notificaciones',
     name: 'notificaciones',
     component: () => import('@/vistas/Notificaciones.vue'),
