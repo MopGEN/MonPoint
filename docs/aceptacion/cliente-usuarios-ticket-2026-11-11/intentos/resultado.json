@@ -1,0 +1,200 @@
+{
+  "inicio": "2026-11-12T01:11:35.678Z",
+  "cliente": "http://localhost:5173",
+  "gateway": "http://localhost:8080",
+  "casos": [
+    "Alta UI: politica 400 como lista en el campo; correo duplicado 409; alta VENDEDOR 201",
+    "PUT UI cambia rol y password; login anterior 401 y nuevo 200; el JWT previo conserva sus permisos",
+    "Correo propio actualizado: cabecera y fila propia sincronizadas; rol bloqueado; API rechaza cambio de rol/desactivacion con 400"
+  ],
+  "errores": [],
+  "actorInicial": {
+    "id": "6af5124937c4c1cab6cc6017",
+    "nombre": "Admin usuarios 1794445896768",
+    "correo": "admin.usuarios.1794445896768@monpoint.test",
+    "rol": "ADMIN",
+    "activo": true
+  },
+  "politica": {
+    "detail": "La contraseña no cumple la política de seguridad",
+    "instance": "/auth/register",
+    "status": 400,
+    "title": "Contraseña insegura",
+    "requestId": "f1487a79-cddc-4563-a209-bc1b34d6cde7",
+    "errores": [
+      "La contraseña debe tener al menos 8 caracteres",
+      "La contraseña debe contener al menos una letra mayúscula",
+      "La contraseña debe contener al menos un número",
+      "La contraseña debe contener al menos un carácter especial (@$!%*?&)"
+    ]
+  },
+  "duplicado": {
+    "detail": "Ya existe un usuario con el correo admin@monpoint.com",
+    "instance": "/auth/register",
+    "status": 409,
+    "title": "Correo duplicado",
+    "requestId": "6b0ef004-c23a-44a4-9931-2efe63f724d0"
+  },
+  "altaUI": {
+    "id": "6af5124a37c4c1cab6cc6018",
+    "nombre": "Cajero usuarios 1794445896768",
+    "correo": "cajero.usuarios.1794445896768@monpoint.test",
+    "rol": "VENDEDOR",
+    "activo": true
+  },
+  "cambioRolAdmin": {
+    "id": "6af5124a37c4c1cab6cc6018",
+    "nombre": "Cajero usuarios 1794445896768",
+    "correo": "cajero.usuarios.1794445896768@monpoint.test",
+    "rol": "ADMIN",
+    "activo": true
+  },
+  "cambioPassword": {
+    "id": "6af5124a37c4c1cab6cc6018",
+    "nombre": "Cajero usuarios 1794445896768",
+    "correo": "cajero.usuarios.1794445896768@monpoint.test",
+    "rol": "ADMIN",
+    "activo": true
+  },
+  "passwordAnterior": 401,
+  "passwordNueva": 200,
+  "cambioRolVendedor": {
+    "id": "6af5124a37c4c1cab6cc6018",
+    "nombre": "Cajero usuarios 1794445896768",
+    "correo": "cajero.usuarios.1794445896768@monpoint.test",
+    "rol": "VENDEDOR",
+    "activo": true
+  },
+  "tokenPrevioAlCambioDeRol": {
+    "GET_usuarios": 200
+  },
+  "perfilPropio": {
+    "id": "6af5124937c4c1cab6cc6017",
+    "nombre": "Perfil usuarios 1794445896768",
+    "correo": "perfil.usuarios.1794445896768@monpoint.test",
+    "rol": "ADMIN",
+    "activo": true
+  },
+  "rolPropioProhibido": {
+    "estado": 400,
+    "datos": {
+      "detail": "No puedes cambiar tu propio rol",
+      "instance": "/auth/usuarios/6af5124937c4c1cab6cc6017",
+      "status": 400,
+      "title": "Operación no permitida",
+      "requestId": "5f718579-e721-4f67-be14-c64627c68214"
+    }
+  },
+  "desactivacionPropia": {
+    "estado": 400,
+    "datos": {
+      "detail": "El administrador no puede desactivar su propia cuenta",
+      "instance": "/auth/usuarios/6af5124937c4c1cab6cc6017/desactivar",
+      "status": 400,
+      "title": "Operación no permitida",
+      "requestId": "81fd3541-55c4-49d6-8a34-7b5fd9c5a5ec"
+    }
+  },
+  "producto": {
+    "id": "6af5124c0b964197f0e0113d",
+    "nombre": "Ticket usuarios 1794445896768",
+    "descripcion": null,
+    "precio": 41.15,
+    "existencia": 10,
+    "umbralStock": 2,
+    "activo": true,
+    "fechaRegistro": "2026-11-12T01:11:40.166152003Z",
+    "fechaActualizacion": "2026-11-12T01:11:40.166152003Z"
+  },
+  "tickets": [
+    {
+      "rol": "VENDEDOR",
+      "POST_ventas": [
+        202
+      ],
+      "venta": {
+        "id": "6af5124cb0797d183508095c",
+        "folio": 58,
+        "estado": "CONFIRMADA",
+        "clienteId": null,
+        "clienteNombre": null,
+        "lineas": [
+          {
+            "productoId": "6af5124c0b964197f0e0113d",
+            "nombreProducto": "Ticket usuarios 1794445896768",
+            "precioUnitario": 41.15,
+            "cantidad": 1,
+            "subtotal": 41.15
+          }
+        ],
+        "total": 41.15,
+        "motivo": null,
+        "productoIdRechazado": null,
+        "fechaCreacion": "2026-11-12T01:11:40.895Z",
+        "fechaResolucion": "2026-11-12T01:11:41.017Z"
+      },
+      "GET_ticket": [
+        200
+      ],
+      "archivo": "ticket-folio-58.pdf",
+      "bytes": 1861,
+      "sha256": "f8937d68c3144699f8c0a7721380c4be62fee50bcf15d8ab185b5e84f6fe931f",
+      "textoContrastado": true
+    }
+  ],
+  "vendedor": {
+    "GET /auth/usuarios": {
+      "estado": 403,
+      "datos": {
+        "detail": "Tu rol no tiene permiso para realizar esta operación.",
+        "instance": "/auth/usuarios",
+        "status": 403,
+        "title": "Acceso denegado",
+        "requestId": "9e84fa8d-f7bb-400f-a72d-4666e2f073ef"
+      }
+    },
+    "POST /auth/register": {
+      "estado": 403,
+      "datos": {
+        "detail": "Tu rol no tiene permiso para realizar esta operación.",
+        "instance": "/auth/register",
+        "status": 403,
+        "title": "Acceso denegado",
+        "requestId": "f803211e-d19b-4f4b-8240-dab27b8f0b7e"
+      }
+    },
+    "PATCH /auth/usuarios/6af5124937c4c1cab6cc6017/desactivar": {
+      "estado": 403,
+      "datos": {
+        "detail": "Tu rol no tiene permiso para realizar esta operación.",
+        "instance": "/auth/usuarios/6af5124937c4c1cab6cc6017/desactivar",
+        "status": 403,
+        "title": "Acceso denegado",
+        "requestId": "3fb1f0bf-5f02-4e47-9885-7dee9c32718c"
+      }
+    },
+    "PUT /auth/usuarios/6af5124937c4c1cab6cc6017": {
+      "estado": 403,
+      "datos": {
+        "detail": "Solo puedes modificar tu propio perfil",
+        "instance": "/auth/usuarios/6af5124937c4c1cab6cc6017",
+        "status": 403,
+        "title": "Acceso denegado",
+        "requestId": "8afc417d-5228-4ccf-84a5-956fdd316911"
+      }
+    }
+  },
+  "resultado": "FAIL",
+  "fallo": "The expression evaluated to a falsy value:\n\n  assert.ok(await pagina.evaluate(() => document.documentElement.scrollWidth <= innerWidth))\n",
+  "limpieza": [
+    {
+      "id": "6af5124a37c4c1cab6cc6018",
+      "estado": 204
+    },
+    {
+      "id": "6af5124937c4c1cab6cc6017",
+      "estado": 204
+    }
+  ],
+  "fin": "2026-11-12T01:11:43.213Z"
+}

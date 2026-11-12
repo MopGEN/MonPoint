@@ -67,7 +67,11 @@ function salir () {
 
 .usuario {
   margin-left: auto;
+  min-width: 0;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  overflow-wrap: anywhere;
   align-items: center;
   gap: 0.5rem;
   font-size: 0.9375rem;
@@ -83,6 +87,7 @@ function salir () {
 }
 
 .salir {
+  flex-shrink: 0;
   color: #fff;
   border-color: rgb(255 255 255 / 30%);
 }

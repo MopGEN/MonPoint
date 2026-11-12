@@ -97,11 +97,11 @@ test('un fallo que no es de campo devuelve null y va al aviso general', () => {
   assert.equal(erroresDeCausa(null), null)
 })
 
-test('la cuenta propia se reconoce por correo, sin distinguir mayusculas', () => {
-  assert.equal(esUnoMismo({ correo: 'Admin@MonPoint.com' }, 'admin@monpoint.com'), true)
-  assert.equal(esUnoMismo({ correo: 'otro@x.test' }, 'admin@monpoint.com'), false)
-  assert.equal(esUnoMismo({ correo: 'a@x.test' }, ''), false, 'sin sesion no hay cuenta propia')
-  assert.equal(esUnoMismo(undefined, 'a@x.test'), false)
+test('la cuenta propia se reconoce por id aunque cambie el correo', () => {
+  assert.equal(esUnoMismo({ id: 'u1', correo: 'nuevo@x.test' }, 'u1'), true)
+  assert.equal(esUnoMismo({ id: 'u2', correo: 'mismo@x.test' }, 'u1'), false)
+  assert.equal(esUnoMismo({ id: 'u1' }, null), false, 'sin identidad no se atribuye la cuenta')
+  assert.equal(esUnoMismo(undefined, 'u1'), false)
 })
 
 test('el filtro mira nombre, correo y rol', () => {

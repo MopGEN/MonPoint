@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { gateway } from '@/api/gateway'
+import TicketVenta from '@/componentes/TicketVenta.vue'
 import { useCaja } from '@/stores/caja'
 import { crearCobro, editable, cantidadValida, precioValido, dinero, estimado } from '@/caja/cobro'
 const s = useCaja().cobro
@@ -200,6 +201,7 @@ onUnmounted(() => {
               {{ l.cantidad }} × {{ l.nombreProducto }} <span>{{ dinero(l.subtotal) }}</span>
             </li>
           </ul>
+          <TicketVenta :venta="s.venta" />
           <button class="mp-boton mp-boton--secundario" @click="cobro.nueva">Nueva venta</button>
         </div>
         <div v-if="s.estado === 'cancelada'" class="resultado cancelada" role="alert">
@@ -244,7 +246,8 @@ onUnmounted(() => {
       <article v-for="(p, i) in s.pendientes" :key="i" class="operacion" aria-live="polite">
         <strong>{{ p.folio != null ? `Folio ${p.folio}` : 'Operación sin folio recibido' }}</strong
         ><template v-if="p.detalle?.estado === 'CONFIRMADA'"
-          ><p>✓ Venta confirmada · Total cobrado: {{ dinero(p.detalle.total) }}</p></template
+          ><p>✓ Venta confirmada · Total cobrado: {{ dinero(p.detalle.total) }}</p>
+          <TicketVenta :venta="p.detalle" /></template
         ><template v-else-if="p.detalle?.estado === 'CANCELADA'"
           ><p>✕ Venta cancelada</p>
           <p>{{ p.detalle.motivo }}</p></template

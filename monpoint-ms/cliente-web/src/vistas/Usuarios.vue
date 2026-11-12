@@ -34,12 +34,12 @@ import {
  * 3. Nadie puede cambiar su propio rol. El selector queda deshabilitado al
  *    editarse a uno mismo.
  *
- * La fila propia se reconoce por correo: AuthResponse no trae el id del
- * usuario, asi que el cliente no lo conoce.
+ * AuthResponse no trae id, pero GET /auth/me si. Se usa ese id estable para
+ * reconocer la fila propia aunque su correo cambie durante la sesion.
  */
 
 const sesion = useSesion()
-const correoPropio = computed(() => sesion.usuario?.correo ?? '')
+const idPropio = ref(null)
 
 const COLUMNAS = [
   { clave: 'nombre', titulo: 'Usuario' },
@@ -47,7 +47,14 @@ const COLUMNAS = [
   { clave: 'acciones', titulo: '', ancho: '13rem' },
 ]
 
-const recurso = useRecurso(({ senal }) => gateway.obtener('/auth/usuarios', { senal }), {
+const recurso = useRecurso(async ({ senal }) => {
+  const [lista, propio] = await Promise.all([
+    gateway.obtener('/auth/usuarios', { senal }),
+    gateway.obtener('/auth/me', { senal }),
+  ])
+  idPropio.value = propio.id
+  return lista
+}, {
   inicial: [],
 })
 
@@ -64,7 +71,7 @@ const forma = reactive(vacio())
 
 const esEdicion = computed(() => dialogo.value === 'edicion')
 const editandoseASiMismo = computed(
-  () => esEdicion.value && esUnoMismo(editando.value, correoPropio.value),
+  () => esEdicion.value && esUnoMismo(editando.value, idPropio.value),
 )
 
 const guardado = useAccion((id, cuerpo) =>
@@ -87,6 +94,7 @@ function abrirEdicion (usuario) {
 
 function cerrarDialogo () {
   if (guardado.enCurso.value) return
+  forma.password = ''
   dialogo.value = null
   editando.value = null
 }
@@ -114,6 +122,13 @@ async function guardar () {
     if (porCampo) guardado.fijarCampos(porCampo)
     return
   }
+  // Actualizar los datos visibles, sin modificar el rol del token ni simular
+  // una renovacion de sesion. La fila propia se identifica por /auth/me.
+  if (editandoseASiMismo.value && sesion.usuario) {
+    sesion.usuario.nombre = r.valor.nombre
+    sesion.usuario.correo = r.valor.correo
+  }
+  forma.password = ''
   dialogo.value = null
   editando.value = null
   await recurso.recargar()
@@ -188,7 +203,7 @@ async function confirmarBaja () {
           <template #celda-nombre="{ fila }">
             <span class="nombre">
               {{ fila.nombre }}
-              <span v-if="esUnoMismo(fila, correoPropio)" class="mp-insignia mp-insignia--apagada">
+              <span v-if="esUnoMismo(fila, idPropio)" class="mp-insignia mp-insignia--apagada">
                 usted
               </span>
             </span>
@@ -210,7 +225,7 @@ async function confirmarBaja () {
                    que en lugar de ofrecer un boton que terminaria en error se
                    explica por que no esta. -->
               <button
-                v-if="!esUnoMismo(fila, correoPropio)"
+                v-if="!esUnoMismo(fila, idPropio)"
                 type="button"
                 class="mp-boton mp-boton--secundario"
                 @click="pedirBaja(fila)"
@@ -281,7 +296,7 @@ async function confirmarBaja () {
             id="rol"
             etiqueta="Rol"
             :error="guardado.campos.value.rol"
-            :ayuda="editandoseASiMismo ? 'Nadie puede cambiar su propio rol.' : ''"
+            :ayuda="editandoseASiMismo ? 'Nadie puede cambiar su propio rol.' : esEdicion ? 'El cambio de rol se refleja al volver a iniciar sesión.' : ''"
           >
             <template #default="{ atributos }">
               <select
@@ -333,9 +348,9 @@ async function confirmarBaja () {
       </p>
       <p class="detalle-baja">
         <strong>No se puede deshacer desde la aplicación.</strong> El listado solo muestra cuentas
-        activas y no existe una operación para reactivarlas: haría falta intervenir la base de
-        datos.
+        activas y no hay una opción para reactivar esta cuenta.
       </p>
+      <p class="detalle-baja">Una sesión ya abierta puede seguir activa hasta su vencimiento.</p>
       <p
         v-if="desactivando?.rol === 'ADMIN' && administradores <= 2"
         class="mp-aviso mp-aviso--pendiente"

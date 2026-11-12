@@ -1,0 +1,38 @@
+
+> monpoint-cliente-web@3.0.0 build
+> vite build
+
+vite v6.4.5 building for production...
+transforming...
+✓ 74 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                             0.45 kB │ gzip:  0.29 kB
+dist/assets/EstadoRecurso-C76TSJuj.css      0.16 kB │ gzip:  0.13 kB
+dist/assets/NoEncontrada-C_5VKvss.css       0.18 kB │ gzip:  0.15 kB
+dist/assets/TablaDatos-BEUZXPwg.css         0.20 kB │ gzip:  0.14 kB
+dist/assets/IniciarSesion-C85ZFr_B.css      0.34 kB │ gzip:  0.22 kB
+dist/assets/Notificaciones-CBa04c2p.css     1.18 kB │ gzip:  0.43 kB
+dist/assets/CampoFormulario-inuP1SRg.css    1.18 kB │ gzip:  0.48 kB
+dist/assets/Clientes-DWoRfh6-.css           1.48 kB │ gzip:  0.52 kB
+dist/assets/Productos-DQ08bTYt.css          1.49 kB │ gzip:  0.53 kB
+dist/assets/Usuarios-B9Gdl5Mz.css           1.60 kB │ gzip:  0.53 kB
+dist/assets/Reportes-Dvwa9rmm.css           2.59 kB │ gzip:  0.83 kB
+dist/assets/Caja-C3yC3mxl.css               3.14 kB │ gzip:  0.96 kB
+dist/assets/index-DAUWu9r9.css              5.76 kB │ gzip:  1.83 kB
+dist/assets/filtro-B-TzLMKy.js              0.23 kB │ gzip:  0.20 kB
+dist/assets/documento-D3NJHhor.js           0.24 kB │ gzip:  0.20 kB
+dist/assets/useAccion-B7yM2cKw.js           0.57 kB │ gzip:  0.36 kB
+dist/assets/NoEncontrada-DGCManDG.js        0.62 kB │ gzip:  0.42 kB
+dist/assets/TablaDatos-Lqr_robK.js          0.95 kB │ gzip:  0.53 kB
+dist/assets/IniciarSesion-Cx_VyA8w.js       1.74 kB │ gzip:  0.91 kB
+dist/assets/EstadoRecurso-DpMFmGr8.js       1.79 kB │ gzip:  0.97 kB
+dist/assets/CampoFormulario-CtJ58L8n.js     1.86 kB │ gzip:  0.95 kB
+dist/assets/Notificaciones-BvsuGp2V.js      3.60 kB │ gzip:  1.72 kB
+dist/assets/Clientes-YWxQpRNb.js            7.37 kB │ gzip:  2.88 kB
+dist/assets/Usuarios-DczHyYit.js            9.18 kB │ gzip:  3.61 kB
+dist/assets/Productos-DngpnMIo.js           9.41 kB │ gzip:  3.48 kB
+dist/assets/Caja-DaApNacO.js               10.54 kB │ gzip:  4.02 kB
+dist/assets/Reportes-CCQoMmgF.js           12.97 kB │ gzip:  4.92 kB
+dist/assets/index-Chjmf05S.js             114.57 kB │ gzip: 44.61 kB
+✓ built in 856ms

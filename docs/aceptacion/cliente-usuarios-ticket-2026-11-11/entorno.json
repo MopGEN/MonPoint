@@ -1,0 +1,34 @@
+{
+  "node": "v24.19.0",
+  "chromium": "Chromium 154.0.8037.57 built on Debian GNU/Linux 13 (trixie)",
+  "contenedores": [
+    "monpoint-reportes Up 9 minutes (healthy)",
+    "monpoint-notificaciones Up 9 minutes (healthy)",
+    "monpoint-cliente Up 9 minutes (healthy)",
+    "monpoint-gateway Up 9 minutes (healthy)",
+    "monpoint-eureka Up 10 minutes (healthy)",
+    "monpoint-ventas Up 9 minutes (healthy)",
+    "monpoint-inventario Up 9 minutes (healthy)",
+    "monpoint-clientes Up 9 minutes (healthy)",
+    "monpoint-auth Up 9 minutes (healthy)",
+    "monpoint-rabbitmq Up 10 minutes (healthy)",
+    "monpoint-mongodb Up 10 minutes (healthy)"
+  ],
+  "imagenes": [
+    {
+      "nombre": "/monpoint-auth",
+      "imagen": "monpoint-ms-ms-auth",
+      "id": "sha256:ccbf618f944b54dfc4bb124be7bbccde9d06e92d98775cd68f49ad55d2337b6c"
+    },
+    {
+      "nombre": "/monpoint-reportes",
+      "imagen": "monpoint-semilla32-ms-reportes:latest",
+      "id": "sha256:f97a04226c365cf28626394d63146bd6e30da0af041a68b8aee374af70cea4cf"
+    },
+    {
+      "nombre": "/monpoint-gateway",
+      "imagen": "monpoint-ms-api-gateway",
+      "id": "sha256:7a8d7f4bda071e30d2c1fb783dd830b65bedc2d025bd147e35b4410eafb13848"
+    }
+  ]
+}

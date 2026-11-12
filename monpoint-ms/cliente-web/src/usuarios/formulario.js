@@ -50,14 +50,13 @@ export function validar (forma, { edicion = false } = {}) {
 /**
  * Cuerpo de la peticion.
  *
- * Al editar, una contrasena vacia se OMITE para conservar la actual, tal como
+ * Al editar, una contrasena vacia viaja como null para conservar la actual, tal como
  * documenta ActualizarUsuarioRequest. La contrasena no se recorta: un espacio
  * al principio o al final es un caracter valido y recortarlo guardaria algo
  * distinto de lo que la persona escribio.
  *
- * `rol` se envia siempre en el alta y solo cuando cambia en la edicion, porque
- * el servicio rechaza que alguien cambie su propio rol y enviarlo igual no
- * tiene efecto pero si lo compara.
+ * `rol` lleva valor en el alta y al cambiarlo en la edicion; null conserva el
+ * actual. El servicio rechaza un cambio de rol propio, no un valor sin cambio.
  */
 export function aPeticion (forma, { edicion = false, rolOriginal = null } = {}) {
   const base = {
@@ -80,10 +79,9 @@ export function aPeticion (forma, { edicion = false, rolOriginal = null } = {}) 
  * - Validacion de Bean Validation: mapa `campos`, que ya sirve tal cual.
  * - Politica de contrasena: lista en `errores`, no un mapa. Se juntan bajo el
  *   campo password, que es el unico al que se refieren.
- * - Correo repetido: 409 sin campos. Se atribuye al correo porque en ms-auth
- *   el unico indice unico es el de correo, asi que un conflicto de clave no
- *   puede venir de otro campo. Si algun dia hubiera otro, esta suposicion
- *   dejaria de valer y habria que mirar el cuerpo.
+ * - Correo repetido: 409 sin campos. GlobalExceptionHandler de ms-auth mapea
+ *   CorreoDuplicadoException y DuplicateKeyException a "Correo duplicado".
+ *   Esta traduccion se limita al contrato actual de esas operaciones.
  *
  * @returns {Record<string,string>|null} null cuando el fallo no es de un campo
  */
@@ -102,6 +100,6 @@ export function erroresDeCausa (causa) {
 export const filtrar = (usuarios, consulta) =>
   filtrarPor(usuarios, consulta, ['nombre', 'correo', 'rol'])
 
-/** El cliente no conoce su propio id: AuthResponse no lo trae. El correo si. */
-export const esUnoMismo = (usuario, correoSesion) =>
-  Boolean(correoSesion) && usuario?.correo?.toLowerCase() === correoSesion.toLowerCase()
+/** /auth/me aporta el id estable, aunque el correo haya cambiado. */
+export const esUnoMismo = (usuario, idPropio) =>
+  Boolean(idPropio) && usuario?.id === idPropio

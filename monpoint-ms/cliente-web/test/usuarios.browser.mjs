@@ -1,9 +1,9 @@
 /**
  * Recorrido de la pantalla de usuarios con el Gateway simulado.
  *
- * El doble reproduce las tres formas en que ms-auth informa de un fallo: el
- * mapa `campos` de Bean Validation, la lista `errores` de la politica de
- * contrasena y el 409 sin campos del correo repetido.
+ * El doble reproduce la lista `errores` de la politica de contrasena y el 409
+ * sin campos del correo repetido. El mapa `campos` tambien tiene prueba
+ * unitaria en usuarios.test.js; no se simula aqui un rechazo Bean Validation.
  *
  * Uso: npm run build && npm run preview, y en otra consola
  *      node test/usuarios.browser.mjs
@@ -26,8 +26,13 @@ let usuarios = [
 let fallo = null // 'politica' | 'duplicado' | null
 const peticiones = []
 
-const navegador = await chromium.launch()
+const navegador = await chromium.launch({
+  ...(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}),
+  args: process.env.CHROMIUM_NO_SANDBOX === '1' ? ['--no-sandbox'] : [],
+})
 const pagina = await (await navegador.newContext({ viewport: { width: 1280, height: 900 } })).newPage()
+const erroresJs = []
+pagina.on('pageerror', (e) => erroresJs.push(e.message))
 
 await pagina.route(`${API}/auth/login`, (r) =>
   r.fulfill({
@@ -40,6 +45,10 @@ await pagina.route(`${API}/auth/login`, (r) =>
     }),
   }),
 )
+await pagina.route(`${API}/auth/me`, (r) => r.fulfill({
+  status: 200, contentType: 'application/json',
+  body: JSON.stringify(usuarios.find((u) => u.id === (rol === 'ADMIN' ? 'u1' : 'u3'))),
+}))
 
 const problema = (status, extra) => ({
   status, contentType: 'application/problem+json',
@@ -61,8 +70,10 @@ await pagina.route(`${API}/auth/register`, (ruta) => {
   if (fallo === 'duplicado') {
     return ruta.fulfill(problema(409, { detail: `Ya existe un usuario con el correo ${cuerpo.correo}` }))
   }
-  usuarios.push({ id: `u${usuarios.length + 1}`, activo: true, ...cuerpo })
-  return ruta.fulfill({ status: 201, contentType: 'application/json', body: JSON.stringify(cuerpo) })
+  const { nombre, correo, rol } = cuerpo
+  const usuario = { id: `u${usuarios.length + 1}`, activo: true, nombre, correo, rol }
+  usuarios.push(usuario)
+  return ruta.fulfill({ status: 201, contentType: 'application/json', body: JSON.stringify(usuario) })
 })
 
 await pagina.route(`${API}/auth/usuarios**`, (ruta) => {
@@ -98,7 +109,7 @@ for (const x of ['inventario/productos', 'clientes', 'notificaciones']) {
 }
 
 async function entrar (seccion = 'Usuarios') {
-  await pagina.goto(`${BASE}/login`)
+  if (new URL(pagina.url()).pathname !== '/login') await pagina.goto(`${BASE}/login`)
   await pagina.fill('#correo', 'x@y.test')
   await pagina.fill('#contrasena', 'x')
   await pagina.click('button[type="submit"]')
@@ -170,11 +181,20 @@ await pagina.screenshot({ path: `${SALIDA}-03-propio-perfil.png` })
 
 // Sin contrasena nueva, viaja null y el rol no cambia.
 await pagina.fill('#nombre', 'Administrador General')
+await pagina.fill('#correo', 'admin.nuevo@monpoint.test')
 await pagina.click('button[form="forma-usuario"]')
 await pagina.waitForSelector('dialog[open]', { state: 'detached' })
 const edicion = peticiones.at(-1)
 assert.equal(edicion.cuerpo.password, null)
 assert.equal(edicion.cuerpo.rol, null)
+const propiaModificada = pagina.locator('table.mp-tabla tbody tr', { hasText: 'admin.nuevo@monpoint.test' })
+await propiaModificada.waitFor()
+assert.equal(await propiaModificada.getByText('usted', { exact: true }).count(), 1)
+assert.equal(await propiaModificada.getByRole('button', { name: 'Desactivar', exact: true }).count(), 0)
+assert.equal(await pagina.locator('header.barra .usuario').innerText(), 'Administrador General\nADMIN')
+await propiaModificada.getByRole('button', { name: 'Editar', exact: true }).click()
+assert.equal(await pagina.isDisabled('#rol'), true, 'el correo cambiado sigue siendo la cuenta propia')
+await pagina.getByRole('dialog', { name: 'Editar usuario', exact: true }).getByRole('button', { name: 'Cancelar', exact: true }).click()
 
 // Desactivar: el dialogo advierte que no se deshace y cuenta los ADMIN que
 // quedarian. La fila desaparece porque el listado solo trae activos.
@@ -185,17 +205,31 @@ assert.ok(texto.includes('No se puede deshacer'), texto)
 assert.ok(texto.includes('Quedaría') || texto.includes('Quedarían'), texto)
 await pagina.screenshot({ path: `${SALIDA}-04-desactivar.png` })
 await pagina.click('dialog[open] button.peligro')
+await pagina.waitForSelector('dialog[open]', { state: 'detached' })
+await pagina.locator('.estado[aria-busy="false"]').waitFor()
+await propiaModificada.waitFor()
 await pagina.waitForSelector('table.mp-tabla >> text=Victor Salas', { state: 'detached' })
 assert.equal(peticiones.at(-1).tipo, 'baja')
 
 // VENDEDOR: la seccion no se ofrece.
+await pagina.getByRole('link', { name: 'Caja', exact: false }).click()
+await pagina.waitForURL('**/caja')
 rol = 'VENDEDOR'
 await pagina.click('button:has-text("Salir")')
 await pagina.waitForURL('**/login')
 await entrar(null)
 const secciones = await pagina.locator('nav[aria-label="Secciones"] a').allInnerTexts()
 assert.ok(!secciones.some((s) => s.includes('Usuarios')))
+assert.equal(await pagina.evaluate(() => history.state.back), '/usuarios')
+await pagina.evaluate(() => window.addEventListener('popstate', (e) => {
+  window.destinoUsuarioEnPrueba = e.state?.current
+}, { once: true }))
+await pagina.goBack()
+await pagina.waitForURL('**/caja')
+assert.equal(await pagina.evaluate(() => window.destinoUsuarioEnPrueba), '/usuarios')
+assert.equal(await pagina.getByRole('button', { name: 'Salir', exact: true }).count(), 1)
 await pagina.screenshot({ path: `${SALIDA}-05-vendedor.png` })
 
+assert.deepEqual(erroresJs, [])
 await navegador.close()
 console.log('Recorrido completado. Capturas en', `${SALIDA}-*.png`)

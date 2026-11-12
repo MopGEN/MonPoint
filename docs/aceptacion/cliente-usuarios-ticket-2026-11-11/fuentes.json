@@ -1,0 +1,21 @@
+{
+  "base": "6a1b9d7",
+  "parcheOriginal": "99fea4f6",
+  "parcheImportado": "6aa36c6",
+  "parcheSha256": "79512b6e5c552eb5df5b200e8968efa0e9237ed1ef12636d73456d007429f376",
+  "sha256": {
+    "monpoint-ms/cliente-web/README.md": "dba35cb68bc065249b637e474805ef4846e04a7c361926dc6aa67d231a59dc17",
+    "monpoint-ms/cliente-web/src/App.vue": "f7d47d57ddd7a633f06b4ca5a65b292d101734df315f881f0f81a7840c2d3554",
+    "monpoint-ms/cliente-web/src/componentes/TicketVenta.vue": "8806a1dabe81bc685cbcb66c25be483a6964267b382b36078cd4f0427a52149d",
+    "monpoint-ms/cliente-web/src/comun/documento.js": "b3b378dd04566a13e8dd8746f854096fdc2b5e20f9cdeb1e183b986e966f1729",
+    "monpoint-ms/cliente-web/src/router/index.js": "ebcb5cff32152f44150f9e3d5be6ff7a5b5a6356ae7ec3219284219b3b86f8ee",
+    "monpoint-ms/cliente-web/src/usuarios/formulario.js": "9b916ee2ba421c3b27bf421b374719ed16d65a727864b8cbb969efa61e43bdc4",
+    "monpoint-ms/cliente-web/src/vistas/Caja.vue": "98b14c41510307aa99d506c73fd7a56dc4991b2eb76faa62ebb8b97162215e08",
+    "monpoint-ms/cliente-web/src/vistas/Reportes.vue": "cc8e9087e7aee3732910595e8e98ef81c74ac9d11b251fdbb0639af3cd879b70",
+    "monpoint-ms/cliente-web/src/vistas/Usuarios.vue": "fe01e10a8057d4e6ad8987612ca5430f4b079e8af8ed6d0fb74fde6cccbb44ff",
+    "monpoint-ms/cliente-web/test/ticket.browser.mjs": "4e30d936ec814dc881e859e558dcb6882fc62340ea6c2e1b732a1ef7192714a1",
+    "monpoint-ms/cliente-web/test/usuarios-ticket.real.browser.mjs": "e55b34c07a70c38f0e3abef2fc03d3e1592636058caf2e4142eb89ab210d972d",
+    "monpoint-ms/cliente-web/test/usuarios.browser.mjs": "56d1d41a92c35b5d254cb9267dd9b2e613ef3d75f7d63fbf35beb725df11987f",
+    "monpoint-ms/cliente-web/test/usuarios.test.js": "469f1edb2ed00ed200489dddfa5791cce334bbd0cfaa8c110f3f45c0764bafb2"
+  }
+}

@@ -39,6 +39,7 @@ src/
     ├── Productos.vue       catálogo activo y CRUD por rol
     ├── Clientes.vue        altas/cambios para ambos roles; eliminación ADMIN
     ├── Reportes.vue        agregación, tres PDF y datos de empresa (ADMIN)
+    ├── Usuarios.vue        cuentas activas, edición y desactivación (ADMIN)
     ├── Notificaciones.vue  alertas, filtros de lectura y marcado (solo ADMIN)
     └── NoEncontrada.vue
 ```
@@ -72,6 +73,11 @@ abrirla.
 | Metodo | Ruta | Notas |
 |---|---|---|
 | POST | `/auth/login` | `{correo, password}` → `{token, tipo, correo, nombre, rol, expiraEn}` |
+| GET | `/auth/me` | perfil actual e id estable de la cuenta autenticada |
+| GET | `/auth/usuarios` | solo ADMIN; cuentas activas |
+| POST | `/auth/register` | alta ADMIN; 201 |
+| PUT | `/auth/usuarios/{id}` | ADMIN sobre otras cuentas; ambos roles sobre su perfil, sin cambiar rol propio |
+| PATCH | `/auth/usuarios/{id}/desactivar` | solo ADMIN, excepto su propia cuenta; 204 |
 | POST | `/ventas` | 202 con la venta **PENDIENTE**; no es confirmacion |
 | GET | `/ventas/{id}` | detalle y estado de la venta — tarea 5.2 |
 | GET | `/inventario/productos` | activos; ADMIN y VENDEDOR |
@@ -84,6 +90,7 @@ abrirla.
 | DELETE | `/clientes/{id}` | eliminación física, solo ADMIN; 204 |
 | GET | `/reportes/ventas/agregado?periodo=DIA&desde=YYYY-MM-DD&hasta=YYYY-MM-DD` | ADMIN; DIA, MES o ANIO |
 | GET | `/reportes/ventas/historial?desde=YYYY-MM-DD&hasta=YYYY-MM-DD` | ADMIN; PDF, hasta 366 días inclusivos |
+| GET | `/reportes/ventas/{id}/ticket` | ADMIN y VENDEDOR; PDF de confirmada, 404 si falta la proyección y 409 si cancelada |
 | GET | `/reportes/productos/listado` | ADMIN; PDF del catálogo activo proyectado |
 | GET | `/reportes/clientes/listado` | ADMIN; PDF del directorio proyectado |
 | GET | `/reportes/configuracion` | ambos roles; 404 si todavía no existe |
@@ -102,8 +109,8 @@ al cajero; las vistas no deben reescribirlo.
 ## Navegación y notificaciones
 
 La barra deriva sus enlaces de `meta.nav` y comparte `rolPermitido` con la
-guarda. Ambos roles ven Caja, Productos y Clientes; ADMIN ve además Reportes y
-Notificaciones. Las pantallas que
+guarda. Ambos roles ven Caja, Productos y Clientes; ADMIN ve además Reportes,
+Notificaciones y Usuarios. Las pantallas que
 todavía no existen no se anuncian. El Gateway valida el token y cada servicio
 autoriza las operaciones; ocultar un enlace no protege la API.
 
@@ -299,10 +306,69 @@ Verifica proyecciones nuevas, tres PDF legibles y permisos con token real.
 
 Estos listados salen de proyecciones asíncronas de ms-reportes. No aseguran
 actualización inmediata ni reconstruyen eventos anteriores a sus colas. La
-pantalla incluye tres exportaciones y configuración; **no incorpora el ticket
-por venta**, ni un listado paginado nuevo en ms-ventas.
+pantalla incluye tres exportaciones y configuración. El ticket por venta vive
+en Caja; no se incorpora un listado paginado nuevo en ms-ventas.
 
 [Revisión, PDF y capturas](../../docs/aceptacion/cliente-reportes-2026-11-11/RESULTADOS.md).
+
+## Usuarios y ticket en Caja
+
+Usuarios lista únicamente cuentas activas. ADMIN puede crear y modificar otras
+cuentas, cambiarles contraseña/rol y desactivarlas. No hay reactivación por API
+ni en esta pantalla. No se ofrece desactivar la propia cuenta y su selector de
+rol está bloqueado. `GET /auth/me` aporta el id estable para reconocerla incluso
+si cambia el correo. Al editar el perfil propio se sincronizan nombre/correo
+visibles, sin renovar el JWT ni alterar su rol.
+
+El formulario exige los obligatorios y deja a ms-auth validar el correo y la
+política de contraseña. Presenta `campos`, la lista `errores` de la política y
+el 409 por correo duplicado junto al campo correspondiente. No recorta la
+contraseña; al editar, vacía se envía como null para conservar la actual.
+Se vacía el control al cancelar o guardar. Rol null conserva el actual.
+
+**Cambiar rol o desactivar no revoca JWT ya emitidos.** La nueva autenticación
+usa el rol actual y rechaza una cuenta inactiva; los tokens anteriores pueden
+seguir sirviendo hasta vencer. La interfaz lo explica antes de desactivar y al
+editar el rol. No se añade revocación ni se presenta el cierre de la sesión
+ajena como una propiedad del sistema actual.
+
+`TicketVenta` ofrece **Descargar ticket (PDF)** en el resultado confirmado y en
+operaciones confirmadas por seguimiento. Usa `gateway.descargar`, con Bearer de
+memoria, y el nombre `ticket-folio-N.pdf`. El PDF se guarda mediante el mismo
+helper de Reportes. El doble clic se bloquea sin depender del render. Desmontar
+el componente aborta la petición y descarta una respuesta tardía.
+
+Si ms-reportes aún no proyectó la confirmación, su 404 `VENTA_NO_DISPONIBLE` se
+muestra conservando la venta confirmada y permitiendo pedir el ticket de nuevo.
+No hay reintento automático ni se vuelve a enviar el cobro. Pendientes y
+canceladas no ofrecen ticket; 401 conserva la expiración común de sesión.
+
+Después de compilar y arrancar preview:
+
+```bash
+PLAYWRIGHT_MODULE=/ruta/a/playwright/index.mjs node test/usuarios.browser.mjs
+PLAYWRIGHT_MODULE=/ruta/a/playwright/index.mjs node test/ticket.browser.mjs
+```
+
+Aceptan las variables de navegador anteriores. `SALIDA` es prefijo de capturas
+para Usuarios y directorio para Ticket. Ticket incluye 404/reintento manual,
+doble clic, cancelada, seguimiento, desmontaje y 401 con API simulada.
+
+Con Vite y todos los servicios vivos, sin intercepciones:
+
+```bash
+PLAYWRIGHT_MODULE=/ruta/a/playwright/index.mjs node test/usuarios-ticket.real.browser.mjs
+```
+
+Requiere `pdftotext` o `PDFTOTEXT_PATH`. **Solo prueba:** crea un ADMIN, un
+VENDEDOR y un producto; registra dos ventas y descarga sus tickets desde ambos
+roles. Modifica y desactiva solo sus dos cuentas de prueba; conserva producto y
+ventas. No modifica la cuenta ADMIN inicial. No es idempotente ni parte de npm
+test. Usa las variables habituales de navegador y credenciales de prueba, y
+`PRUEBA_PASSWORD_NUEVA` para el cambio de contraseña. La evidencia guarda
+estados y respuestas sin tokens ni contraseñas.
+
+[Revisión, recorrido real y PDF](../../docs/aceptacion/cliente-usuarios-ticket-2026-11-11/RESULTADOS.md).
 
 ## Cliente empaquetado con nginx (5.6)
 
