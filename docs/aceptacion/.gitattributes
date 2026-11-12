@@ -11,3 +11,5 @@ cliente-usuarios-ticket-2026-11-11/**/*.pdf binary
 cliente-concha-visual-2026-11-12/** -text
 cliente-caja-visual-2026-11-12/** -text
 cliente-caja-visual-2026-11-12/**/*.pdf binary
+# Registro recibido con CRLF: exportarlo sin conversion de texto en los parches.
+cliente-caja-visual-2026-11-12/windows-f12/f12-windows.json binary

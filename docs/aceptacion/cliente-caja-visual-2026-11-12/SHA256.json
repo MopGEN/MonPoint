@@ -1,7 +1,7 @@
 [
   {
     "archivo": "RESULTADOS.md",
-    "sha256": "9ad6043c78627b87263c6603b418ac0e8c844e106a4f9ec1573ed4dd871a3933"
+    "sha256": "ce8d492b01167674672594f42231ca4a8891f77d59ba3f34cf5047bec8920c69"
   },
   {
     "archivo": "capturas/01-claro-carrito.png",
@@ -138,5 +138,41 @@
   {
     "archivo": "real/ticket-folio-62.pdf",
     "sha256": "61efe94f5fbf74bd72d05882d26def18962ffc8de046d5da0144c2c50f46832d"
+  },
+  {
+    "archivo": "windows-f12/RESULTADOS.md",
+    "sha256": "01edf4b1aa3f1888c219b6fe93e48e3c29f79a4394cfe02bd36d488e2a20067e"
+  },
+  {
+    "archivo": "windows-f12/capturas/01-observador-preparado.png",
+    "sha256": "86be8e63b91fad7629626d9ecf6a6a30bec6c5ab0a9c9c65442b82a3a5259b51"
+  },
+  {
+    "archivo": "windows-f12/capturas/02-carrito-antes.png",
+    "sha256": "ff894d823b1a1712eec6923cc2f4e1ef6f14851f2359eda86f3c1fb222cdf5db"
+  },
+  {
+    "archivo": "windows-f12/capturas/03-en-proceso.png",
+    "sha256": "3725a736e7ef75a4683bbdf8e037cf964ab8cc2a8c964127ca5312e9ff1d28c1"
+  },
+  {
+    "archivo": "windows-f12/capturas/04-confirmada.png",
+    "sha256": "ca2d45792d87db41c360196487710c01085ccf58832d1dfdf96abdb13fafcce9"
+  },
+  {
+    "archivo": "windows-f12/capturas/05-registro-f12.png",
+    "sha256": "fba816e7f894ec8a64898f47a4be4c80833229ec6684a53f470c9696e56892fb"
+  },
+  {
+    "archivo": "windows-f12/entrada/prueba-f12.rar",
+    "sha256": "7e02907f9c5acb590ee038c493399e6323a315f0e3be70225a07525c6a3de3e7"
+  },
+  {
+    "archivo": "windows-f12/f12-windows.json",
+    "sha256": "b304dcff3d9c1321cca99bc433bfcb19b9379c9a2038920448d3ab999e89adb4"
+  },
+  {
+    "archivo": "windows-f12/procedencia.json",
+    "sha256": "8117fb573077877981beb53b3ec66ddeda817096124d7faa30d4ea9a8efe8cc3"
   }
 ]

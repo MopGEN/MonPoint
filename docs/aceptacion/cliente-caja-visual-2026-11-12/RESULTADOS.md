@@ -4,7 +4,9 @@ Base `1cd0bc7`, fusión #29 de la concha. Parche recibido
 `0001-5.5-Rejilla-de-catalogo-indicador-de-pasos-y-atajos-.patch`, commit
 declarado `e6b4c65`, importado con git am como `eb72d6b`, conservando la autoría
 de Alejandro Bermúdez. Los cambios de revisión se añaden después.
-Pruebas en Linux/Chromium, sin acreditar ejecución manual ni atajos en Windows.
+Los recorridos automatizados se ejecutaron en Linux/Chromium. La posterior
+[prueba física de F12 en Windows](windows-f12/RESULTADOS.md) conserva el JSON,
+cinco capturas originales y la observación manual de que DevTools no se abrió.
 
 ## Resultado y decisiones de alcance
 
@@ -104,6 +106,7 @@ todos los anchos ni de todos los navegadores.
 | Regresión del cuerpo del cobro | [Aprobada](pruebas/atajos.json): no hay línea adicional ni cobro de carrito vacío |
 | Geometría, temas y fuentes | [Aprobada](pruebas/geometria.json): recursos locales 200, sin solicitudes externas en ese recorrido |
 | Usuarios/ticket contra servicios reales y Vite | [Aprobado](real/resultado.json), sin interceptar las peticiones |
+| F12 físico en Windows/Chrome 157 | [Recorrido manual](windows-f12/RESULTADOS.md): folio 7 mostrado En proceso → Confirmada, Sello × 1, $120.00; DevTools no se abrió según el usuario |
 
 El recorrido real se adaptó a la tarjeta y al nuevo nombre del buscador. Cobra
 mediante Ctrl+Enter conservando el foco en el filtro, justo donde estaba el
@@ -138,8 +141,10 @@ No se editaron ni reescalaron los PNG.
 
 ## Límites e integridad
 
-No se verificaron teclado físico ni empaquetado Windows/nginx. Meta+Enter está
-implementado, pero no se probó sobre macOS. Las pruebas simuladas verifican los
+La prueba física posterior cubre F12 en la sesión Windows/Chrome 157 descrita
+en su expediente; no generaliza a otras configuraciones. Sigue pendiente el
+empaquetado Windows/nginx. Meta+Enter está implementado, pero no se probó sobre
+macOS. Las pruebas simuladas verifican los
 manejadores y el render; no sustituyen los contratos del servidor. La operación
 incierta sigue siendo incierta y no se reenvía automáticamente. No se añadieron
 historial paginado, Proveedores ni otras pantallas. No se tocaron Asana, las

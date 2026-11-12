@@ -1,0 +1,18 @@
+{
+  "fecha": "2026-11-12T08:49:12.456Z",
+  "navegador": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+  "pulsaciones": [
+    {
+      "tecla": "F12",
+      "confiable": true,
+      "cancelable": true,
+      "cancelado": true,
+      "repetida": false,
+      "ctrl": false,
+      "alt": false,
+      "shift": false,
+      "meta": false,
+      "foco": ""
+    }
+  ]
+}
