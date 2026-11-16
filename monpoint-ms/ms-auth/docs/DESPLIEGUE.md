@@ -14,7 +14,15 @@ El contrato del token está en [`CONTRATO_TOKEN.md`](CONTRATO_TOKEN.md).
 | `EUREKA_URL` | `http://localhost:8761/eureka/` | Servidor Eureka |
 | `JWT_SECRET` | Marcador de `infra/.env.example` | Clave HS256 compartida con el Gateway |
 | `JWT_EXPIRATION_MS` | `86400000` (24 h) | Vigencia del token |
-| `ADMIN_DEFAULT_PASSWORD` | `Admin123!` | Contraseña del admin inicial; solo se usa si la colección `usuarios` está vacía |
+| `SEMILLA_NOMINAL_HABILITADA` | `false` | Crear las cuentas ausentes; una base vacía exige habilitarla |
+| `AUTOTACHI_VICTOR_PASSWORD` | Sin valor | Clave de Víctor al crearlo |
+| `AUTOTACHI_ALEJANDRO_PASSWORD` | Sin valor | Clave de Alejandro al crearlo |
+| `AUTOTACHI_HUGO_PASSWORD` | Sin valor | Clave de Hugo al crearlo |
+| `AUTOTACHI_VENDEDOR_PASSWORD` | Sin valor | Clave del vendedor al crearlo |
+
+Configurar las claves según la [guía de semilla nominal](../../scripts/SEMILLA_AUTOTACHI.md).
+Fuera de Compose deben estar exportadas en la terminal o configuradas en el IDE;
+Spring no carga automáticamente `infra/.env`. No cambian cuentas ya existentes.
 
 ## 2. En local (fuera de Docker)
 
@@ -49,9 +57,8 @@ Levantar el sistema completo:
 cd monpoint-ms/infra && docker compose up -d --build
 ```
 
-> Requiere que `eureka-server/` y `api-gateway/` ya tengan su proyecto y su `Dockerfile` (hoy están vacíos).
-> Mientras tanto, `docker compose up -d --build --no-deps ms-auth` levanta solo `ms-auth`; necesita que
-> `mongodb` esté arriba y que algún Eureka responda como `eureka-server` dentro de la red `monpoint-red`.
+Los servicios Eureka y Gateway están incluidos en el Compose. Para actualizar
+solo auth sin borrar datos: `docker compose up -d --build ms-auth`.
 
 ## 4. Registro en Eureka
 
@@ -106,7 +113,10 @@ servicio, sin Eureka:
 Es más simple, pero pierde lo que aporta Eureka: no reparte carga entre varias instancias y sigue
 enviando tráfico aunque la instancia esté `DOWN`. Sirve como plan B mientras `eureka-server` no exista.
 
-## 6. Verificación realizada (2026-10-02)
+## 6. Verificación histórica (2026-10-02)
+
+Esta ejecución usó el administrador genérico anterior. Se conserva como registro;
+no describe el bootstrap nominal actual.
 
 Con un Eureka desechable de Spring Cloud 2025.1.3 y la imagen construida por `docker compose`:
 

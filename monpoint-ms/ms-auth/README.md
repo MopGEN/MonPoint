@@ -89,23 +89,27 @@ Login de ejemplo (a través del Gateway):
 ```bash
 curl -X POST http://localhost:8080/auth/login \
   -H 'Content-Type: application/json' \
-  -d '{"correo":"admin@monpoint.com","password":"Admin123!"}'
+  -d '{"correo":"victor.ortiz@autotachi.mx","password":"<clave-configurada>"}'
 ```
 
 ```json
-{"token":"eyJhbGciOiJIUzI1NiJ9...","tipo":"Bearer","correo":"admin@monpoint.com","nombre":"Administrador","rol":"ADMIN","expiraEn":86400000}
+{"token":"eyJhbGciOiJIUzI1NiJ9...","tipo":"Bearer","correo":"victor.ortiz@autotachi.mx","nombre":"Víctor Ortiz","rol":"ADMIN","expiraEn":86400000}
 ```
 
 Después, en cada petición protegida: `Authorization: Bearer <token>`.
 
-### Usuario inicial
-Si la colección `usuarios` está vacía, al arrancar se crea `admin@monpoint.com` con rol `ADMIN` y la contraseña de
-`ADMIN_DEFAULT_PASSWORD` (por omisión `Admin123!`, solo para desarrollo).
+### Usuarios iniciales
+La [semilla Auto Tachi](../scripts/SEMILLA_AUTOTACHI.md) crea tres ADMIN nominales
+(Víctor Ortiz, Alejandro Bermúdez, Hugo Trejo) y un VENDEDOR genérico, todos con
+`@autotachi.mx`. Requiere activación explícita y claves por entorno, sin valores
+por omisión. Solo añade correos ausentes; conserva contraseñas, roles y bajas de
+cuentas existentes. El antiguo `admin@monpoint.com` permanece si ya estaba,
+pero no se crea al iniciar una base nueva.
 
 ### Reglas de negocio
 - **Roles:** exclusivamente `ADMIN` o `VENDEDOR`, uno por usuario. Otro valor ➔ 400.
 - **Correo:** siempre se llama `correo` (nunca `email`) y se normaliza con `trim().toLowerCase()`. Es único (índice declarado).
-- **Contraseña:** 8 a 72 caracteres, con al menos una mayúscula, una minúscula, un dígito y un símbolo `@$!%*?&`. El 400 dice qué regla falló.
+- **Contraseña:** mínimo 8 caracteres y máximo 72 bytes UTF-8, con al menos una mayúscula, una minúscula, un dígito y un símbolo `@$!%*?&`. El 400 dice qué regla falló.
 - **Login opaco:** correo inexistente, contraseña incorrecta o cuenta inactiva dan el mismo 401, en el mismo tiempo.
 - **Nunca** se devuelve el hash de la contraseña.
 
@@ -133,7 +137,11 @@ Colección `usuarios` en `auth_db`: `_id`, `correo` (índice único), `password_
 | `EUREKA_URL` | `http://localhost:8761/eureka/` | Servidor Eureka |
 | `JWT_SECRET` | Marcador de `infra/.env.example` | Clave compartida con el Gateway |
 | `JWT_EXPIRATION_MS` | `86400000` (24 h) | Vigencia del token |
-| `ADMIN_DEFAULT_PASSWORD` | `Admin123!` | Contraseña del admin inicial |
+| `SEMILLA_NOMINAL_HABILITADA` | `false` | Activa la creación de cuentas nominales; necesaria en base vacía |
+| `AUTOTACHI_VICTOR_PASSWORD` | Sin valor | Clave de Víctor al crear su cuenta |
+| `AUTOTACHI_ALEJANDRO_PASSWORD` | Sin valor | Clave de Alejandro al crear su cuenta |
+| `AUTOTACHI_HUGO_PASSWORD` | Sin valor | Clave de Hugo al crear su cuenta |
+| `AUTOTACHI_VENDEDOR_PASSWORD` | Sin valor | Clave de la cuenta VENDEDOR al crearla |
 
 ## Cómo correrlo
 
@@ -149,7 +157,7 @@ Entra por `http://localhost:8080` (Gateway). Panel de Eureka: `http://localhost:
 
 > 🔒 **No dejes los valores de `.env.example` en tu `.env`.** El repositorio es público: con el `JWT_SECRET` de
 > ejemplo, cualquiera puede firmar tokens de ADMIN que tu Gateway aceptaría. Genera los tuyos con
-> `openssl rand -hex 32` (JWT) y `openssl rand -hex 24` (contraseñas).
+> `openssl rand -hex 32` (JWT). Las contraseñas deben cumplir la política indicada arriba; una cadena hexadecimal sola no la cumple.
 
 **En local, desde IntelliJ o la terminal** (para depurar):
 

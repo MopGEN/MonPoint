@@ -39,12 +39,15 @@ el `.env`, se puede ejecutar `docker compose down -v` y luego `docker compose up
 -d`. **`down -v` borra los datos locales de MongoDB y RabbitMQ de ese proyecto.**
 
 
-## Datos de prueba (3.1)
+## Cuentas y catálogo iniciales
 
-Para crear datos de prueba con el conjunto levantado, seguir la
-[semilla por API (3.1)](../scripts/README.md). La fase 1 crea o reutiliza el
-VENDEDOR, clientes y productos; verifica el ADMIN inicial. No usar mongo-init
-para los catálogos: escribir directamente en la base no publica sus eventos.
+Configurar las cuatro claves `AUTOTACHI_*_PASSWORD` y
+`SEMILLA_NOMINAL_HABILITADA=true` en el `.env` privado. La
+[semilla Auto Tachi](../scripts/SEMILLA_AUTOTACHI.md) explica la actualización
+sin borrar volúmenes: auth crea solo los correos ausentes y el guion por Gateway
+importa los 23 productos activos del prototipo. No usar mongo-init para el
+catálogo: escribir directamente en la base no publica sus eventos.
+Los guiones 3.1 permanecen documentados como históricos.
 
 ## Cliente nginx (5.6)
 

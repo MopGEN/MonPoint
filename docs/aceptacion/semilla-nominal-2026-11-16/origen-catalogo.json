@@ -1,0 +1,13 @@
+{
+  "archivoFuente": "index.html (prototipo adjunto)",
+  "sha256Fuente": "fbeaa4f673cb5e1cfb1428c7ddba8655029a6bb9a6696250fe10022d4ea5b5e0",
+  "funcion": "semillaProductos()",
+  "extraccion": "24 filas literales del bloque embebido en el HTML; comparación de todos sus campos contra el JSON",
+  "filasOriginales": 24,
+  "filasActivasImportadas": 23,
+  "inactivoExcluido": "ACC-024",
+  "catalogo": "monpoint-ms/scripts/catalogo-autotachi.json",
+  "sha256Catalogo": "649612a68993fc2c5462ae7733af23cb38ee20413369a43550088b2f4a065103",
+  "descripcion": "null; no figura en los datos originales",
+  "referencias": "solo procedencia, no SKU en la API"
+}

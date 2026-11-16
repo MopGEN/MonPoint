@@ -39,9 +39,11 @@ docker compose up -d
 
 ## Datos de prueba
 
-La [semilla por API de la 3.1](scripts/README.md) carga usuarios, clientes y
-productos con el conjunto levantado. La fase de ventas queda pendiente de los
-consumidores de reportes y notificaciones.
+La [semilla Auto Tachi](scripts/SEMILLA_AUTOTACHI.md) añade tres ADMIN nominales,
+un VENDEDOR genérico y los 23 productos activos del prototipo, sin borrar datos
+ni reponer stock en repeticiones. Las claves se configuran en el entorno.
+Los [guiones históricos de la 3.1](scripts/README.md) se conservan para sus
+expedientes de aceptación; ya no son el bootstrap de una base nueva.
 
 ## Estructura del repositorio
 
