@@ -1,0 +1,219 @@
+{
+  "estado": "COMPLETADA",
+  "usuarios": [
+    {
+      "id": "6afb6863703a448c402f7011",
+      "correo": "victor.ortiz@autotachi.mx",
+      "rol": "ADMIN",
+      "accion": "VERIFICADO"
+    },
+    {
+      "id": "6afb6864703a448c402f7012",
+      "correo": "alejandro.bermudez@autotachi.mx",
+      "rol": "ADMIN",
+      "accion": "VERIFICADO"
+    },
+    {
+      "id": "6afb6864703a448c402f7013",
+      "correo": "hugo.trejo@autotachi.mx",
+      "rol": "ADMIN",
+      "accion": "VERIFICADO"
+    },
+    {
+      "id": "6afb6864703a448c402f7014",
+      "correo": "vendedor@autotachi.mx",
+      "rol": "VENDEDOR",
+      "accion": "VERIFICADO"
+    }
+  ],
+  "productos": [
+    {
+      "id": "6afb6982a95cefce81fcce4b",
+      "nombre": "Balatas delanteras cerámicas Tsuru",
+      "precio": 489,
+      "existencia": 11,
+      "umbralStock": 6,
+      "accion": "REUTILIZADO"
+    },
+    {
+      "id": "6afb6982a95cefce81fcce4c",
+      "nombre": "Filtro de aceite Gonher GP-106",
+      "precio": 89,
+      "existencia": 42,
+      "umbralStock": 12,
+      "accion": "REUTILIZADO"
+    },
+    {
+      "id": "6afb6982a95cefce81fcce4d",
+      "nombre": "Filtro de aire Versa 2012-2019",
+      "precio": 179,
+      "existencia": 9,
+      "umbralStock": 8,
+      "accion": "REUTILIZADO"
+    },
+    {
+      "id": "6afb6982a95cefce81fcce4e",
+      "nombre": "Bujía NGK iridio IZFR6K11",
+      "precio": 165,
+      "existencia": 36,
+      "umbralStock": 16,
+      "accion": "REUTILIZADO"
+    },
+    {
+      "id": "6afb6982a95cefce81fcce4f",
+      "nombre": "Banda de accesorios 6PK1870",
+      "precio": 395,
+      "existencia": 5,
+      "umbralStock": 4,
+      "accion": "REUTILIZADO"
+    },
+    {
+      "id": "6afb6982a95cefce81fcce50",
+      "nombre": "Amortiguador trasero Aveo Monroe",
+      "precio": 899,
+      "existencia": 6,
+      "umbralStock": 4,
+      "accion": "REUTILIZADO"
+    },
+    {
+      "id": "6afb6982a95cefce81fcce51",
+      "nombre": "Bomba de agua Jetta A4 2.0",
+      "precio": 1290,
+      "existencia": 3,
+      "umbralStock": 3,
+      "accion": "REUTILIZADO"
+    },
+    {
+      "id": "6afb6982a95cefce81fcce52",
+      "nombre": "Kit de clutch Chevy 1.6",
+      "precio": 2450,
+      "existencia": 2,
+      "umbralStock": 2,
+      "accion": "REUTILIZADO"
+    },
+    {
+      "id": "6afb6982a95cefce81fcce53",
+      "nombre": "Aceite sintético 5W-30 Mobil 1 L",
+      "precio": 219,
+      "existencia": 48,
+      "umbralStock": 16,
+      "accion": "REUTILIZADO"
+    },
+    {
+      "id": "6afb6982a95cefce81fcce54",
+      "nombre": "Aceite multigrado 20W-50 Quaker 4 L",
+      "precio": 549,
+      "existencia": 18,
+      "umbralStock": 8,
+      "accion": "REUTILIZADO"
+    },
+    {
+      "id": "6afb6982a95cefce81fcce55",
+      "nombre": "Anticongelante Prestone 50/50 3.78 L",
+      "precio": 329,
+      "existencia": 11,
+      "umbralStock": 6,
+      "accion": "REUTILIZADO"
+    },
+    {
+      "id": "6afb6982a95cefce81fcce56",
+      "nombre": "Líquido de frenos DOT 4 355 ml",
+      "precio": 119,
+      "existencia": 20,
+      "umbralStock": 8,
+      "accion": "REUTILIZADO"
+    },
+    {
+      "id": "6afb6982a95cefce81fcce57",
+      "nombre": "Aditivo limpia inyectores STP",
+      "precio": 99,
+      "existencia": 7,
+      "umbralStock": 8,
+      "accion": "REUTILIZADO"
+    },
+    {
+      "id": "6afb6982a95cefce81fcce58",
+      "nombre": "Líquido de dirección hidráulica 946 ml",
+      "precio": 135,
+      "existencia": 15,
+      "umbralStock": 6,
+      "accion": "REUTILIZADO"
+    },
+    {
+      "id": "6afb6982a95cefce81fcce59",
+      "nombre": "Limpiaparabrisas concentrado 1 L",
+      "precio": 49,
+      "existencia": 26,
+      "umbralStock": 10,
+      "accion": "REUTILIZADO"
+    },
+    {
+      "id": "6afb6982a95cefce81fcce5a",
+      "nombre": "Llave de cruz 4 vías 17-23 mm",
+      "precio": 279,
+      "existencia": 8,
+      "umbralStock": 4,
+      "accion": "REUTILIZADO"
+    },
+    {
+      "id": "6afb6982a95cefce81fcce5b",
+      "nombre": "Juego de dados 1/2 in 24 piezas Truper",
+      "precio": 890,
+      "existencia": 4,
+      "umbralStock": 3,
+      "accion": "REUTILIZADO"
+    },
+    {
+      "id": "6afb6982a95cefce81fcce5c",
+      "nombre": "Gato hidráulico de patín 2 t",
+      "precio": 1499,
+      "existencia": 1,
+      "umbralStock": 2,
+      "accion": "REUTILIZADO"
+    },
+    {
+      "id": "6afb6982a95cefce81fcce5d",
+      "nombre": "Multímetro automotriz digital",
+      "precio": 649,
+      "existencia": 5,
+      "umbralStock": 3,
+      "accion": "REUTILIZADO"
+    },
+    {
+      "id": "6afb6982a95cefce81fcce5e",
+      "nombre": "Cables pasa corriente 300 A 3 m",
+      "precio": 429,
+      "existencia": 9,
+      "umbralStock": 4,
+      "accion": "REUTILIZADO"
+    },
+    {
+      "id": "6afb6982a95cefce81fcce5f",
+      "nombre": "Tapetes de hule universales 4 pzas",
+      "precio": 399,
+      "existencia": 12,
+      "umbralStock": 4,
+      "accion": "REUTILIZADO"
+    },
+    {
+      "id": "6afb6982a95cefce81fcce60",
+      "nombre": "Aromatizante de rejilla Little Trees",
+      "precio": 35,
+      "existencia": 60,
+      "umbralStock": 20,
+      "accion": "REUTILIZADO"
+    },
+    {
+      "id": "6afb6982a95cefce81fcce61",
+      "nombre": "Plumas limpiaparabrisas Bosch 22 in",
+      "precio": 249,
+      "existencia": 0,
+      "umbralStock": 6,
+      "accion": "REUTILIZADO"
+    }
+  ],
+  "ventasCreadas": 0,
+  "referenciasExcluidas": [
+    "ACC-024"
+  ]
+}

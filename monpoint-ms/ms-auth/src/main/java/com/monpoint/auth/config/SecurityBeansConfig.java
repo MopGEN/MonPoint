@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * Beans de seguridad que no dependen de la cadena de filtros HTTP.
  * <p>
  * Separado de {@code SecurityConfig} para que {@code DataInitializer} pueda cifrar
- * la contraseña del admin inicial sin acoplarse a la configuración de rutas. También
+ * las contraseñas de las cuentas iniciales sin acoplarse a la configuración de rutas. También
  * habilita {@link JwtProperties}, que usa {@code JwtService} tanto en el filtro como en el login.
  */
 @Configuration

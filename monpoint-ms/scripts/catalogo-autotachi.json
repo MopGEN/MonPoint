@@ -1,0 +1,194 @@
+[
+  {
+    "referencia": "REF-001",
+    "nombre": "Balatas delanteras cerámicas Tsuru",
+    "precioCentavos": 48900,
+    "existencia": 14,
+    "umbralStock": 6,
+    "activo": true
+  },
+  {
+    "referencia": "REF-002",
+    "nombre": "Filtro de aceite Gonher GP-106",
+    "precioCentavos": 8900,
+    "existencia": 42,
+    "umbralStock": 12,
+    "activo": true
+  },
+  {
+    "referencia": "REF-003",
+    "nombre": "Filtro de aire Versa 2012-2019",
+    "precioCentavos": 17900,
+    "existencia": 9,
+    "umbralStock": 8,
+    "activo": true
+  },
+  {
+    "referencia": "REF-004",
+    "nombre": "Bujía NGK iridio IZFR6K11",
+    "precioCentavos": 16500,
+    "existencia": 36,
+    "umbralStock": 16,
+    "activo": true
+  },
+  {
+    "referencia": "REF-005",
+    "nombre": "Banda de accesorios 6PK1870",
+    "precioCentavos": 39500,
+    "existencia": 5,
+    "umbralStock": 4,
+    "activo": true
+  },
+  {
+    "referencia": "REF-006",
+    "nombre": "Amortiguador trasero Aveo Monroe",
+    "precioCentavos": 89900,
+    "existencia": 6,
+    "umbralStock": 4,
+    "activo": true
+  },
+  {
+    "referencia": "REF-007",
+    "nombre": "Bomba de agua Jetta A4 2.0",
+    "precioCentavos": 129000,
+    "existencia": 3,
+    "umbralStock": 3,
+    "activo": true
+  },
+  {
+    "referencia": "REF-008",
+    "nombre": "Kit de clutch Chevy 1.6",
+    "precioCentavos": 245000,
+    "existencia": 2,
+    "umbralStock": 2,
+    "activo": true
+  },
+  {
+    "referencia": "LIQ-009",
+    "nombre": "Aceite sintético 5W-30 Mobil 1 L",
+    "precioCentavos": 21900,
+    "existencia": 48,
+    "umbralStock": 16,
+    "activo": true
+  },
+  {
+    "referencia": "LIQ-010",
+    "nombre": "Aceite multigrado 20W-50 Quaker 4 L",
+    "precioCentavos": 54900,
+    "existencia": 18,
+    "umbralStock": 8,
+    "activo": true
+  },
+  {
+    "referencia": "LIQ-011",
+    "nombre": "Anticongelante Prestone 50/50 3.78 L",
+    "precioCentavos": 32900,
+    "existencia": 11,
+    "umbralStock": 6,
+    "activo": true
+  },
+  {
+    "referencia": "LIQ-012",
+    "nombre": "Líquido de frenos DOT 4 355 ml",
+    "precioCentavos": 11900,
+    "existencia": 20,
+    "umbralStock": 8,
+    "activo": true
+  },
+  {
+    "referencia": "LIQ-013",
+    "nombre": "Aditivo limpia inyectores STP",
+    "precioCentavos": 9900,
+    "existencia": 7,
+    "umbralStock": 8,
+    "activo": true
+  },
+  {
+    "referencia": "LIQ-014",
+    "nombre": "Líquido de dirección hidráulica 946 ml",
+    "precioCentavos": 13500,
+    "existencia": 15,
+    "umbralStock": 6,
+    "activo": true
+  },
+  {
+    "referencia": "LIQ-015",
+    "nombre": "Limpiaparabrisas concentrado 1 L",
+    "precioCentavos": 4900,
+    "existencia": 26,
+    "umbralStock": 10,
+    "activo": true
+  },
+  {
+    "referencia": "HER-016",
+    "nombre": "Llave de cruz 4 vías 17-23 mm",
+    "precioCentavos": 27900,
+    "existencia": 8,
+    "umbralStock": 4,
+    "activo": true
+  },
+  {
+    "referencia": "HER-017",
+    "nombre": "Juego de dados 1/2 in 24 piezas Truper",
+    "precioCentavos": 89000,
+    "existencia": 4,
+    "umbralStock": 3,
+    "activo": true
+  },
+  {
+    "referencia": "HER-018",
+    "nombre": "Gato hidráulico de patín 2 t",
+    "precioCentavos": 149900,
+    "existencia": 1,
+    "umbralStock": 2,
+    "activo": true
+  },
+  {
+    "referencia": "HER-019",
+    "nombre": "Multímetro automotriz digital",
+    "precioCentavos": 64900,
+    "existencia": 5,
+    "umbralStock": 3,
+    "activo": true
+  },
+  {
+    "referencia": "ACC-020",
+    "nombre": "Cables pasa corriente 300 A 3 m",
+    "precioCentavos": 42900,
+    "existencia": 9,
+    "umbralStock": 4,
+    "activo": true
+  },
+  {
+    "referencia": "ACC-021",
+    "nombre": "Tapetes de hule universales 4 pzas",
+    "precioCentavos": 39900,
+    "existencia": 12,
+    "umbralStock": 4,
+    "activo": true
+  },
+  {
+    "referencia": "ACC-022",
+    "nombre": "Aromatizante de rejilla Little Trees",
+    "precioCentavos": 3500,
+    "existencia": 60,
+    "umbralStock": 20,
+    "activo": true
+  },
+  {
+    "referencia": "ACC-023",
+    "nombre": "Plumas limpiaparabrisas Bosch 22 in",
+    "precioCentavos": 24900,
+    "existencia": 0,
+    "umbralStock": 6,
+    "activo": true
+  },
+  {
+    "referencia": "ACC-024",
+    "nombre": "Cubreasientos de neopreno negro",
+    "precioCentavos": 119000,
+    "existencia": 3,
+    "umbralStock": 2,
+    "activo": false
+  }
+]

@@ -276,7 +276,12 @@ services:
       # falta directConnection=true (solo se usa al correr ms-auth fuera de Docker).
       MONGO_URI: mongodb://auth_user:auth_pass@mongodb:27017/auth_db?replicaSet=rs0&authSource=auth_db
       JWT_SECRET: ${JWT_SECRET}
-      ADMIN_DEFAULT_PASSWORD: ${ADMIN_DEFAULT_PASSWORD:-Admin123!}
+      # Optativa para bases existentes; en una base vacia ms-auth exige habilitarla.
+      SEMILLA_NOMINAL_HABILITADA: ${SEMILLA_NOMINAL_HABILITADA:-false}
+      AUTOTACHI_VICTOR_PASSWORD: ${AUTOTACHI_VICTOR_PASSWORD:-}
+      AUTOTACHI_ALEJANDRO_PASSWORD: ${AUTOTACHI_ALEJANDRO_PASSWORD:-}
+      AUTOTACHI_HUGO_PASSWORD: ${AUTOTACHI_HUGO_PASSWORD:-}
+      AUTOTACHI_VENDEDOR_PASSWORD: ${AUTOTACHI_VENDEDOR_PASSWORD:-}
     depends_on:
       mongodb:
         condition: service_healthy

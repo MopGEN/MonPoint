@@ -1,4 +1,15 @@
-# Datos de prueba por API — actividad 3.1
+# Datos de prueba por API
+
+La semilla vigente para el equipo es [Semilla Auto Tachi](SEMILLA_AUTOTACHI.md):
+cuatro cuentas nominales/genérica con claves del entorno y 23 productos visibles
+del prototipo. Ejecutar `semilla-autotachi.mjs` para esa carga.
+
+Lo que sigue documenta los **guiones históricos 3.1**, conservados para los
+expedientes anteriores. Requieren las cuentas genéricas ya existentes;
+el `DataInitializer` actual no las crea. No usar estos guiones como arranque
+de una base nueva ni mezclarlos con la importación nominal esperando el mismo catálogo.
+
+## Datos históricos — actividad 3.1
 
 ## Fase 1 implementada: usuarios, clientes y productos
 
@@ -15,8 +26,8 @@ inventario disponibles a través del Gateway. Antes de la primera alta, el guion
 3. Si el vendedor ya existe, verifica también sus credenciales.
 4. Crea únicamente lo que falta; comprueba el login del vendedor recién creado.
 
-El ADMIN inicial lo crea `DataInitializer` al arrancar ms-auth con `usuarios`
-vacía. El guion lo verifica y reutiliza; no intenta dar de alta un administrador
+El ADMIN inicial lo creaba la versión histórica de `DataInitializer` con `usuarios`
+vacía. La versión actual ya no lo hace. El guion lo verifica y reutiliza; no intenta dar de alta un administrador
 sin autenticarse. El resultado queda asociado a los ids que devuelve la API.
 
 | Datos | Identidad estable | Valores iniciales |
@@ -55,21 +66,16 @@ Para estas variables usar valores literales; Node no expande referencias como
 | Variable | Por omisión | Uso |
 |---|---|---|
 | `SEMILLA_GATEWAY_URL` | `http://localhost:8080` | Origen del Gateway; no una ruta ni una URL con credenciales |
-| `ADMIN_DEFAULT_PASSWORD` | `Admin123!` | Login del ADMIN; misma variable que DataInitializer y Compose |
+| `ADMIN_DEFAULT_PASSWORD` | `Admin123!` | Login del ADMIN histórico; ya no la lee DataInitializer |
 | `SEMILLA_VENDEDOR_PASSWORD` | `Vendedor123!` | Alta y verificación del VENDEDOR de prueba |
 
-Las claves por omisión son de desarrollo. Definir las elegidas en `infra/.env`
-antes de inicializar una base nueva. **Cambiar ADMIN_DEFAULT_PASSWORD después
-no cambia la contraseña de una cuenta existente.** Tampoco el guion cambia la
-del vendedor existente: si no coincide, falla antes de crear catálogos.
-`ADMIN_DEFAULT_PASSWORD` ausente o vacía usa `Admin123!` en Compose,
-DataInitializer y este guion. No se recortan espacios de las contraseñas.
-`SEMILLA_VENDEDOR_PASSWORD` vacía se rechaza por la política del vendedor.
+Las claves por omisión de estos guiones son las del entorno histórico de
+desarrollo. Configurar las claves reales de esas cuentas si ya se cambiaron.
+`ADMIN_DEFAULT_PASSWORD` ausente o vacía usa `Admin123!` solo en el guion
+histórico; `SEMILLA_VENDEDOR_PASSWORD` ausente usa `Vendedor123!`.
+Ni Compose ni el DataInitializer actual usan esas variables para crear cuentas.
+Una clave distinta no rota una cuenta existente: detiene el login.
 Cada petición tiene un plazo de 10 segundos.
-
-Compose ahora pasa `ADMIN_DEFAULT_PASSWORD` al contenedor ms-auth. Para aplicar
-el cambio de configuración a un contenedor anterior se usa `docker compose up
--d ms-auth` desde `infra`; esto tampoco rota la contraseña guardada.
 
 ## Repetición, fallos y alcance de la idempotencia
 

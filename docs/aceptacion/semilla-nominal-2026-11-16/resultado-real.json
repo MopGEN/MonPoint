@@ -1,0 +1,35 @@
+{
+  "fecha": "2026-11-16T20:37:16.604Z",
+  "origen": "http://127.0.0.1:18090",
+  "comprobaciones": [
+    {
+      "caso": "Importación por Gateway",
+      "altas": 23,
+      "roles": [
+        "ADMIN",
+        "ADMIN",
+        "ADMIN",
+        "VENDEDOR"
+      ],
+      "stockCero": 0
+    },
+    {
+      "caso": "Repetición tras ajuste de stock",
+      "reutilizados": 23,
+      "altas": 0,
+      "stockBalatas": 11,
+      "productoHistoricoConservado": "6afb6983a95cefce81fcce62",
+      "genericoConservado": "6afb69832a738f73986278a9"
+    },
+    {
+      "caso": "Reinicio de auth",
+      "documentosSinCambios": true,
+      "claveCambiadaConservada": true,
+      "rolCambiadoConservado": true,
+      "bajaConservada": true,
+      "genericoConservado": true,
+      "importacionPosterior": "INTERRUMPIDA sin altas"
+    }
+  ],
+  "estado": "COMPLETADA"
+}

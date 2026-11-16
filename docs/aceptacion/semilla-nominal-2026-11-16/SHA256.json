@@ -1,0 +1,34 @@
+[
+  {
+    "ruta": "RESULTADOS.md",
+    "sha256": "951d598784568781e1ab9dd3f0f78fa8b47e69f03300a8516ad0b5fafca86f6f"
+  },
+  {
+    "ruta": "auth-maven.txt",
+    "sha256": "8c85503ab42690d823ac09fb76f8c3be432d7e493594882f20cb11fa3d518533"
+  },
+  {
+    "ruta": "comprobacion-real.mjs",
+    "sha256": "229112ed86d5963be997efe6216128c27bf12f9fee9defe667045288f02e67c7"
+  },
+  {
+    "ruta": "guiones-node.txt",
+    "sha256": "4b0ebe28a0877d1a58095eaf39ebaf2d6d741797f75886645c220a7117a05e7b"
+  },
+  {
+    "ruta": "origen-catalogo.json",
+    "sha256": "45765fb8876a7ea4f1beb9e32a488e9fc3e311323eca5de29d8237f1aeb4c10d"
+  },
+  {
+    "ruta": "primera.json",
+    "sha256": "176ddf07e6a50071abedfb5b97d8bd65d3602648832626bd1cf9c74469bee491"
+  },
+  {
+    "ruta": "resultado-real.json",
+    "sha256": "9593934152dbff27fcc46f81167c223585c3a816bbfada6cc67cc564dbd60793"
+  },
+  {
+    "ruta": "segunda.json",
+    "sha256": "e77f4cb156ba16534ea9ec84af03a9630010cfe5b9bd2e6637325d3f59782744"
+  }
+]
