@@ -1,5 +1,7 @@
 # cliente-web
 
+Documentación del conjunto (6.2): [API y permisos](../docs/api/README.md) · [operación y puertos](../docs/api/operacion.md) · [JWT y revocación](../docs/api/seguridad.md).
+
 Cliente web de MonPoint MS. Vue 3 + Vite + Pinia. Habla unicamente con el
 `api-gateway`; ningun microservicio se expone al navegador.
 
@@ -65,7 +67,8 @@ ejercita desde el primer dia.
 **3. La guarda del enrutador no es seguridad.** Evita mostrar pantallas que
 fallarian; no protege datos. Quien edite el estado de Pinia desde las
 herramientas del navegador ve cualquier pantalla. Lo que protege es que el
-Gateway valide token y rol en cada peticion. Toda ruta nace privada salvo que
+Gateway valide el token y propague su rol en cada petición, y que el servidor
+aplique los permisos que correspondan. Toda ruta nace privada salvo que
 declare `meta.publica`, para que olvidar la meta cierre la pantalla en lugar de
 abrirla.
 
@@ -482,7 +485,7 @@ Evidencia en nube del empaquetado y de los tres desenlaces desde nginx:
 [Guía completa para Windows y PowerShell](../../docs/aceptacion/GUIA-WINDOWS.md):
 preparación, producto de prueba, tres desenlaces, recuperación y evidencia.
 
-1. Con los nueve contenedores healthy, entrar en `http://localhost:3000/login`.
+1. Con los once servicios de Compose saludables, entrar en `http://localhost:3000/login`.
 2. Iniciar sesión, cargar catálogo y clientes y realizar una venta de prueba.
    Verificar el folio y el total confirmado, y que no haya error CORS.
 3. Abrir o recargar `http://localhost:3000/caja`: debe aparecer login y, al

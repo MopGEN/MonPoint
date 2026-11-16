@@ -52,7 +52,7 @@ Los guiones 3.1 permanecen documentados como históricos.
 ## Cliente nginx (5.6)
 
 `docker compose up -d --build` incluye `cliente-web` en `http://localhost:3000`.
-El conjunto actual tiene nueve contenedores. Vite en `:5173` es opcional y solo
+El Compose actual declara once servicios. Vite en `:5173` es opcional y solo
 para desarrollo. Añadir `http://localhost:3000` a `CORS_ORIGENES` en `.env` si se
 conserva una configuración anterior y recrear Gateway con `docker compose up -d
 api-gateway`. No hace falta borrar datos ni reiniciar MongoDB.

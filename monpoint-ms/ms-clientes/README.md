@@ -1,5 +1,7 @@
 # ms-clientes
 
+Referencia HTTP (6.2): [campos, respuestas y permisos](../docs/api/clientes.md) · [seguridad y revocación](../docs/api/seguridad.md) · [arranque y pruebas](../docs/api/operacion.md).
+
 Clientes de MonPoint (H-040, H-042; épica E-04). Puerto interno **8084**, base `clientes_db`, usuario `clientes_user`.
 Se llega a él **solo a través del Gateway** (`http://localhost:8080/clientes/...`); no publica puertos.
 
@@ -25,7 +27,7 @@ Patrón: capas `controller ➔ service ➔ repository` (como ms-auth). La identi
 Cuerpo de alta y modificación: `{"nombre":"Ana Pérez","correo":"ana@correo.com","telefono":"3312345678","direccion":"Calle 1"}`.
 `nombre` es obligatorio; `correo` es opcional pero, si viene, debe tener formato válido y **no** se exige único.
 
-### ⚠️ Decisiones que la documentación no fija (confirmar con el Product Owner)
+### Decisiones y límites de la implementación
 
 | Tema | Lo que se hizo | Por qué |
 |---|---|---|
@@ -35,13 +37,12 @@ Cuerpo de alta y modificación: `{"nombre":"Ana Pérez","correo":"ana@correo.com
 | Paginación | **No** se implementa | H-040 la menciona, pero Doc 01 §7.4 la recortó |
 | Outbox | **No** se implementa | Doc 01 §7.4. Se publica con `RabbitTemplate` después de confirmar la transacción; si el broker cae en ese instante, el evento se pierde (queda en el log) |
 
-## Eventos (⚠️ provisional hasta el catálogo H-008)
+## Eventos
 
 Exchange `clientes.eventos` (topic). Sobre común: `eventoId`, `tipo`, `version`, `fecha`, `origen`, `datos`.
-Las routing keys (`cliente.creado`, `cliente.actualizado`), el formato de `version` (`"1"`) y los campos de `datos`
-(`clienteId`, `nombre`, `correo`, `telefono`, `direccion`, `fechaActualizacion`; salen del Doc 04, `clientes_replica` y
-`contrapartes_proy`) son una **propuesta**: `docs/eventos/` sigue vacío. Todo está concentrado en
-`event/ClienteEventos.java` y `event/impl/RabbitClienteEventPublisher.java`.
+El [contrato de clientes](../docs/eventos/cliente.md) fija routing keys (`cliente.creado`, `cliente.actualizado`),
+version `"1"` y los campos de datos. Las constantes y la publicación están en
+`event/ClienteEventos.java` y `event/impl/RabbitClienteEventPublisher.java`. No hay evento de eliminación.
 
 ## Variables de entorno
 

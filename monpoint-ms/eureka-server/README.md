@@ -1,5 +1,7 @@
 # eureka-server
 
+Documentación del conjunto (6.2): [API y permisos](../docs/api/README.md) · [operación y puertos](../docs/api/operacion.md) · [JWT y revocación](../docs/api/seguridad.md).
+
 Servidor de descubrimiento de MonPoint (H-001, actividad 1.2). Cada microservicio se registra aquí al
 arrancar, y el API Gateway lo encuentra por su nombre (`lb://ms-auth`) en lugar de por una dirección fija.
 

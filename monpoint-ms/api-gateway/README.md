@@ -1,7 +1,8 @@
 # api-gateway
 
-Punto único de entrada de MonPoint (H-002, H-003, H-009; actividades 1.3, 2.3 y 2.4). Es el **único componente
-abierto a la red** (8080). El cliente web y Postman le hablan a él, y él reenvía a cada servicio.
+Punto de entrada de las APIs de MonPoint (H-002, H-003, H-009; actividades 1.3, 2.3 y 2.4), publicado en 8080. El cliente nginx se publica aparte en 3000. Los seis servicios de dominio no publican sus puertos; las herramientas de infraestructura están ligadas a loopback. [Puertos y operación](../docs/api/operacion.md).
+
+Referencia de las [27 operaciones HTTP](../docs/api/README.md) y de [autorización/revocación](../docs/api/seguridad.md).
 
 Hace tres cosas:
 
@@ -29,7 +30,7 @@ que los servicios de dominio no tengan que resolverlo cada uno. No guarda datos 
 - **API Gateway / edge service**, reactivo (Spring Cloud Gateway 5.0 sobre WebFlux y Netty).
 - **Descubrimiento del lado del cliente:** el Gateway lee el registro de Eureka y elige una instancia `UP` (`lb://`).
 - **Validación de token sin estado:** verifica la firma HS256 y la vigencia con la clave compartida; nunca consulta a ms-auth.
-- **Anti-suplantación:** la identidad que reciben los servicios solo la pone el Gateway.
+- **Anti-suplantación por esta entrada:** elimina la identidad aportada por el cliente y la sustituye desde el JWT. Los servicios confían en la red interna; no hay mTLS entre ellos.
 
 ### Flujo de una petición
 
@@ -72,12 +73,12 @@ Navegador / Postman ──HTTP──► :8080
 
 | Prefijo | Destino (`spring.application.name` del servicio) | Puerto interno | Estado |
 |---|---|---|---|
-| `/auth/**` | `lb://ms-auth` | 8081 | Operativo |
-| `/inventario/**` | `lb://ms-inventario` | 8082 | 503 hasta que el servicio se registre en Eureka |
-| `/ventas/**` | `lb://ms-ventas` | 8083 | 503 hasta que el servicio se registre en Eureka |
-| `/clientes/**` | `lb://ms-clientes` | 8084 | 503 hasta que el servicio se registre en Eureka |
-| `/reportes/**` | `lb://ms-reportes` | 8085 | 503 hasta que el servicio se registre en Eureka |
-| `/notificaciones/**` | `lb://ms-notificaciones` | 8086 | 503 hasta que el servicio se registre en Eureka |
+| `/auth/**` | `lb://ms-auth` | 8081 | Requiere instancia UP; 503 sin destino |
+| `/inventario/**` | `lb://ms-inventario` | 8082 | Requiere instancia UP; 503 sin destino |
+| `/ventas/**` | `lb://ms-ventas` | 8083 | Requiere instancia UP; 503 sin destino |
+| `/clientes/**` | `lb://ms-clientes` | 8084 | Requiere instancia UP; 503 sin destino |
+| `/reportes/**` | `lb://ms-reportes` | 8085 | Requiere instancia UP; 503 sin destino |
+| `/notificaciones/**` | `lb://ms-notificaciones` | 8086 | Requiere instancia UP; 503 sin destino |
 | Cualquier otro | — | — | 404 |
 
 **Por qué sin `StripPrefix`:** el servicio recibe la ruta completa (`/inventario/productos`, no `/productos`). Así,
@@ -99,8 +100,7 @@ el `@RequestMapping`**.
 | `Authorization` | Se conserva tal cual (ms-auth vuelve a validar el token) | Los servicios de dominio no lo usan |
 
 **Anti-suplantación:** el Gateway **elimina siempre** los `X-User-Id` y `X-User-Role` que mande el cliente, también en
-las rutas públicas. Un servicio puede confiar en esas cabeceras porque solo las pone el Gateway, y porque los
-servicios no publican puertos (nadie puede saltarse el Gateway).
+las rutas públicas. No publicar los puertos reduce el acceso directo desde el host; un proceso con acceso a la red interna todavía podría enviarlas. Las cabeceras no prueban por sí mismas su origen. Ver el [límite de confianza](../docs/api/seguridad.md).
 
 ## Qué exige token
 
@@ -142,7 +142,7 @@ y llegan tal cual al cliente.
 | Garantiza | No hace (le toca a cada servicio o queda fuera) |
 |---|---|
 | Firma HS256 válida, token vigente, claims completos y rol conocido | **Verificar si el rol alcanza** para la operación (403) |
-| Identidad confiable en `X-User-*` (borra las del cliente) | Revocar tokens: un token sigue valiendo hasta su `exp` (24 h) |
+| Identidad confiable en `X-User-*` (borra las del cliente) | Revocar individualmente: el token sigue hasta exp (24 h por omisión); rotar la clave en todos los validadores invalida todos |
 | Un `X-Request-ID` por petición | Validar el cuerpo de las peticiones |
 | CORS solo para orígenes permitidos | Limitar la tasa de peticiones (*rate limiting*) |
 
@@ -182,7 +182,7 @@ y llegan tal cual al cliente.
 |---|---|---|
 | `SERVER_PORT` | `8080` | Puerto HTTP |
 | `EUREKA_URL` | `http://localhost:8761/eureka/` | Servidor Eureka |
-| `JWT_SECRET` | Marcador de `infra/.env.example` | Clave HS256 en texto plano UTF-8, al menos 32 caracteres, **idéntica a la de ms-auth**. Con menos, el Gateway no arranca. **Cambia el valor de ejemplo**: el repositorio es público |
+| `JWT_SECRET` | Marcador de `infra/.env.example` | Clave HS256 en texto plano UTF-8, al menos 32 bytes, **idéntica a la de ms-auth**. Con menos, el Gateway no arranca. **Cambia el valor de ejemplo**: el repositorio es público |
 | `CORS_ORIGENES` | `http://localhost:5173` | Orígenes permitidos, separados por comas |
 
 ## Cómo levantarlo
@@ -203,7 +203,7 @@ y el mismo `JWT_SECRET` que ms-auth.
 cd monpoint-ms/api-gateway && ./mvnw test
 ```
 
-Son 27 pruebas y no necesitan Docker, Eureka ni ms-auth.
+Las pruebas de este módulo no necesitan Docker, Eureka ni ms-auth reales; usan destinos simulados.
 
 | Clase | Qué comprueba |
 |---|---|

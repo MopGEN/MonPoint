@@ -1,8 +1,10 @@
 # ms-notificaciones — 5.4
 
+Referencia HTTP (6.2): [campos, respuestas y permisos](../docs/api/notificaciones.md) · [seguridad y revocación](../docs/api/seguridad.md) · [arranque y pruebas](../docs/api/operacion.md).
+
 Consume `StockBajo`, guarda avisos en su propia base y permite que ADMIN los
 consulte y marque como leídos. No publica eventos ni llama a otros servicios
-de dominio por HTTP. No añade una pantalla al cliente.
+de dominio por HTTP. El cliente actual incluye una pantalla de Notificaciones y la campana ADMIN; este README describe el backend.
 
 ## Contrato y decisiones
 
