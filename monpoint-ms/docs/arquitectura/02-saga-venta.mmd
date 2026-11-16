@@ -1,0 +1,78 @@
+sequenceDiagram
+    autonumber
+    actor C as Caja Vue
+    participant G as Gateway
+    participant V as ms-ventas
+    participant DV as ventas_db
+    participant B as RabbitMQ
+    participant I as ms-inventario
+    participant DI as inventario_db
+    participant R as ms-reportes
+    participant N as ms-notificaciones
+    Note over C,I: Precondición: JWT válido, réplicas de producto/cliente recibidas.<br/>400 de validación anterior al registro no es un rechazo asíncrono de stock.
+    C->>G: POST /ventas (ids y cantidades), Bearer
+    G->>G: Validar JWT, reemplazar X-User-Id y X-User-Role
+    G->>V: POST /ventas con identidad del token
+    V->>V: Exigir ADMIN/VENDEDOR, validar réplicas, congelar precios/nombres
+    V->>DV: TX: incrementar folio + insertar venta PENDIENTE
+    DV-->>V: Commit
+    V->>B: VentaCreada (afterCommit)
+    V-->>G: 202 con id, folio y PENDIENTE
+    G-->>C: 202: aceptación, no confirmación
+    Note over C,B: La entrega asíncrona puede adelantarse a la recepción del 202.<br/>El primer GET puede encontrar ya un estado terminal.
+    par Procesamiento asincrono por mensajeria
+        B-->>I: VentaCreada, cola inventario.venta-creada
+        I->>DI: Consultar eventoId, TX: insertar marcador + descuentos condicionales
+        alt Todas las líneas disponibles y activas
+            DI-->>I: Commit: stock descontado y eventoId registrados juntos
+            I->>B: StockReservado, después del commit
+            par Resolver y proyectar la venta
+                B-->>V: StockReservado, cola ventas.stock
+                V->>DV: TX: venta CONFIRMADA + eventoId
+                DV-->>V: Commit
+                V->>B: VentaConfirmada (afterCommit)
+                B-->>R: VentaConfirmada, cola reportes.ventas
+                R->>R: TX local: ventas_proy + eventoId, commit
+            and Aviso si una existencia resultante alcanza o baja el umbral
+                opt existenciaResultante menor o igual que umbralStock
+                    I->>B: StockBajo, después de StockReservado
+                    B-->>N: StockBajo, cola notificaciones.stock-bajo
+                    N->>N: TX local: actualizar/crear aviso + eventoId, commit
+                end
+            end
+        else Algún producto no existe, está inactivo o no tiene existencia
+            DI-->>I: Rollback de TODOS los descuentos y del marcador de esa TX
+            I->>DI: Otra TX: registrar eventoId procesado, sin descontar
+            DI-->>I: Commit del marcador de rechazo
+            I->>B: StockRechazado con productoId y motivo
+            B-->>V: StockRechazado, cola ventas.stock
+            V->>DV: TX: CANCELADA + motivo/productoIdRechazado + eventoId
+            DV-->>V: Commit
+            V->>B: VentaCancelada (afterCommit)
+            B-->>R: VentaCancelada, cola reportes.ventas
+            R->>R: TX local: ventas_proy CANCELADA + eventoId, commit
+            Note over R,N: CANCELADA no suma en agregación, su ticket devuelve 409.<br/>Notificaciones NO consume el cierre de ventas.
+        end
+    and Sondeo independiente desde el cliente
+        loop Sondeo por id hasta terminal o hasta agotar el plazo del cliente
+            C->>G: GET /ventas/{id}, Bearer
+            G->>V: GET con identidad validada
+            V->>DV: Leer estado, líneas, total y fechas
+            DV-->>V: Documento de venta
+            V-->>G: 200 detalle, Cache-Control: no-store
+            G-->>C: PENDIENTE, CONFIRMADA o CANCELADA
+        end
+        opt Solicitud de ticket tras confirmación
+            C->>G: GET /reportes/ventas/{id}/ticket, Bearer
+            G->>R: HTTP con cabeceras de identidad
+            R-->>G: 200 PDF o 404 VENTA_NO_DISPONIBLE si aún no llegó la proyección
+            G-->>C: Resultado de la proyección, no de una consulta a ventas
+        end
+    end
+    opt Reentrega posterior de VentaCreada cuyo marcador ya existe
+        B-->>I: Mismo eventoId
+        I->>DI: Consultar eventos_procesados
+        DI-->>I: Ya procesado
+        I->>I: Descartar, sin otro descuento ni respuesta de stock por esta entrega
+    end
+    Note over V,N: Cada consumidor descarta su eventoId ya procesado, no es entrega exactamente una vez.<br/>Fallo técnico: hasta 3 entregas AMQP en total, luego cola .fallidos, no implica CANCELADA.<br/>Caída entre commit y publicación puede dejar PENDIENTE o una proyección atrasada: no hay outbox.

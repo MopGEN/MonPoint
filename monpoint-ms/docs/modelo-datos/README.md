@@ -1,5 +1,7 @@
 # Modelo de datos — MonPoint MS
 
+Vista visual de la implementación actual (6.3): [modelo por servicio](../arquitectura/03-modelo-documental.md). Esta transcripción conserva la referencia del Documento 04; las divergencias efectivas se distinguen en esa vista.
+
 Transcripción del **Documento 04 — Modelo de Datos, v1.1** (`docs/planeacion/MonPoint_MS_04_Modelo_de_Datos.pdf`) en un
 formato que se puede leer, buscar y pasar como contexto a una IA (H-070). **La fuente de verdad sigue siendo el PDF**:
 si algo difiere, manda el PDF. El esquema está **cerrado**: agregar o cambiar un campo, una colección o un índice lo

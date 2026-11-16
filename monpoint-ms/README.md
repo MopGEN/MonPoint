@@ -17,6 +17,11 @@ internas, los dos mecanismos de autorización, el rol por cadena de ventas y
 el ticket sin guarda interna. La vigencia JWT por omisión es de 24 horas y no
 hay revocación individual implementada.
 
+## Diagramas (6.3)
+
+[Componentes, secuencia de venta con rechazo y modelo documental por servicio](docs/arquitectura/README.md),
+con fuentes Mermaid y vistas SVG. El diagrama JPG original se conserva como referencia histórica.
+
 ## Cómo levantar el sistema
 
 ```bash
@@ -168,7 +173,7 @@ usuario de un servicio no tiene permiso sobre las bases de los demás.
 | 03 — Product Backlog | Historias con criterios de aceptación | [`docs/planeacion/`](docs/planeacion/MonPoint_MS_03_Product_Backlog_y_Convenciones_de_Trabajo.pdf) |
 | 04 — Modelo de Datos | Colecciones campo por campo | [`docs/planeacion/`](docs/planeacion/MonPoint_MS_04_Modelo_de_Datos.pdf) |
 | Prototipo del cliente | Comportamiento y textos de la interfaz | [`docs/prototipo/index.html`](docs/prototipo/index.html) |
-| Diagrama de arquitectura | Componentes, tráfico HTTP y flujo de eventos | [`docs/arquitectura/`](docs/arquitectura/01-componentes-y-trafico.jpg) |
+| Diagrama de arquitectura | Componentes, tráfico HTTP y flujo de eventos | [`docs/arquitectura/`](docs/arquitectura/) |
 | Convenciones de trabajo | Ramas, confirmaciones, revisión e incidencias | [`CONTRIBUTING.md`](CONTRIBUTING.md) |
 
 La versión vigente de cada documento está impresa en su portada; el historial lo
