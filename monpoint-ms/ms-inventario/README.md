@@ -1,5 +1,7 @@
 # ms-inventario
 
+Referencia HTTP (6.2): [campos, respuestas y permisos](../docs/api/inventario.md) · [seguridad y revocación](../docs/api/seguridad.md) · [arranque y pruebas](../docs/api/operacion.md).
+
 Productos y control de existencias de MonPoint (H-020 a H-024; épica E-02). Puerto interno **8082**, base
 `inventario_db`, usuario `inventario_user`. Se llega a él **solo a través del Gateway**
 (`http://localhost:8080/inventario/...`); no publica puertos.
@@ -27,7 +29,7 @@ Patrón: capas `controller ➔ service ➔ repository` (como ms-auth). La identi
 | `DELETE /inventario/productos/{id}` | **ADMIN** | 204 (baja lógica: `activo=false`, el documento permanece) | 403, 404, 401 |
 
 Cuerpo de alta y modificación: `{"nombre":"Aceite 1L","descripcion":"opcional","precio":45.50,"existencia":10,"umbralStock":5}`.
-`descripcion` y `umbralStock` son opcionales (sin umbral se usa el valor por omisión). El precio viaja como decimal
+`descripcion` y `umbralStock` son opcionales. En alta, umbral omitido/null toma 5; en edición conserva el valor anterior. El precio viaja como decimal
 exacto y se guarda como `Decimal128`.
 
 ## Reserva de existencias (H-023, H-024)
@@ -46,12 +48,12 @@ VentaCreada ─► cola inventario.venta-creada ─► VentaCreadaListener ─�
 La seguridad ante concurrencia viene del descuento condicional atómico por documento; si dos transacciones chocan
 sobre el mismo producto, MongoDB aborta una con un error transitorio y el reintento del listener la repite.
 
-## ⚠️ Lo que la documentación no define (confirmar con el Product Owner)
+## Decisiones y limitaciones implementadas
 
 | Tema | Lo que se hizo |
 |---|---|
-| Catálogo de eventos (H-008, `docs/eventos/` vacío) | **Propuesta provisional** concentrada en `event/InventarioEventos.java`, `event/impl/RabbitInventarioEventPublisher.java`, `event/VentaCreadaEvento.java` y `config/RabbitConfig.java`: routing keys (`producto.creado`, `stock.reservado`, `venta.creada`…), nombres de cola, `version="1"` y los nombres de los campos de `datos`. De H-022/H-023/H-024 salen los campos mínimos; `ventaId` se agregó porque ms-ventas lo necesita para correlacionar |
-| Formato de `VentaCreada` | Se asume `datos: {ventaId, lineas:[{productoId, cantidad}]}`. **Alejandro (ms-ventas) debe confirmarlo** |
+| Catálogo de eventos | Contratos vigentes de [producto](../docs/eventos/producto.md), [reserva](../docs/eventos/stock-reservado.md), [rechazo](../docs/eventos/stock-rechazado.md) y [stock bajo](../docs/eventos/stock-bajo.md). Constantes y adaptadores en `event/` y `config/RabbitConfig.java` |
+| Formato de `VentaCreada` | [Contrato del productor y consumidores](../docs/eventos/venta-creada.md); inventario utiliza ventaId y líneas de producto/cantidad |
 | Motivos de `StockRechazado` | `EXISTENCIA_INSUFICIENTE`, `PRODUCTO_INACTIVO`, `PRODUCTO_NO_ENCONTRADO` |
 | Umbral por omisión | 5 (`Producto.UMBRAL_POR_OMISION`) |
 | Reintentos del consumidor | 3 intentos, 1 s; después a `inventario.venta-creada.fallidos` (`application.properties`) |

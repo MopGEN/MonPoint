@@ -3,15 +3,28 @@
 Migración de MonPointV2 (monolito JavaFX) a una arquitectura de microservicios.
 
 **Equipo:** Alejandro (Product Owner y Tech Lead) · Victor · Hugo
-**Periodo de desarrollo:** 28 de septiembre – 6 de noviembre de 2026
+**Periodo del plan original:** 28 de septiembre – 6 de noviembre de 2026
+**Entrega acordada:** 19 de noviembre de 2026
 
 ---
+
+## Documentación de servicios y API (6.2)
+
+[Inventario de 27 endpoints](docs/api/README.md), con cuerpos, respuestas,
+validaciones y permisos por ruta; [seguridad y revocación](docs/api/seguridad.md)
+y [arranque/pruebas](docs/api/operacion.md). Incluye la confianza en cabeceras
+internas, los dos mecanismos de autorización, el rol por cadena de ventas y
+el ticket sin guarda interna. La vigencia JWT por omisión es de 24 horas y no
+hay revocación individual implementada.
 
 ## Cómo levantar el sistema
 
 ```bash
 cd infra
-cp .env.example .env     # y cambiar los valores
+if [ ! -f .env ]; then
+  cp .env.example .env
+fi
+# Configurar las claves y la semilla nominal en el .env privado antes de continuar.
 docker compose up -d --build
 ```
 

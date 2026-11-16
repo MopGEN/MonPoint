@@ -1,5 +1,25 @@
 # ms-ventas — réplicas y saga de venta (3.6, 4.1 y 4.4)
 
+Referencia HTTP (6.2): [campos, respuestas y permisos](../docs/api/ventas.md) · [seguridad y revocación](../docs/api/seguridad.md) · [arranque y pruebas](../docs/api/operacion.md).
+
+## Servicio y arranque
+
+Puerto interno 8083, nombre `MS-VENTAS` en Eureka, base `ventas_db` y usuario
+`ventas_user`. No publica puertos; el Gateway es la entrada `/ventas/**`.
+MONGO_URI es obligatoria. Compose la construye con MONGO_VENTAS_PASSWORD;
+para Java fuera de Docker hay que exportarla, con directConnection=true
+si se usa el Mongo publicado en el host. SERVER_PORT, EUREKA_URL y las
+variables RABBITMQ_* siguen los valores de [operación](../docs/api/operacion.md).
+
+Desde `monpoint-ms/infra`: `docker compose up -d --build ms-ventas`.
+Requiere MongoDB replica set, sus índices aprovisionados, RabbitMQ y Eureka.
+GET /actuator/health sirve al healthcheck interno. El backend tiene dos rutas
+HTTP de negocio, sin listado paginado ni filtro de pendientes.
+
+La autorización usa comparación literal de cadenas en VentaService, no enum ni
+SecurityContext. Ambos roles pueden consultar cualquier venta. El límite de
+confianza de las cabeceras se documenta en [seguridad](../docs/api/seguridad.md).
+
 ## Registro de ventas
 
 `POST /ventas` a través del Gateway. Requiere token con rol ADMIN o VENDEDOR.
@@ -113,7 +133,7 @@ con su subtotal, total, motivo y fechas. Es la única vía por la que el cliente
 web conoce el desenlace de la saga, porque el registro responde 202 con la venta
 en PENDIENTE y la resolución llega después por mensajería.
 
-Tres decisiones que conviene no revertir sin leer esto:
+Decisiones de la consulta:
 
 - **El subtotal y el total se calculan en el servidor.** El Documento 04 prohíbe
   persistir el subtotal para no tener dos fuentes de verdad, pero eso no obliga a
@@ -144,15 +164,17 @@ existe rastro de qué vendedor cobró cada venta.
 Esto no afecta a la 5.2 —nada que consultar se podría filtrar por un dato que no
 está—, pero sí limita a ms-reportes: cualquier corte por vendedor es imposible
 mientras el campo no exista, y agregarlo después no reconstruye el histórico.
-Decidirlo antes de la 4.6.
+Es una limitación actual que debe declararse en el cierre, no una atribución que las cuentas nominales reconstruyan.
 
 ## Pruebas
 
-Desde este directorio, con Java 21 y Maven:
+Desde este directorio, con JDK 21 y Maven Wrapper:
 
 ```powershell
-mvn test
+.\mvnw.cmd test
 ```
+
+En Linux: `./mvnw test`.
 
 Las pruebas unitarias no necesitan Docker. Para incluir las pruebas de
 transacción, iniciar MongoDB con el Compose de `../infra` y definir
@@ -163,7 +185,7 @@ Windows, la URI usa `localhost:27017`, `replicaSet=rs0`,
 
 ```powershell
 # Definir MONGO_VENTAS_TEST_URI en el entorno sin versionar la credencial.
-mvn test
+.\mvnw.cmd test
 ```
 
 Sin esa variable, `ReplicasTransaccionTest`, `VentaRegistroIntegracionTest` y

@@ -2,6 +2,7 @@
 
 Referencia para el **API Gateway** y para cualquier servicio que valide los tokens que emite `ms-auth`.
 Si algo de este contrato cambia, debe cambiar en ambos lados a la vez.
+Referencia vigente de [autorización, límites y rotación](../../docs/api/seguridad.md) (6.2).
 
 ---
 
@@ -13,7 +14,7 @@ Si algo de este contrato cambia, debe cambiar en ambos lados a la vez.
 POST /auth/login
 Content-Type: application/json
 
-{"correo": "admin@monpoint.com", "password": "Admin123!"}
+{"correo": "victor.ortiz@autotachi.mx", "password": "<clave-configurada-en-el-entorno>"}
 ```
 
 Respuesta `200 OK`:
@@ -22,16 +23,16 @@ Respuesta `200 OK`:
 {
   "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOi...",
   "tipo": "Bearer",
-  "correo": "admin@monpoint.com",
-  "nombre": "Administrador",
+  "correo": "victor.ortiz@autotachi.mx",
+  "nombre": "Víctor Ortiz",
   "rol": "ADMIN",
   "expiraEn": 86400000
 }
 ```
 
 - `expiraEn` es la **vigencia en milisegundos**, no una fecha.
-- El correo se normaliza (sin espacios y en minúsculas): `ADMIN@MonPoint.com` y `admin@monpoint.com` son el mismo usuario.
-- Correo inexistente, contraseña incorrecta o cuenta inactiva reciben **el mismo** `401` con `"detail": "Credenciales incorrectas"`, y tardan lo mismo: la respuesta no revela qué correos existen.
+- El correo se normaliza (sin espacios y en minúsculas): `VICTOR.ORTIZ@autotachi.mx` y `victor.ortiz@autotachi.mx` son el mismo usuario.
+- Correo inexistente, contraseña incorrecta o cuenta inactiva reciben **el mismo** `401` con `"detail": "Credenciales incorrectas"`. El cuerpo no distingue esas causas. También se compara BCrypt para un correo inexistente; no se garantiza latencia idéntica en toda condición de ejecución.
 
 ## 2. Cómo se envía
 
@@ -46,7 +47,7 @@ Authorization: Bearer <token>
 | Elemento | Valor |
 |---|---|
 | Algoritmo | `HS256` (HMAC-SHA256), declarado explícitamente al firmar. Header del token: `{"alg":"HS256"}` |
-| Clave | Variable `JWT_SECRET`: **texto plano UTF-8** (no Base64), mínimo 32 caracteres (256 bits) |
+| Clave | Variable `JWT_SECRET`: **texto plano UTF-8** (no Base64), mínimo 32 bytes (256 bits) |
 | Compartida con | API Gateway. Debe ser **idéntica** en ambos lados |
 | Origen | `monpoint-ms/infra/.env`. El valor por omisión de `application.properties` es el marcador de `infra/.env.example`: solo sirve para desarrollo |
 
@@ -60,12 +61,12 @@ Con una clave de menos de 32 bytes, `ms-auth` no arranca (`WeakKeyException`).
 | `userId` | string | Id del usuario en MongoDB (`ObjectId` en hexadecimal) |
 | `rol` | string | `ADMIN` o `VENDEDOR`: un único rol por usuario |
 | `iat` | número | Fecha de emisión, en segundos Unix |
-| `exp` | número | Expiración, en segundos Unix: `iat` + `JWT_EXPIRATION_MS` (24 h por omisión) |
+| `exp` | número | Expiración expresada en segundos Unix; se calcula sumando la vigencia en **milisegundos** al instante de emisión, antes de serializar (24 h por omisión) |
 
 Ejemplo de payload:
 
 ```json
-{"sub":"admin@monpoint.com","userId":"6abf387781233486cd272c8e","rol":"ADMIN","iat":1790920089,"exp":1791006489}
+{"sub":"victor.ortiz@autotachi.mx","userId":"6abf387781233486cd272c8e","rol":"ADMIN","iat":1790920089,"exp":1791006489}
 ```
 
 Un token se rechaza con `401` si la firma no coincide, si expiró, si viene sin firma (`"alg":"none"`),
@@ -92,13 +93,32 @@ Lo devuelve en la respuesta, lo imprime en cada línea de sus logs y lo incluye 
 
 ## 6. Compromiso *stateless*
 
-Los tokens no se revocan. Si un usuario es desactivado o cambia de rol, los tokens que ya tenía
-**siguen siendo válidos hasta su `exp`** (máximo 24 h con la configuración actual).
+Los tokens emitidos no tienen revocación individual. Desactivar una cuenta,
+cambiar contraseña/correo o cambiar su rol **no cambia el exp ni los claims
+firmados de sus tokens anteriores**. Auth y Gateway validan sin consultar el
+estado actual de la cuenta. Los otros cinco servicios reciben la identidad
+del Gateway; no hacen introspección ni validan JWT por su cuenta.
 
-- Los logins nuevos sí reflejan el cambio de inmediato: una cuenta inactiva recibe `401` y un rol nuevo viaja en el siguiente token.
-- `GET /auth/me` consulta la base de datos, así que muestra el estado real (`"activo": false`) aunque el token siga vigente.
+`jwt.expiration=${JWT_EXPIRATION_MS:86400000}` significa 86 400 000 ms,
+**24 horas por omisión**, para emisiones nuevas. La ventana restante de un token
+termina en su propio exp; con otra configuración puede ser distinta.
 
-Si hiciera falta cortar el acceso antes: reducir `JWT_EXPIRATION_MS` o agregar una lista de revocación (fuera del alcance actual).
+- Los nuevos login consultan la base: una cuenta inactiva recibe 401 y un rol
+  cambiado se incluye en el siguiente token.
+- GET /auth/me consulta el perfil actual y puede devolver activo=false o un
+  rol distinto del token; eso no revoca el token ni limita las demás rutas.
+- Cerrar sesión en el cliente borra su copia local; no hay logout servidor,
+  refresh token, lista negra ni introspección implementados.
+- **Reducir JWT_EXPIRATION_MS solo acorta las nuevas emisiones.** No corta el
+  acceso de un token ya emitido. Añadirla al .env tampoco la pasa por sí solo
+  al contenedor: el Compose actual no declara esa variable para auth.
+- El mecanismo disponible para invalidar de inmediato todos los tokens anteriores
+  es **rotar JWT_SECRET en todas las instancias de auth y Gateway**. Afecta a todos
+  los usuarios y obliga a autenticarse de nuevo; una rotación parcial produce
+  rechazo de tokens y no garantiza invalidación completa.
+
+Procedimiento y límites de confianza: [seguridad de la API](../../docs/api/seguridad.md).
+Esta documentación no ejecuta una rotación ni desactiva cuentas.
 
 ## 7. Errores de autenticación y autorización
 

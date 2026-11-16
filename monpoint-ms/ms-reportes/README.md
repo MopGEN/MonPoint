@@ -1,5 +1,7 @@
 # ms-reportes
 
+Referencia HTTP (6.2): [campos, respuestas y permisos](../docs/api/reportes.md) · [seguridad y revocación](../docs/api/seguridad.md) · [arranque y pruebas](../docs/api/operacion.md).
+
 Configuración de la empresa, proyecciones, datos para gráficas y documentos PDF de MonPoint (H-050 a H-056; épica E-05).
 Puerto interno **8085**, base `reportes_db`, usuario `reportes_user`.
 Se llega a él **solo a través del Gateway** (`http://localhost:8080/reportes/...`); no publica puertos.
@@ -17,7 +19,7 @@ servicio **no valida el JWT** y verifica el rol él mismo. Los errores salen en 
 
 ## Endpoints
 
-Todos exigen token en el Gateway. Sin identidad: **401**; un rol que no sea `ADMIN` ni `VENDEDOR`: **400**.
+Todos exigen token en el Gateway. Un JWT con rol desconocido recibe **401** allí. Internamente, faltar cabeceras da **401** y convertir una cabecera ajena al enum Rol da **400**; no son la misma capa de validación.
 
 | Método y ruta | Rol | Éxito | Errores |
 |---|---|---|---|
@@ -31,8 +33,10 @@ Todos exigen token en el Gateway. Sin identidad: **401**; un rol que no sea `ADM
 
 Cuerpo de la configuración:
 `{"nombreEmpresa":"Papelería Monpoint","rfc":"MON850101AB1","direccion":"Calle 1","telefono":"3312345678"}`.
-`nombreEmpresa` y `rfc` son obligatorios; el RFC se guarda en mayúsculas. Una dirección o un teléfono en blanco se
+`nombreEmpresa` (máximo 120) y `rfc` son obligatorios; ConfiguracionRequest valida el patrón de RFC y lo guarda en mayúsculas. `direccion` admite hasta 200 y `telefono` hasta 30 caracteres. Una dirección o un teléfono en blanco se
 guardan como `null`.
+
+El ticket no pasa UsuarioActual a DocumentoService: no hay comprobación interna de rol ni propiedad; la exigencia de JWT/cabeceras no debe confundirse con esa guarda. Ver [seguridad](../docs/api/seguridad.md).
 
 ### Fechas y zona horaria
 
@@ -54,7 +58,7 @@ parte de su periodo.
 
 ### PDF
 
-- `Content-Type: application/pdf`, `Content-Disposition: inline` (el navegador lo abre en su visor) y
+- `Content-Type: application/pdf`, `Content-Disposition: inline` (sugiere apertura en visor, si se navega con una petición autorizada) y
   `Cache-Control: no-store`. Nombres: `ticket-folio-42.pdf`, `historial-ventas-2026-11-01-a-2026-11-30.pdf`,
   `listado-productos-2026-11-08.pdf`.
 - Encabezado con los datos de la empresa; si aún no se configuran, dice **«Empresa sin configurar»** y el PDF se
@@ -154,6 +158,7 @@ listeners aunque estén desactivados.
 | No hay reporte por vendedor | El evento de venta no trae quién la registró | Cualquier VENDEDOR puede pedir el ticket de cualquier venta |
 | Proveedores sin proyección | La gestión de proveedores quedó fuera del alcance (Doc 01 §7.4) y nadie publica sus eventos | `contrapartes_proy` solo tiene `tipo = CLIENTE` |
 | El listado de productos no muestra existencias | Los eventos de producto no la traen; la autoridad del stock es ms-inventario | Solo nombre y precio |
+| El ticket no tiene guarda interna de rol/propiedad | DocumentoService.ticket solo recibe id; depende de Gateway y cabeceras del controlador | Cualquier ADMIN/VENDEDOR con un id disponible puede obtenerlo |
 | Contraseñas de desarrollo en archivos versionados | `reportes_pass` está en `infra/mongo-init` y en los valores por omisión, igual que en los demás servicios | Válido solo para desarrollo; en otro entorno se pasa `MONGO_URI` por variable |
 | 503 unos segundos tras reiniciar el contenedor | Con `eureka.client.healthcheck.enabled=true`, la instancia pasa UP → DOWN → UP al registrarse, y el Gateway guarda en caché el registro unos 30 s | Pasa en todos los servicios de dominio; se resuelve solo |
 

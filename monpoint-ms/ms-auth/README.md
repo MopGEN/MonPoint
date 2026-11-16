@@ -1,5 +1,7 @@
 # ms-auth
 
+Referencia HTTP (6.2): [campos, respuestas y permisos](../docs/api/auth.md) · [seguridad y revocación](../docs/api/seguridad.md) · [arranque y pruebas](../docs/api/operacion.md).
+
 Autenticación y gestión de usuarios de MonPoint (épica E-01: H-010 a H-014). Emite el **JWT** que el API Gateway
 valida en cada petición. Es el primer servicio terminado y sirve de **referencia para construir los demás**: la
 [Guía para tu microservicio](#guía-para-tu-microservicio) reúne lo que todos deben respetar, con código listo para copiar.
@@ -44,7 +46,7 @@ Cliente ──POST /auth/login──► Gateway :8080 ──(ruta pública; borr
                                                 RequestIdFilter      → X-Request-ID en logs y respuesta
                                                 AuthController       → valida el DTO (@Valid)
                                                 AuthService          → busca por correo normalizado y compara BCrypt
-                                                                       (mismo tiempo si el correo no existe)
+                                                                       (también compara BCrypt si el correo no existe)
                                                 JwtService           → firma HS256 {sub, userId, rol, iat, exp}
 Cliente ◄────────────── 200 {token, tipo, correo, nombre, rol, expiraEn} ──────────────┘
 
@@ -110,13 +112,13 @@ pero no se crea al iniciar una base nueva.
 - **Roles:** exclusivamente `ADMIN` o `VENDEDOR`, uno por usuario. Otro valor ➔ 400.
 - **Correo:** siempre se llama `correo` (nunca `email`) y se normaliza con `trim().toLowerCase()`. Es único (índice declarado).
 - **Contraseña:** mínimo 8 caracteres y máximo 72 bytes UTF-8, con al menos una mayúscula, una minúscula, un dígito y un símbolo `@$!%*?&`. El 400 dice qué regla falló.
-- **Login opaco:** correo inexistente, contraseña incorrecta o cuenta inactiva dan el mismo 401, en el mismo tiempo.
+- **Login opaco:** correo inexistente, contraseña incorrecta o cuenta inactiva dan el mismo 401; se compara BCrypt también para correo inexistente, sin prometer latencias idénticas.
 - **Nunca** se devuelve el hash de la contraseña.
 
 ### El token (resumen; detalle en el contrato)
-- HS256 con `JWT_SECRET` en **texto plano UTF-8** (no Base64), mínimo 32 caracteres, **idéntica en el Gateway**.
-- Claims: `sub` (correo), `userId` (ObjectId), `rol`, `iat`, `exp`. Vigencia de 24 h.
-- No se revocan: desactivar a un usuario no invalida los tokens que ya tenía hasta que vencen.
+- HS256 con `JWT_SECRET` en **texto plano UTF-8** (no Base64), mínimo 32 bytes, **idéntica en el Gateway**.
+- Claims: `sub` (correo), `userId` (ObjectId), `rol`, `iat`, `exp`. Vigencia **por omisión** de 24 h (`JWT_EXPIRATION_MS=86400000`).
+- Desactivar, cambiar contraseña o cambiar rol no revoca tokens previos. Reducir la vigencia solo afecta a nuevas emisiones. La única invalidación global inmediata implementada es rotar `JWT_SECRET` en todas las instancias de auth y Gateway; ver [seguridad](../docs/api/seguridad.md).
 
 ### Datos que guarda
 Colección `usuarios` en `auth_db`: `_id`, `correo` (índice único), `password_hash`, `nombre`, `rol`, `activo`,
@@ -149,7 +151,10 @@ Colección `usuarios` en `auth_db`: `_id`, `correo` (índice único), `password_
 
 ```bash
 cd monpoint-ms/infra
-cp .env.example .env          # solo la primera vez; luego CAMBIA las contraseñas y JWT_SECRET
+if [ ! -f .env ]; then
+  cp .env.example .env
+fi
+# Configurar las claves y la semilla nominal en el .env privado antes de continuar.
 docker compose up -d --build
 ```
 
@@ -172,13 +177,17 @@ cd ../ms-auth && JWT_SECRET='<el de tu .env>' ./mvnw spring-boot:run     # queda
 
 ## Pruebas
 
+Configurar las cuatro AUTOTACHI_*_PASSWORD y la bandera de semilla en el proceso
+de pruebas, con MongoDB aislado. El .env de Compose no se carga automáticamente
+en Maven.
+
 ```bash
 cd monpoint-ms/infra && docker compose up -d mongodb     # las de integración usan MongoDB real
 cd ../ms-auth && ./mvnw test
 ```
 
-68 pruebas: unitarias (JUnit 5 + Mockito), de API y seguridad (`@WebMvcTest` + MockMvc con la seguridad real) y de
-integración contra MongoDB. Postman: importa `docs/postman/` y corre la colección; con `baseUrl` en `8080` pasa por el Gateway.
+La suite combina unitarias, API/seguridad (`@WebMvcTest` + MockMvc) e integración con MongoDB.
+La ejecución de la semilla nominal conservó [76 pruebas correctas](../../docs/aceptacion/semilla-nominal-2026-11-16/auth-maven.txt); no es una ejecución nueva de 6.2. Para la suite completa actual configurar las cuatro claves nominales y la bandera en una base aislada; ver [operación](../docs/api/operacion.md). Las colecciones Postman históricas pueden referirse al administrador genérico; adaptar el entorno privado a las cuentas nominales sin versionar claves.
 
 ## Estructura (capas)
 
@@ -227,13 +236,12 @@ Si dos fuentes chocan, manda la de arriba. Ante la ambigüedad, se escala al Pro
 | Qué se construye y cuándo (incluido el **alcance recortado**, §7.4) | `docs/planeacion/MonPoint_MS_01_Plan_de_Trabajo_del_Equipo.pdf` |
 | Criterios de aceptación de cada historia (H-xxx) | `docs/planeacion/MonPoint_MS_03_Product_Backlog_y_Convenciones_de_Trabajo.pdf` |
 | Colecciones, campos, tipos e índices | `docs/planeacion/MonPoint_MS_04_Modelo_de_Datos.pdf`, transcrito en [`docs/modelo-datos/`](../docs/modelo-datos/README.md) |
-| Eventos (nombres, campos, routing keys, colas) | `docs/eventos/`: **catálogo pendiente** (H-008). Ver G10 |
+| Eventos (nombres, campos, routing keys, colas) | Contratos actuales en `docs/eventos/`; ver [producto](../docs/eventos/producto.md), [cliente](../docs/eventos/cliente.md) y [cierre de venta](../docs/eventos/venta-cierre.md). Ver G10 |
 | Rutas, cabeceras y errores del Gateway | [`api-gateway/README.md`](../api-gateway/README.md) |
 | Registro en Eureka | [`eureka-server/README.md`](../eureka-server/README.md) |
 | Ramas, commits y PR | [`CONTRIBUTING.md`](../CONTRIBUTING.md) |
 
-**Recortado (Doc 01 §7.4), no se construye:** patrón outbox, gestión de proveedores, paginación, filtros y
-ordenamiento en listados, comprobantes en PDF y pantallas de administración del cliente web.
+El plan original (Doc 01 §7.4) recortaba outbox, proveedores, paginación, filtros/ordenamiento, PDF y pantallas de administración. La implementación posterior sí incluye PDF, administración web y filtros concretos; el [inventario HTTP de 6.2](../docs/api/README.md) describe el estado actual. Esta guía de construcción no sustituye ese inventario ni modifica los documentos históricos de planeación.
 
 ### G3. Proyecto Maven
 
@@ -710,13 +718,9 @@ public record ProductoResponse(String id, String nombre, String descripcion, Big
 | ms-inventario | `ProductoCreado`, `ProductoActualizado`, `ProductoDadoDeBaja`, `StockReservado`, `StockRechazado`, `StockBajo` | `VentaCreada` |
 | ms-ventas | `VentaCreada`, `VentaConfirmada`, `VentaCancelada` | `Producto*`, `Cliente*`, `StockReservado`, `StockRechazado` |
 | ms-reportes | — | `Producto*`, `Cliente*`, `VentaConfirmada`, `VentaCancelada` |
-| ms-notificaciones | — | `StockBajo`, `VentaConfirmada`, `VentaCancelada` |
+| ms-notificaciones | — | `StockBajo` (el consumidor implementado no consume cierres de venta) |
 
-> ⛔ **Lo que todavía NO está decidido:** los campos de `datos` de cada evento, las routing keys, los nombres de
-> las colas, el formato de `version` y la configuración de reintentos. Los define el **catálogo de eventos**
-> (`docs/eventos/`, H-008, lo aprueba el Product Owner), que **aún está vacío**. **No los inventes.** Mientras
-> tanto, puedes construir la lógica del servicio y probar consumidores publicando mensajes a mano desde la
-> consola de RabbitMQ (http://localhost:15672).
+Los contratos implementados ya están en `docs/eventos/`: sobre, datos, routing keys, colas y límites. Consultarlos antes de cambiar productores o consumidores. Las publicaciones manuales de prueba no acreditan una venta HTTP ni un recorrido extremo a extremo y deben hacerse en un entorno aislado.
 
 ### G11. Spring Security en servicios de dominio
 
