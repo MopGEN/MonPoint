@@ -1,0 +1,12 @@
+erDiagram
+    direction LR
+    usuarios {
+        ObjectId _id PK
+        String correo UK "normalizado"
+        String password_hash "BCrypt"
+        String nombre
+        String rol "ADMIN o VENDEDOR"
+        Boolean activo "baja logica"
+        Date creado_en "UTC"
+        Date actualizado_en "UTC"
+    }

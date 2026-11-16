@@ -1,0 +1,20 @@
+erDiagram
+    direction LR
+    notificaciones {
+        ObjectId _id PK
+        String tipo "STOCK_BAJO"
+        ObjectId productoId "no FK"
+        String productoNombre
+        Int32 existenciaResultante "valor del evento"
+        String mensaje
+        Boolean activa "indice unico parcial"
+        Boolean leida
+        Date fechaCreacion "UTC"
+        Date fechaLectura "opcional UTC"
+    }
+    eventos_procesados {
+        ObjectId _id PK
+        String eventoId UK "idempotencia"
+        String tipo
+        Date fechaProcesado "UTC"
+    }

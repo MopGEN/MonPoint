@@ -1,0 +1,11 @@
+erDiagram
+    direction LR
+    clientes {
+        ObjectId _id PK
+        String nombre
+        String correo "opcional, no unico"
+        String telefono "opcional"
+        String direccion "opcional"
+        Date fechaRegistro "UTC"
+        Date fechaActualizacion "UTC"
+    }

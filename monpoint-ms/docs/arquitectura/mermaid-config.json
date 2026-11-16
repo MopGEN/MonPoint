@@ -1,0 +1,23 @@
+{
+  "theme": "base",
+  "securityLevel": "strict",
+  "deterministicIds": true,
+  "deterministicIDSeed": "monpoint-6.3",
+  "themeVariables": {
+    "fontFamily": "Arial, sans-serif",
+    "fontSize": "15px",
+    "primaryColor": "#F2F5F8",
+    "primaryTextColor": "#16202B",
+    "primaryBorderColor": "#12233F",
+    "lineColor": "#4E5A6B",
+    "secondaryColor": "#E1F3EB",
+    "tertiaryColor": "#FFF4DE"
+  },
+  "sequence": {
+    "actorMargin": 30,
+    "messageMargin": 28,
+    "noteMargin": 14,
+    "wrap": true,
+    "mirrorActors": false
+  }
+}

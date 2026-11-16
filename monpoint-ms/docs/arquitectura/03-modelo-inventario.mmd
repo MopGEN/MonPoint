@@ -1,0 +1,19 @@
+erDiagram
+    direction LR
+    productos {
+        ObjectId _id PK
+        String nombre
+        String descripcion "opcional"
+        Decimal128 precio
+        Int32 existencia "autoridad de stock"
+        Int32 umbralStock
+        Boolean activo "baja logica"
+        Date fechaRegistro "UTC"
+        Date fechaActualizacion "UTC"
+    }
+    eventos_procesados {
+        ObjectId _id PK
+        String eventoId UK "idempotencia"
+        String tipo
+        Date fechaProcesado "UTC"
+    }

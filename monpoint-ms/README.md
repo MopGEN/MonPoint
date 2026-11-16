@@ -17,6 +17,11 @@ internas, los dos mecanismos de autorización, el rol por cadena de ventas y
 el ticket sin guarda interna. La vigencia JWT por omisión es de 24 horas y no
 hay revocación individual implementada.
 
+## Diagramas (6.3)
+
+[Componentes, secuencia de venta con rechazo y modelo documental por servicio](docs/arquitectura/README.md),
+con fuentes Mermaid y vistas SVG. El diagrama JPG original se conserva como referencia histórica.
+
 ## Cómo levantar el sistema
 
 ```bash

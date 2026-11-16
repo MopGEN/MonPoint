@@ -1,0 +1,28 @@
+flowchart TB
+    C["Cliente Vue 3<br/>nginx · host :3000"] -->|"HTTP + Bearer JWT"| G["API Gateway · host :8080<br/>Valida JWT y sustituye X-User-Id/Role"]
+    E["Eureka Server<br/>Registro y descubrimiento<br/>host loopback :8761"]
+    G -.->|"descubre instancias UP"| E
+    A["ms-auth :8081<br/>Usuarios y JWT · auth_db<br/>Revalida Bearer con Spring Security<br/>Fuera del bus"]
+    G -->|"HTTP /auth/**"| A
+    subgraph DOMINIOS["Cinco servicios · identidad por cabeceras del Gateway · sin puertos publicados"]
+        direction LR
+        CL["ms-clientes :8084<br/>clientes_db<br/>Directorio"]
+        I["ms-inventario :8082<br/>inventario_db<br/>Productos y reserva atómica"]
+        V["ms-ventas :8083<br/>ventas_db<br/>Folio y saga"]
+        R["ms-reportes :8085<br/>reportes_db<br/>Proyecciones, empresa y PDF"]
+        N["ms-notificaciones :8086<br/>notificaciones_db<br/>Solo consume StockBajo"]
+    end
+    G -->|"HTTP con prefijo completo<br/>y cabeceras de identidad"| DOMINIOS
+    DOMINIOS -.->|"cada servicio registra instancia y salud"| E
+    A -.->|"registro y salud"| E
+    M[("MongoDB 7 · replica set rs0<br/>Una instancia, seis bases lógicas<br/>Usuario restringido por servicio")]
+    A --> M
+    DOMINIOS -->|"cada servicio usa solo su base"| M
+    B["RabbitMQ<br/>Topic exchanges: clientes.eventos,<br/>inventario.eventos y ventas.eventos<br/>Colas por consumidor y colas .fallidos"]
+    DOMINIOS <-->|"Eventos asíncronos<br/>Productores y consumidores: ver tabla en README"| B
+    classDef edge fill:#12233F,color:#FFFFFF,stroke:#12233F
+    classDef bus fill:#FFF4DE,color:#16202B,stroke:#B57519
+    classDef db fill:#E1F3EB,color:#16202B,stroke:#17795A
+    class C,G,E edge
+    class B bus
+    class M db

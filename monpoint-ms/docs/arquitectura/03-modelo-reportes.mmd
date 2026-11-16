@@ -1,0 +1,48 @@
+erDiagram
+    direction LR
+    configuracion {
+        String _id PK "config"
+        String nombreEmpresa
+        String rfc
+        String direccion "opcional"
+        String telefono "opcional"
+        Date fechaActualizacion "UTC"
+    }
+    ventas_proy {
+        ObjectId _id PK "mismo id de ventas"
+        Int64 folio
+        String clienteNombre "snapshot opcional"
+        String estado "CONFIRMADA o CANCELADA"
+        Array lineas "documentos embebidos"
+        Decimal128 total
+        Date fecha "resolucion de origen"
+    }
+    lineas_embebidas {
+        String productoId "String en mapping actual"
+        String nombreProducto "snapshot"
+        Decimal128 precioUnitario "snapshot"
+        Int32 cantidad "sin importe persistido"
+    }
+    productos_proy {
+        ObjectId _id PK "mismo id de inventario"
+        String nombre
+        Decimal128 precio
+        Boolean activo
+        Date fechaActualizacion "fecha de origen"
+    }
+    contrapartes_proy {
+        ObjectId _id PK "mismo id de clientes"
+        String tipo "solo CLIENTE alimentado"
+        String nombre
+        String correo "opcional"
+        String telefono "opcional"
+        String direccion "opcional"
+        Date fechaActualizacion "fecha de origen"
+    }
+    eventos_procesados {
+        ObjectId _id PK
+        String eventoId UK "idempotencia"
+        String tipo
+        Date fechaProcesado "UTC"
+    }
+    ventas_proy ||--|{ lineas_embebidas : "embebe, no es coleccion"

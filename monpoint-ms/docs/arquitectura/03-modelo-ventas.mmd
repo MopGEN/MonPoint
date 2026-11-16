@@ -1,0 +1,44 @@
+erDiagram
+    direction LR
+    ventas {
+        ObjectId _id PK
+        Int64 folio UK "secuencial"
+        ObjectId clienteId "opcional"
+        String clienteNombre "snapshot opcional"
+        String estado "PENDIENTE CONFIRMADA CANCELADA"
+        String motivoCancelacion "opcional"
+        ObjectId productoIdRechazado "opcional"
+        Array lineas "documentos embebidos"
+        Decimal128 total "calculado en servidor"
+        Date fechaCreacion "UTC"
+        Date fechaResolucion "opcional UTC"
+    }
+    lineas_embebidas {
+        ObjectId productoId "trazabilidad, sin FK"
+        String nombreProducto "snapshot"
+        Decimal128 precioUnitario "snapshot"
+        Int32 cantidad "sin subtotal persistido"
+    }
+    productos_replica {
+        ObjectId _id PK "mismo id de inventario"
+        String nombre
+        Decimal128 precio
+        Boolean activo
+        Date fechaActualizacion "fecha de origen"
+    }
+    clientes_replica {
+        ObjectId _id PK "mismo id de clientes"
+        String nombre
+        Date fechaActualizacion "fecha de origen"
+    }
+    contadores {
+        String _id PK "venta_folio"
+        Int64 valor "incremento atomico"
+    }
+    eventos_procesados {
+        ObjectId _id PK
+        String eventoId UK "idempotencia"
+        String tipo
+        Date fechaProcesado "UTC"
+    }
+    ventas ||--|{ lineas_embebidas : "embebe, no es coleccion"
