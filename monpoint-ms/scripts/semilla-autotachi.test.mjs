@@ -9,7 +9,7 @@ import { sembrarAutotachi, cuentas, productos, catalogo } from './semilla-autota
 async function servicio(t) {
   const env = Object.fromEntries(cuentas.map((c, i) => [c.variable, `ClavePrueba${i}!`]))
   const usuarios = cuentas.map((c, i) => ({ id: `u${i}`, nombre: c.nombre, correo: c.correo, rol: c.rol, activo: true }))
-  const estado = { usuarios, productos: [], peticiones: [], fallo: null }
+  const estado = { usuarios, productos: [], empresa: null, peticiones: [], fallo: null }
   const servidor = http.createServer(async (req, res) => {
     const partes = []
     for await (const parte of req) partes.push(parte)
@@ -25,6 +25,14 @@ async function servicio(t) {
     const i = cuentas.findIndex((_, j) => req.headers.authorization === `Bearer token-${j}`)
     if (i < 0) return responder(401, {})
     if (req.url === '/auth/me') return responder(200, usuarios[i])
+    if (req.url === '/reportes/configuracion') {
+      if (req.method === 'GET') return responder(estado.empresa ? 200 : 404, estado.empresa ?? {})
+      if (req.method === 'PUT' && usuarios[i].rol === 'ADMIN') {
+        estado.empresa = cuerpo
+        return responder(200, cuerpo)
+      }
+      return responder(403, {})
+    }
     if (req.url !== '/inventario/productos') return responder(404, {})
     if (req.method === 'GET') return responder(200, estado.productos)
     if (usuarios[i].rol !== 'ADMIN') return responder(403, {})
@@ -169,4 +177,99 @@ test('CLI sale con 1 sin imprimir claves, token ni cuerpo del servidor', async t
   assert.equal(JSON.parse(salida).resumen.estado, 'INTERRUMPIDA')
   for (const cuenta of cuentas) assert.ok(!salida.includes(env[cuenta.variable]))
   assert.ok(!salida.includes('token-0'))
+})
+
+const empresaEntorno = {
+  SEMILLA_EMPRESA_HABILITADA: 'true', AUTOTACHI_EMPRESA_NOMBRE: ' Auto Tachi Refacciones y Accesorios ',
+  AUTOTACHI_EMPRESA_RFC: ' xaxx010101000 ', AUTOTACHI_EMPRESA_DIRECCION: ' Av. Prueba 1 ',
+}
+const empresaEsperada = { nombreEmpresa: 'Auto Tachi Refacciones y Accesorios', rfc: 'XAXX010101000', direccion: 'Av. Prueba 1', telefono: null }
+
+test('empresa deshabilitada no consulta reportes ni cambia la importacion previa', async t => {
+  const { env, estado } = await servicio(t)
+  const r = await sembrarAutotachi({ env })
+  assert.deepEqual(r.empresa, { accion: 'OMITIDA' })
+  assert.ok(estado.peticiones.every(p => p.ruta !== '/reportes/configuracion'))
+})
+
+test('empresa requiere nombre y RFC antes de cualquier peticion; no inventa valores', async t => {
+  const { env, estado } = await servicio(t)
+  for (const variable of ['AUTOTACHI_EMPRESA_NOMBRE', 'AUTOTACHI_EMPRESA_RFC']) {
+    await assert.rejects(sembrarAutotachi({ env: { ...env, ...empresaEntorno, [variable]: '' } }), new RegExp(variable))
+  }
+  await assert.rejects(sembrarAutotachi({ env: { ...env, SEMILLA_EMPRESA_HABILITADA: 'si' } }), /true o false/)
+  assert.equal(estado.peticiones.length, 0)
+})
+
+test('404 confirmado crea empresa por API; repetir no hace PUT ni repone stock', async t => {
+  const { env, estado } = await servicio(t)
+  const opciones = { env: { ...env, ...empresaEntorno } }
+  const r = await sembrarAutotachi(opciones)
+  assert.equal(r.empresa.accion, 'CREADA')
+  assert.deepEqual(estado.empresa, empresaEsperada)
+  assert.equal(estado.peticiones.filter(p => p.metodo === 'PUT').length, 1)
+  estado.productos[0].existencia = 1
+  estado.peticiones.length = 0
+  const repetida = await sembrarAutotachi(opciones)
+  assert.equal(repetida.empresa.accion, 'REUTILIZADA')
+  assert.equal(estado.productos[0].existencia, 1)
+  assert.equal(estado.peticiones.filter(p => p.metodo === 'PUT').length, 0)
+  assert.equal(altas(estado).length, 0)
+})
+
+test('empresa existente diferente o catalogo en conflicto bloquea escrituras sin deshacer ediciones', async t => {
+  const { env, estado } = await servicio(t)
+  estado.empresa = { ...empresaEsperada, nombreEmpresa: 'Nombre editado' }
+  await assert.rejects(sembrarAutotachi({ env: { ...env, ...empresaEntorno } }), /nombreEmpresa/)
+  assert.equal(estado.empresa.nombreEmpresa, 'Nombre editado')
+  assert.ok(estado.peticiones.every(p => p.metodo !== 'PUT'))
+  assert.equal(altas(estado).length, 0)
+  estado.empresa = null
+  estado.productos = [{ ...productos.at(-1), id: 'ultimo', activo: true, precio: 999 }]
+  await assert.rejects(sembrarAutotachi({ env: { ...env, ...empresaEntorno } }), /precio difiere/)
+  assert.equal(estado.empresa, null)
+})
+
+test('errores de lectura o validacion de empresa no se interpretan como ausencia', async t => {
+  const { env, estado } = await servicio(t)
+  for (const status of [403, 500]) {
+    estado.fallo = ({ req, responder }) => {
+      if (req.url !== '/reportes/configuracion') return false
+      responder(status, {}); return true
+    }
+    await assert.rejects(sembrarAutotachi({ env: { ...env, ...empresaEntorno } }), new RegExp(`HTTP ${status}`))
+    assert.equal(altas(estado).length, 0)
+    assert.ok(estado.peticiones.every(p => p.metodo !== 'PUT'))
+  }
+  estado.fallo = ({ req, responder }) => {
+    if (req.url !== '/reportes/configuracion') return false
+    responder(200, null); return true
+  }
+  await assert.rejects(sembrarAutotachi({ env: { ...env, ...empresaEntorno } }), /nombreEmpresa/)
+  assert.ok(estado.peticiones.every(p => p.metodo !== 'PUT'), '200 null no equivale a 404')
+  estado.fallo = ({ req, responder }) => {
+    if (req.url !== '/reportes/configuracion' || req.method !== 'PUT') return false
+    responder(400, { detail: 'Validacion del servidor' }); return true
+  }
+  await assert.rejects(sembrarAutotachi({ env: { ...env, ...empresaEntorno } }), /HTTP 400/)
+  assert.equal(altas(estado).length, 0)
+})
+
+test('PUT de empresa guardado sin respuesta no se repite y se verifica en la siguiente ejecucion', async t => {
+  const { env, estado } = await servicio(t)
+  estado.fallo = ({ req, res, cuerpo }) => {
+    if (req.url !== '/reportes/configuracion' || req.method !== 'PUT') return false
+    estado.empresa = cuerpo; res.destroy(); return true
+  }
+  await assert.rejects(sembrarAutotachi({ env: { ...env, ...empresaEntorno } }), error => {
+    assert.match(error.message, /puede haberse guardado/)
+    assert.equal(error.resumen.empresa.accion, 'SIN_CONFIRMAR')
+    return true
+  })
+  assert.equal(estado.peticiones.filter(p => p.metodo === 'PUT').length, 1)
+  assert.equal(altas(estado).length, 0)
+  estado.peticiones.length = 0; estado.fallo = null
+  const r = await sembrarAutotachi({ env: { ...env, ...empresaEntorno } })
+  assert.equal(r.empresa.accion, 'REUTILIZADA')
+  assert.equal(estado.peticiones.filter(p => p.metodo === 'PUT').length, 0)
 })

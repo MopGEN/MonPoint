@@ -1,0 +1,32 @@
+[
+  {
+    "ruta": "/fuentes/Inter-OFL.txt",
+    "metodo": "GET",
+    "estado": 200,
+    "tipo": "text/plain",
+    "nosniff": "nosniff",
+    "cache": null,
+    "bytes": 4380,
+    "sha256": "262481e844521b326f5ecd053e59b98c8b2da78c8ee1bdbb6e8174305e54935a"
+  },
+  {
+    "ruta": "/fuentes/IBM-Plex-Mono-OFL.txt",
+    "metodo": "GET",
+    "estado": 200,
+    "tipo": "text/plain",
+    "nosniff": "nosniff",
+    "cache": null,
+    "bytes": 4362,
+    "sha256": "d741e57d5f865e294df801f96b7b5161a88b211df65887e4358d271c9fc5fb4f"
+  },
+  {
+    "ruta": "/fuentes/no-existe.txt",
+    "metodo": "GET",
+    "estado": 200,
+    "tipo": "text/html",
+    "nosniff": "nosniff",
+    "cache": "no-cache",
+    "bytes": 449,
+    "sha256": "af07db5bc4dcb84a5f042345e07bb9cb75f9e95eb28b5f79e135e062b3cc8ff3"
+  }
+]

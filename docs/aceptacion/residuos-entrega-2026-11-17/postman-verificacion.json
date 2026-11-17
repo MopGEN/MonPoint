@@ -1,0 +1,10 @@
+{
+  "archivo": "monpoint-ms/ms-auth/docs/postman/monpoint-local.postman_environment.json",
+  "camposVacios": [
+    "adminPassword",
+    "vendedorPassword",
+    "authToken",
+    "vendedorToken"
+  ],
+  "verificado": true
+}

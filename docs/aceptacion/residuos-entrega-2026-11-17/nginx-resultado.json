@@ -1,0 +1,12 @@
+[
+  {
+    "variante": "corregido",
+    "codigo": 0,
+    "version": "nginx version: nginx/1.28.3"
+  },
+  {
+    "variante": "base",
+    "codigo": 1,
+    "version": "nginx version: nginx/1.28.3"
+  }
+]

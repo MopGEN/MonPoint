@@ -1,0 +1,9 @@
+{
+  "baseRevisada": "61883f5",
+  "hashBlobGit": {
+    "monpoint-ms/scripts/semilla-autotachi.mjs": "c5d161789634614fcf11822fbfabb64c463cd038",
+    "monpoint-ms/scripts/semilla-autotachi.test.mjs": "d22d706aaf498a1c9b814dc7cc9a77ddad59e001"
+  },
+  "pruebas": 54,
+  "fallos": 0
+}

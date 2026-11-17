@@ -22,6 +22,13 @@ hay revocación individual implementada.
 [Componentes, secuencia de venta con rechazo y modelo documental por servicio](docs/arquitectura/README.md),
 con fuentes Mermaid y vistas SVG. El diagrama JPG original se conserva como referencia histórica.
 
+## Cierre (6.4, borrador para revisión)
+
+[Resultado, decisiones, límites y alcance pendiente](docs/cierre/README.md), con
+trazabilidad a las ejecuciones conservadas. Incluye el [procedimiento pendiente
+en Windows](docs/cierre/VERIFICACION-WINDOWS.md): rotación JWT, empresa y segundo
+anfitrión. El borrador no declara ejecutadas esas operaciones ni cerrado H-095.
+
 ## Cómo levantar el sistema
 
 ```bash
@@ -172,6 +179,7 @@ usuario de un servicio no tiene permiso sobre las bases de los demás.
 | 02 — Requisitos y Alcance | Qué se construye y qué explícitamente no | [`docs/planeacion/`](docs/planeacion/MonPoint_MS_02_Especificacion_de_Requisitos_y_Alcance.pdf) |
 | 03 — Product Backlog | Historias con criterios de aceptación | [`docs/planeacion/`](docs/planeacion/MonPoint_MS_03_Product_Backlog_y_Convenciones_de_Trabajo.pdf) |
 | 04 — Modelo de Datos | Colecciones campo por campo | [`docs/planeacion/`](docs/planeacion/MonPoint_MS_04_Modelo_de_Datos.pdf) |
+| 6.4 — Cierre (borrador) | Resultado, decisiones, límites, evidencias y operaciones pendientes | [`docs/cierre/`](docs/cierre/README.md) |
 | Prototipo del cliente | Comportamiento y textos de la interfaz | [`docs/prototipo/index.html`](docs/prototipo/index.html) |
 | Diagrama de arquitectura | Componentes, tráfico HTTP y flujo de eventos | [`docs/arquitectura/`](docs/arquitectura/) |
 | Convenciones de trabajo | Ramas, confirmaciones, revisión e incidencias | [`CONTRIBUTING.md`](CONTRIBUTING.md) |

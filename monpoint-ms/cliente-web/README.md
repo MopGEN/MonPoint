@@ -521,6 +521,12 @@ el montaje del certificado corresponden al entorno de compilación.
 
 ## Caja (5.5)
 
+La comprobación aislada de nginx, sin API ni credenciales, se ejecuta con el
+contenedor del cliente ya iniciado: `node test/nginx-estaticos.mjs`.
+`BASE_URL` permite otro origen (por omisión http://127.0.0.1:3000).
+Verifica licencias OFL byte a byte, 404 de archivos inexistentes y siete
+enlaces profundos de la SPA; no es un recorrido de autenticación ni venta.
+
 El catálogo se presenta como tarjetas pulsables con nombre, precio y existencia:
 neutra sobre el umbral, aviso en o bajo el umbral y error cuando no queda
 existencia. Las tarjetas sin existencia siguen disponibles; la reserva la decide

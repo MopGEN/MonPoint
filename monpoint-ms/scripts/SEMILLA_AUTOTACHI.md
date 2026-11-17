@@ -1,7 +1,7 @@
 # Semilla nominal y catálogo Auto Tachi
 
 La semilla tiene dos pasos: `ms-auth` añade las cuentas al arrancar y
-`semilla-autotachi.mjs` importa el catálogo por el Gateway. No hay panel de
+`semilla-autotachi.mjs` importa el catálogo y, opcionalmente, la empresa por el Gateway. No hay panel de
 credenciales en el cliente ni contraseñas por omisión en el inicializador.
 
 | Nombre | Correo de acceso | Rol inicial | Variable de contraseña |
@@ -14,8 +14,9 @@ credenciales en el cliente ni contraseñas por omisión en el inicializador.
 Nombres y dominio proceden del prototipo. Por acuerdo del equipo, los tres
 nominales son ADMIN, aunque el prototipo daba VENDEDOR a Alejandro y Hugo.
 Los correos son identificadores de login: no se envía correo ni se acredita
-propiedad de esos buzones. La cuarta cuenta es compartida; sus ventas no
-permiten distinguir qué persona la utilizó.
+propiedad de esos buzones. La cuarta cuenta es compartida. Además, Venta no
+persiste el usuario que la registró: tampoco hay atribución de ventas para las
+cuentas nominales.
 
 ## Preparación en Windows
 
@@ -94,7 +95,41 @@ Antes del primer POST se comprueba todo el catálogo existente por nombre exacto
 Un precio, descripción o umbral diferente o nombres duplicados producen conflicto.
 La existencia se excluye de esa comparación: al repetir no se repone stock
 consumido ni se deshacen ajustes. Solo se envía POST para productos ausentes;
-no hay PUT, PATCH, DELETE, registro de usuarios por API ni creación de ventas.
+no hay PUT de productos, PATCH, DELETE, registro de usuarios por API ni creación de ventas.
+
+## Empresa reproducible, opcional
+
+En el `.env` privado, establecer `SEMILLA_EMPRESA_HABILITADA=true`,
+`AUTOTACHI_EMPRESA_NOMBRE` y `AUTOTACHI_EMPRESA_RFC`. El nombre de la entrega es
+«Auto Tachi Refacciones y Accesorios». Configurar el RFC acordado para esa
+instalación; no hay uno por omisión ni se deduce del prototipo. Opcionalmente
+definir `AUTOTACHI_EMPRESA_DIRECCION` y `AUTOTACHI_EMPRESA_TELEFONO` (vacíos
+equivalen a null). La plantilla deja la función deshabilitada hasta completar
+esos datos. Estas variables las lee Node; no es necesario pasarlas a los
+contenedores en Compose.
+
+Después de verificar las cuentas y los conflictos del catálogo, el mismo
+comando consulta `GET /reportes/configuracion`. Solo un **404 confirmado**
+permite un `PUT` autenticado ADMIN para crear el documento único. El servidor
+valida RFC y tamaños; el guion no inventa otra política. Si existe y coincide,
+lo reutiliza sin PUT. Si difiere en algún campo, se interrumpe sin sobrescribir
+la empresa ni crear productos. Un 403, 5xx, respuesta inválida o 200 null no
+equivale a ausencia.
+
+Para el volumen actual, entrar a **Reportes → Datos de la empresa → Editar**
+y cambiar solo el nombre, conservando RFC, dirección y teléfono. Esa pantalla
+usa PUT por el Gateway. Alinear luego el `.env` con esos datos antes de repetir
+la semilla. El login conserva una marca estática pública; no consulta este
+endpoint autenticado ni necesita un endpoint público nuevo. Otra marca exige
+modificar conscientemente la presentación del login.
+
+El resumen incluye `empresa.accion`: OMITIDA, VERIFICANDO, SIN_CONFIRMAR,
+CREADA o REUTILIZADA. Una escritura que pierde su respuesta queda SIN_CONFIRMAR,
+no se reintenta y puede haberse guardado; consultar antes de repetir. La siguiente
+ejecución la reutiliza si coincide. No hay una transacción entre empresa y
+productos: un fallo posterior no revierte lo ya creado. Ejecutar una sola
+instancia; el GET/PUT inicial no es un compare-and-set frente a ediciones
+concurrentes.
 
 Las cuentas y productos genéricos anteriores **permanecen**: no se ejecuta
 `down -v`, no se borran ventas y no se reinician folios. Una base nueva tiene
@@ -117,7 +152,8 @@ incompleto tras un POST puede significar alta ya persistida. La salida marca
 esté ausente. Esperar a que el servidor termine, revisar el listado y resolver
 antes de repetir. Un 201 con datos discordantes también requiere esa revisión.
 
-`COMPLETADA` acredita los cuatro accesos y las respuestas de catálogo verificadas.
+`COMPLETADA` acredita los cuatro accesos, las respuestas de catálogo y, si se
+habilitó, los datos de empresa verificados.
 No acredita ventas, tickets, proyecciones de reportes ni alertas. Crear un
 producto con stock bajo no emite por sí mismo `StockBajo`; esa emisión sucede
 al reservar existencias. No se fabrican notificaciones para imitar el prototipo.
