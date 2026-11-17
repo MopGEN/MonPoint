@@ -16,7 +16,6 @@ export const productos = catalogo.filter(p => p.activo).map(p => ({
   existencia: p.existencia, umbralStock: p.umbralStock,
 }))
 const camposCatalogo = ['descripcion', 'precio', 'umbralStock', 'activo']
-const EMPRESA_AUSENTE = Symbol('configuracion 404')
 
 function empresaDelEntorno(env) {
   const habilitada = env.SEMILLA_EMPRESA_HABILITADA ?? 'false'
@@ -71,45 +70,48 @@ export async function sembrarAutotachi({ env = process.env, fetchImpl = fetch, t
         try { await respuesta.body?.cancel() } catch { /* No imprimir errores del transporte. */ }
         throw new Error(`${operacion}: HTTP ${respuesta.status}.${escritura && respuesta.status >= 500 ? incierto : ''}`)
       }
-      if (respuesta.status === 404) {
+      // Un estado no exitoso admitido conserva su codigo para el llamador;
+      // este helper no le atribuye un significado de negocio.
+      if (!respuesta.ok) {
         await respuesta.body?.cancel()
-        return EMPRESA_AUSENTE
+        return { estado: respuesta.status, datos: null }
       }
-      try { return await respuesta.json() }
+      try { return { estado: respuesta.status, datos: await respuesta.json() } }
       catch { throw new Error(`${operacion}: respuesta JSON incompleta.${incierto}`) }
     }
     let adminToken
     // DataInitializer crea las cuentas; aquí solo se verifica el login y perfil de las cuatro.
     for (const cuenta of cuentas) {
-      const acceso = await api('POST', '/auth/login', { correo: cuenta.correo, password: env[cuenta.variable] }, 200)
+      const { datos: acceso } = await api('POST', '/auth/login', { correo: cuenta.correo, password: env[cuenta.variable] }, 200)
       exigir(acceso?.correo === cuenta.correo && acceso.rol === cuenta.rol
         && typeof acceso.token === 'string' && acceso.token.length > 0,
       `Login discordante para ${cuenta.correo}; revisar su identidad y rol.`)
-      const perfil = await api('GET', '/auth/me', null, 200, acceso.token)
+      const { datos: perfil } = await api('GET', '/auth/me', null, 200, acceso.token)
       exigir(perfil?.correo === cuenta.correo && perfil.nombre === cuenta.nombre && perfil.rol === cuenta.rol
         && perfil.activo === true && typeof perfil.id === 'string' && perfil.id.length > 0,
       `Perfil discordante para ${cuenta.correo}; no se modificó la cuenta.`)
       resumen.usuarios.push({ id: perfil.id, correo: cuenta.correo, rol: cuenta.rol, accion: 'VERIFICADO' })
       if (!adminToken) adminToken = acceso.token
     }
-    const lista = await api('GET', '/inventario/productos', null, 200, adminToken)
+    const { datos: lista } = await api('GET', '/inventario/productos', null, 200, adminToken)
     // Comprobar todo antes de escribir. Stock excluido: nunca reponer consumo ni ajustes.
     const existentes = productos.map(p => coincidencia(lista, 'nombre', { ...p, activo: true }, camposCatalogo))
     if (empresa) {
       resumen.empresa = { accion: 'VERIFICANDO' }
-      const anterior = await api('GET', '/reportes/configuracion', null, [200, 404], adminToken)
+      const consulta = await api('GET', '/reportes/configuracion', null, [200, 404], adminToken)
+      const ausente = consulta.estado === 404
       // PUT tiene id fijo en el servidor, pero actualizar en cada arranque
       // desharia ediciones legitimas. Solo crear ante un 404 confirmado.
-      if (anterior !== EMPRESA_AUSENTE) comprobarEmpresa(anterior, empresa)
+      if (!ausente) comprobarEmpresa(consulta.datos, empresa)
       else resumen.empresa = { accion: 'SIN_CONFIRMAR' }
-      const actual = anterior === EMPRESA_AUSENTE
-        ? await api('PUT', '/reportes/configuracion', empresa, 200, adminToken) : anterior
+      const actual = ausente
+        ? (await api('PUT', '/reportes/configuracion', empresa, 200, adminToken)).datos : consulta.datos
       comprobarEmpresa(actual, empresa)
-      resumen.empresa = { accion: anterior === EMPRESA_AUSENTE ? 'CREADA' : 'REUTILIZADA', nombreEmpresa: actual.nombreEmpresa }
+      resumen.empresa = { accion: ausente ? 'CREADA' : 'REUTILIZADA', nombreEmpresa: actual.nombreEmpresa }
     }
     for (const [i, producto] of productos.entries()) {
       const existente = existentes[i]
-      const actual = existente ?? await api('POST', '/inventario/productos', producto, 201, adminToken)
+      const actual = existente ?? (await api('POST', '/inventario/productos', producto, 201, adminToken)).datos
       exigir(actual?.nombre === producto.nombre, `Alta discordante de ${producto.nombre}; revisar el listado antes de repetir.`)
       coincidencia([actual], 'nombre', { ...producto, activo: true },
         existente ? camposCatalogo : [...camposCatalogo, 'existencia'])

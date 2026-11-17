@@ -44,7 +44,7 @@ el archivo. Ejecutar desde `monpoint-ms`:
     $textoEntorno = [IO.File]::ReadAllText($rutaEntorno)
     $patronClave = '(?m)^[\t ]*JWT_SECRET[\t ]*=[^\r\n]*'
     if ([regex]::Matches($textoEntorno, $patronClave).Count -ne 1) {
-        throw 'Se requiere exactamente una linea JWT_SECRET; revisar el archivo en privado.'
+        throw 'Se requiere exactamente una linea JWT_SECRET; revisar duplicados y codificacion en privado (p. ej., UTF-16 sin BOM).'
     }
     $bytesClave = New-Object byte[] 32
     $generadorClave = [Security.Cryptography.RandomNumberGenerator]::Create()
@@ -74,6 +74,13 @@ borrado seguro de memoria. El bloque escribe y comprueba un temporal junto al
 original antes de reemplazarlo, para no truncar el `.env` si falla la escritura.
 Conserva el contenido de las otras líneas, pero usa UTF-8 sin BOM. Requiere un
 sistema de archivos Windows que admita File.Replace. No ejecutar `down -v`.
+
+ReadAllText detecta un BOM y, si no existe, interpreta UTF-8. Un `.env` en
+UTF-16 sin BOM puede contener caracteres NUL que impidan reconocer la línea;
+en ese caso se detiene antes de modificar el original. Revisar la codificación
+con un editor privado y guardar como UTF-8 antes de reintentar, sin imprimir el
+archivo ni convertirlo a ciegas. Una coincidencia ausente no demuestra por sí
+sola que falte la variable.
 
 Esperar a que ambos servicios estén saludables y registrados. El Gateway puede
 conservar temporalmente destinos de Eureka anteriores; un 503 no prueba rechazo
