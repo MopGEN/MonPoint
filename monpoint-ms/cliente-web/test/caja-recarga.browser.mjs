@@ -37,7 +37,7 @@ async function escenario (nombre, comprobar) {
   const pagina = await contexto.newPage()
   pagina.setDefaultTimeout(5000)
   const errores = [], inesperadas = [], respuestasPendientes = []
-  const estado = { rol: 'ADMIN', productos: 0, clientes: 0, reportes: 0, cobros: [], desenlace: 'CONFIRMADA', lecturas: [] }
+  const estado = { rol: 'ADMIN', productos: 0, clientes: 0, directorio: [], errorClientes: false, reportes: 0, cobros: [], desenlace: 'CONFIRMADA', lecturas: [] }
   pagina.on('pageerror', (e) => errores.push(e.message))
   await pagina.route(`${API}/**`, async (ruta) => {
     const req = ruta.request(), url = new URL(req.url()), path = url.pathname
@@ -45,7 +45,11 @@ async function escenario (nombre, comprobar) {
     if (path === '/auth/login') datos = { token: 'simulado', nombre: 'Persona', correo: 'persona@example.test', rol: estado.rol, expiraEn: 3600000 }
     else if (path === '/reportes/configuracion') datos = { nombreEmpresa: 'Empresa de prueba' }
     else if (path === '/notificaciones') datos = []
-    else if (path === '/clientes') { estado.clientes++; datos = [] }
+    else if (path === '/clientes') {
+      estado.clientes++
+      datos = estado.errorClientes ? { detail: 'Directorio temporalmente no disponible' } : estado.directorio
+      if (estado.errorClientes) status = 503
+    }
     else if (path === '/inventario/productos') {
       estado.productos++
       const respuesta = estado.lecturas.shift()
@@ -242,7 +246,10 @@ try {
     const vacia = retener([])
     await pagina.getByRole('button', { name: 'Actualizar catálogo', exact: true }).click()
     await vacia.empezar(); vacia.liberar()
+    await pagina.getByText('No hay productos activos en el catálogo.', { exact: true }).waitFor()
+    await buscador.fill('inexistente')
     await pagina.getByText('No hay productos para esta búsqueda.', { exact: true }).waitFor()
+    await buscador.fill('')
     const fallo = retener({ detail: 'Error temporal' }, 503)
     await pagina.getByRole('button', { name: 'Actualizar catálogo', exact: true }).click()
     await fallo.empezar(); fallo.liberar(); await aviso.waitFor()
@@ -255,6 +262,42 @@ try {
     tardia.liberar()
     await pagina.getByRole('link', { name: 'Caja', exact: true }).click()
     await pagina.getByRole('button', { name: /^Agregar Sello,.*Existencia 8/ }).waitFor()
+    assert.equal(await pagina.getByRole('alert').count(), 0)
+  })
+  for (const directorio of [[], [{ id: 'c1', nombre: 'Ana Ruiz' }]]) {
+    await escenario(`Error al actualizar clientes conserva la lectura ${directorio.length ? 'con opciones' : 'vacia'} y permite reintentar`, async ({ pagina, estado, entrar, existencia }) => {
+      estado.directorio = directorio
+      await entrar(); await existencia(8)
+      const selector = pagina.getByLabel('Cliente (opcional)', { exact: true })
+      assert.equal(await selector.locator('option').count(), directorio.length + 1)
+      if (directorio.length) await selector.selectOption('c1')
+      estado.errorClientes = true
+      await pagina.getByRole('button', { name: 'Actualizar catálogo', exact: true }).click()
+      const aviso = pagina.getByRole('status').filter({ hasText: 'No se pudo actualizar la lista de clientes.' })
+      await aviso.waitFor()
+      assert.equal(await pagina.getByRole('alert').count(), 0)
+      assert.equal(await selector.locator('option').count(), directorio.length + 1)
+      assert.equal(await selector.inputValue(), directorio.length ? 'c1' : '')
+      assert.equal(await pagina.getByText(/Puede registrar una venta sin cliente/).count(), 0)
+      estado.errorClientes = false
+      estado.directorio = [...directorio, { id: 'c2', nombre: 'Luis Pérez' }]
+      await pagina.getByRole('button', { name: 'Actualizar catálogo', exact: true }).click()
+      await selector.getByRole('option', { name: 'Luis Pérez', exact: true }).waitFor({ state: 'attached' })
+      assert.equal(await aviso.count(), 0)
+      assert.equal(await selector.inputValue(), directorio.length ? 'c1' : '')
+    })
+  }
+  await escenario('Sin lectura previa de clientes se muestra un error y el reintento los carga', async ({ pagina, estado, entrar, existencia }) => {
+    estado.errorClientes = true
+    await entrar(); await existencia(8)
+    await pagina.getByRole('alert').filter({ hasText: 'Puede registrar una venta sin cliente.' }).waitFor()
+    assert.equal(await pagina.getByRole('status').filter({ hasText: 'Se conserva la última lectura.' }).count(), 0)
+    const selector = pagina.getByLabel('Cliente (opcional)', { exact: true })
+    assert.equal(await selector.locator('option').count(), 1)
+    estado.errorClientes = false
+    estado.directorio = [{ id: 'c1', nombre: 'Ana Ruiz' }]
+    await pagina.getByRole('button', { name: 'Actualizar catálogo', exact: true }).click()
+    await selector.getByRole('option', { name: 'Ana Ruiz', exact: true }).waitFor({ state: 'attached' })
     assert.equal(await pagina.getByRole('alert').count(), 0)
   })
 } finally {

@@ -564,6 +564,12 @@ se conserva la última lectura y permite reintentar con «Actualizar catálogo»
 El fallo no cambia el resultado del cobro ni el carrito. Esto no es una
 actualización en tiempo real frente a ventas de otras cajas.
 
+Si falla la actualización de clientes, también se conserva la última lista y
+la selección, con un aviso ámbar. Solo un fallo sin lectura previa de clientes
+se presenta como error y ofrece continuar sin cliente. Una lista vacía válida
+cuenta como lectura previa. El catálogo vacío sin filtro se distingue de una
+búsqueda sin resultados.
+
 El cobro tiene seis estados: inactivo, enviando, enProceso, confirmada, cancelada y
 sinRespuesta. La guarda sincrónica evita doble envío. Después del 202, consulta cada
 800 ms tras completar la respuesta anterior, con un límite de reloj de 10 segundos
@@ -607,6 +613,8 @@ El cuarto cubre el título tras ADMIN → Reportes → Caja → salir → VENDED
 Atrás y tras una navegación cancelada, el refresco tras ambos desenlaces, la
 carrera con una carga manual, errores de consulta o cuerpos inválidos, una
 lista vacía válida y el desmontaje.
+También cubre fallos de clientes con lectura previa vacía o con opciones, la
+conservación de la selección, el error inicial y su recuperación.
 Comprueba que la recarga automática no pide clientes ni oculta la rejilla y
 que su fallo conserva tanto el catálogo como la venta confirmada. El título
 solo se modifica cuando la navegación termina sin fallo.

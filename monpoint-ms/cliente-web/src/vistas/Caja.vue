@@ -23,6 +23,7 @@ const directorio = useRecurso(async ({ senal }) => {
 const productos = computed(() => catalogo.datos.value ?? [])
 const clientes = computed(() => directorio.datos.value ?? [])
 const hayCatalogo = computed(() => catalogo.datos.value !== null)
+const hayClientes = computed(() => directorio.datos.value !== null)
 const cargando = computed(() => !hayCatalogo.value && catalogo.cargando.value)
 const actualizando = computed(() => catalogo.cargando.value || directorio.cargando.value)
 const errorCatalogo = computed(() => catalogo.error.value?.message ?? '')
@@ -186,11 +187,14 @@ onUnmounted(() => {
           No se pudo actualizar el catálogo. Se conserva la última lectura; las existencias pueden haber cambiado.
           {{ errorCatalogo }} Puede reintentar con «Actualizar catálogo».
         </p>
+        <!-- Aqui empieza la cadena de contenido; el aviso anterior coexiste con la rejilla. -->
         <p v-if="errorCatalogo && !hayCatalogo" role="alert" class="mp-aviso mp-aviso--error">
           {{ errorCatalogo }}
         </p>
         <p v-else-if="cargando" role="status">Cargando productos…</p>
-        <p v-else-if="!visibles.length" class="vacio">No hay productos para esta búsqueda.</p>
+        <p v-else-if="!visibles.length" class="vacio">
+          {{ busqueda.trim() ? 'No hay productos para esta búsqueda.' : 'No hay productos activos en el catálogo.' }}
+        </p>
         <ul v-else class="rejilla">
           <li v-for="p in visibles" :key="p.id">
             <button
@@ -233,7 +237,11 @@ onUnmounted(() => {
           <option value="">Venta sin cliente</option>
           <option v-for="c in clientes" :key="c.id" :value="c.id">{{ c.nombre }}</option>
         </select>
-        <p v-if="errorClientes" role="alert" class="mp-aviso mp-aviso--error">
+        <p v-if="errorClientes && hayClientes" role="status" class="mp-aviso mp-aviso--pendiente">
+          No se pudo actualizar la lista de clientes. Se conserva la última lectura.
+          {{ errorClientes }} Puede reintentar con «Actualizar catálogo».
+        </p>
+        <p v-else-if="errorClientes" role="alert" class="mp-aviso mp-aviso--error">
           {{ errorClientes }} Puede registrar una venta sin cliente.
         </p>
         <div v-if="!s.lineas.length && s.estado !== 'confirmada'" class="carrito-vacio">
