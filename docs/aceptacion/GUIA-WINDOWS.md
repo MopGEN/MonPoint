@@ -14,11 +14,12 @@ el recorrido crea ventas reales en tu base local y pausa inventario brevemente.
 
 ## 1. Abrir el proyecto y elegir la revisión
 
-Abre Docker Desktop y espera a que el motor esté listo. En PowerShell:
+Abre Docker Desktop y espera a que el motor esté listo. Sitúa PowerShell en la
+raíz de tu clon y ejecuta:
 
 ```powershell
 $ErrorActionPreference = 'Stop'
-$repo = 'C:\Users\osber\MonPoint'
+$repo = (Get-Location).Path
 Set-Location $repo
 git status --short
 git fetch origin
