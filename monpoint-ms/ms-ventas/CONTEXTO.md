@@ -85,9 +85,9 @@ planeación y los contratos vigentes siguen siendo la autoridad del proyecto.
   desde `.env` tanto a MongoDB como a la URI de ms-ventas.
 - El guion 01 valida `MONGO_VENTAS_PASSWORD` antes de crear cualquiera de los
   seis usuarios de servicio. La fila de ventas utiliza esa clave del entorno.
-- En este equipo el stack llamado `infra` pertenece al proyecto anterior
-  `C:\Users\osber\Proyectos\MonPoint\infra` y contiene MariaDB. Para este
-  checkout se usa `monpoint-ms`; `COMPOSE_PROJECT_NAME=monpoint-ms` queda en el
+- En este equipo el stack llamado `infra` pertenece a una instalación anterior
+  de MonPoint con MariaDB, separada de este clon. Para este checkout se usa
+  `monpoint-ms`; `COMPOSE_PROJECT_NAME=monpoint-ms` queda en el
   `.env` local, junto con las credenciales generadas, sin versionarse.
 - Ejecutar Compose desde `../infra/`: el compose fija `name: monpoint-ms`, por
   lo que basta `docker compose up -d --build`.
@@ -127,13 +127,12 @@ planeación y los contratos vigentes siguen siendo la autoridad del proyecto.
   El contenedor antiguo `monpoint-mariadb` volvió a arrancar.
 - El usuario autorizó trasladar el almacenamiento de Docker a D: conservando
   los datos. Con Docker y WSL detenidos se copió el disco virtual, se verificó
-  igualdad SHA-256 y se enlazó la ruta original mediante una junction NTFS:
-  `C:\Users\osber\AppData\Local\Docker\wsl\disk` apunta a
-  `D:\DockerDesktop\disk`. La aplicación y la distribución de sistema de
-  Docker siguen en C:; las imágenes, contenedores y volúmenes están en D:.
-- El respaldo previo al traslado está en
-  `D:\DockerDesktop\backup-before-move\docker_data.vhdx`, con registro de la
-  migración en `D:\DockerDesktop\migration-record.json`. Se comprobaron los
+  igualdad SHA-256 y se enlazó la carpeta de datos de Docker Desktop del perfil
+  local mediante una junction NTFS hacia el directorio de destino en D:.
+  La aplicación y la distribución de sistema de Docker siguen en C:;
+  las imágenes, contenedores y volúmenes están en D:.
+- El respaldo previo al traslado y el registro de la migración se conservaron
+  en el disco de destino, fuera del repositorio. Se comprobaron los
   mismos identificadores de contenedores e imágenes y el volumen
   `infra_monpoint-data`; `monpoint-mariadb` volvió a arrancar.
 - Las primeras imágenes descargadas cuando C: se llenó quedaron dañadas:
