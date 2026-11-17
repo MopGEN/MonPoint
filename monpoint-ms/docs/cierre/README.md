@@ -170,10 +170,20 @@ acción que corta JWT anteriores es la rotación en cada instalación, no borrar
 un literal de un README. No se infiere que una cuenta histórica siga activa o
 que ya esté desactivada en todos los equipos.
 
-La guía operativa de 6.2 también publicó una ruta de usuario del anfitrión.
-Se sustituyó por una ruta relativa a la raíz del clon en el archivo vigente.
-No se reescribe el historial de main ni se afirma haber retirado esa cadena
-de versiones o copias anteriores; los expedientes históricos se conservan.
+Las guías operativas de 6.2 y de las semillas también publicaron rutas de
+usuario del anfitrión. Los archivos vigentes usan rutas relativas al clon.
+Las notas de contexto de ventas describen la separación de instalaciones y el
+traslado del almacenamiento de Docker sin necesitar rutas personales del equipo.
+
+En el árbol vigente se conservan siete archivos de aceptación con esas rutas:
+cuatro JSON de contenedores y montajes de las dos recolecciones del
+[11 de noviembre](../../../docs/aceptacion/6.1-windows-2026-11-11/RESULTADOS.md),
+incluidas etiquetas de Compose; la [guía Windows](../../../docs/aceptacion/GUIA-WINDOWS.md),
+el [guion de Caja](../../../docs/aceptacion/GUION.md) y el
+[acta del 4 de noviembre](../../../docs/aceptacion/windows-2026-11-04/RESULTADOS.md).
+Se mantienen sus bytes como referencias históricas, sin generalizar las rutas
+a instrucciones de instalación actuales. No se reescribe el historial de main
+ni se afirma haber retirado las cadenas de versiones o copias anteriores.
 
 ## 4. Alcance recortado, ampliado y no construido
 

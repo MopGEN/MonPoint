@@ -41,10 +41,11 @@ No usa UUID ni fechas en los nombres. No crea otro producto por cada ejecución.
 
 ## Ejecución en Windows
 
-Desde PowerShell, con `infra/.env` ya configurado:
+Desde PowerShell, partiendo de la raíz del clon y con
+`monpoint-ms/infra/.env` ya configurado:
 
 ```powershell
-Set-Location C:\Users\osber\MonPoint\monpoint-ms
+Set-Location .\monpoint-ms
 docker compose --project-directory infra ps
 node --version
 node --env-file=infra/.env scripts/semilla.mjs

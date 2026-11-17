@@ -35,10 +35,10 @@ para evitar interpolación de Compose; Node también reconoce esas comillas.
 Las variables ya exportadas en PowerShell prevalecen sobre el archivo tanto
 en Compose como en Node. No imprimir `.env`, tokens ni claves al diagnosticar.
 
-Desde PowerShell:
+Desde PowerShell, partiendo de la raíz del clon:
 
 ```powershell
-Set-Location C:\Users\osber\MonPoint\monpoint-ms
+Set-Location .\monpoint-ms
 # Conserva los volúmenes; reconstruye ms-auth con las nuevas variables.
 docker compose --project-directory infra up -d --build ms-auth
 if ($LASTEXITCODE -ne 0) { throw 'No se pudo actualizar ms-auth.' }
