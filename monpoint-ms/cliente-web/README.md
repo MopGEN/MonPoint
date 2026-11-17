@@ -555,6 +555,15 @@ calcula un **estimado** mediante aritmética decimal exacta, redondeando solo la
 a centavos (mitad hacia arriba); el resultado y los subtotales finales se
 muestran tal como los entrega `GET /ventas/{id}`.
 
+Al confirmar o cancelar un cobro se vuelve a consultar solo el catálogo, sin
+recargar clientes. `useRecurso` cancela la lectura anterior si sigue en curso y
+solo permite aplicar la última respuesta. Las actualizaciones, incluidas las
+manuales, mantienen la rejilla visible; «Cargando productos…» corresponde a la
+carga sin una lectura previa. Si falla una actualización, un aviso indica que
+se conserva la última lectura y permite reintentar con «Actualizar catálogo».
+El fallo no cambia el resultado del cobro ni el carrito. Esto no es una
+actualización en tiempo real frente a ventas de otras cajas.
+
 El cobro tiene seis estados: inactivo, enviando, enProceso, confirmada, cancelada y
 sinRespuesta. La guarda sincrónica evita doble envío. Después del 202, consulta cada
 800 ms tras completar la respuesta anterior, con un límite de reloj de 10 segundos
@@ -585,6 +594,7 @@ Los recorridos visuales y de teclado requieren build/preview como los demás:
 PLAYWRIGHT_MODULE=/ruta/a/playwright/index.mjs node test/caja-visual.browser.mjs
 PLAYWRIGHT_MODULE=/ruta/a/playwright/index.mjs node test/caja-atajos.browser.mjs
 PLAYWRIGHT_MODULE=/ruta/a/playwright/index.mjs node test/caja-geometria.browser.mjs
+PLAYWRIGHT_MODULE=/ruta/a/playwright/index.mjs node test/caja-recarga.browser.mjs
 ```
 
 Usan API simulada. El segundo comprueba el cuerpo exacto de cada cobro y cubre
@@ -592,6 +602,14 @@ Ctrl+Enter desde el buscador, F12 recibido por Chromium, IME, repetición,
 cantidades inválidas, menús, carga/error de catálogo y desmontaje. El tercero
 compara geometría a 1440 px, comprueba anchos de 320 a 1280 px, lateral
 colapsada, temas y fuentes locales. No prueban por sí solos atajos de Windows.
+
+El cuarto cubre el título tras ADMIN → Reportes → Caja → salir → VENDEDOR →
+Atrás y tras una navegación cancelada, el refresco tras ambos desenlaces, la
+carrera con una carga manual, errores de consulta o cuerpos inválidos, una
+lista vacía válida y el desmontaje.
+Comprueba que la recarga automática no pide clientes ni oculta la rejilla y
+que su fallo conserva tanto el catálogo como la venta confirmada. El título
+solo se modifica cuando la navegación termina sin fallo.
 
 `usuarios-ticket.real.browser.mjs` cobra ahora con Ctrl+Enter desde la búsqueda
 para ambos roles y verifica cada total y PDF contra la venta real. Sigue siendo

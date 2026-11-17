@@ -1,23 +1,41 @@
 <script setup>
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { gateway } from '@/api/gateway'
 import TicketVenta from '@/componentes/TicketVenta.vue'
 import { useCaja } from '@/stores/caja'
 import { crearCobro, editable, cantidadValida, precioValido, dinero, estimado } from '@/caja/cobro'
 import { filtrarPor } from '@/comun/filtro'
+import { useRecurso } from '@/composables/useRecurso'
 import { useRoute } from 'vue-router'
 const ruta = useRoute()
 const s = useCaja().cobro
 const cobro = crearCobro(s, gateway)
-const productos = ref([]),
-  clientes = ref([]),
-  busqueda = ref('')
-const cargando = ref(false),
-  errorCatalogo = ref(''),
-  errorClientes = ref('')
+const catalogo = useRecurso(async ({ senal }) => {
+  const datos = await gateway.obtener('/inventario/productos', { senal })
+  if (!Array.isArray(datos)) throw new Error('No se pudo cargar el catálogo.')
+  return datos
+}, { inmediato: false })
+const directorio = useRecurso(async ({ senal }) => {
+  const datos = await gateway.obtener('/clientes', { senal })
+  if (!Array.isArray(datos)) throw new Error('No se pudieron cargar los clientes.')
+  return datos
+}, { inmediato: false })
+const productos = computed(() => catalogo.datos.value ?? [])
+const clientes = computed(() => directorio.datos.value ?? [])
+const hayCatalogo = computed(() => catalogo.datos.value !== null)
+const cargando = computed(() => !hayCatalogo.value && catalogo.cargando.value)
+const actualizando = computed(() => catalogo.cargando.value || directorio.cargando.value)
+const errorCatalogo = computed(() => catalogo.error.value?.message ?? '')
+const errorClientes = computed(() => directorio.error.value?.message ?? '')
+const busqueda = ref('')
 const campoBusqueda = ref(null)
-let carga,
-  desmontado = false
+
+// Una lectura posterior al desenlace sustituye cualquier lectura anterior en
+// vuelo: useRecurso la aborta y descarta su respuesta si llega tarde. No se
+// recargan clientes ni se oculta el ultimo catalogo disponible al actualizar.
+watch(() => s.estado, (estado) => {
+  if (estado === 'confirmada' || estado === 'cancelada') void catalogo.recargar()
+})
 const puedeEditar = computed(() => editable(s))
 const validas = computed(() =>
   s.lineas.every((l) => cantidadValida(l.cantidad) && precioValido(l.precio)),
@@ -70,7 +88,7 @@ const pasoActual = computed(() => {
 const puedeCobrar = computed(() => puedeEditar.value && s.lineas.length > 0 && validas.value)
 
 function agregarPrimero () {
-  if (cargando.value || errorCatalogo.value) return
+  if (!hayCatalogo.value) return
   const primero = visibles.value[0]
   if (primero) agregar(primero)
 }
@@ -99,22 +117,8 @@ function atajos (e) {
     void cobro.cobrar()
   }
 }
-async function cargar() {
-  if (cargando.value) return
-  cargando.value = true
-  errorCatalogo.value = ''
-  errorClientes.value = ''
-  carga = new AbortController()
-  const [p, c] = await Promise.allSettled([
-    gateway.obtener('/inventario/productos', { senal: carga.signal }),
-    gateway.obtener('/clientes', { senal: carga.signal }),
-  ])
-  if (desmontado) return
-  if (p.status === 'fulfilled' && Array.isArray(p.value)) productos.value = p.value
-  else errorCatalogo.value = p.reason?.message ?? 'No se pudo cargar el catálogo.'
-  if (c.status === 'fulfilled' && Array.isArray(c.value)) clientes.value = c.value
-  else errorClientes.value = c.reason?.message ?? 'No se pudieron cargar los clientes.'
-  cargando.value = false
+function cargar() {
+  return Promise.all([catalogo.recargar(), directorio.recargar()])
 }
 function agregar(p) {
   if (!puedeEditar.value || !precioValido(p.precio)) return
@@ -141,8 +145,6 @@ onMounted(() => {
   window.addEventListener('keydown', atajos)
 })
 onUnmounted(() => {
-  desmontado = true
-  carga?.abort()
   cobro.detener()
   window.removeEventListener('beforeunload', prevenirSalida)
   window.removeEventListener('keydown', atajos)
@@ -156,7 +158,7 @@ onUnmounted(() => {
         <h2 id="titulo-catalogo" class="mp-solo-lectores">Catálogo de productos</h2>
         <div class="cabecera-catalogo">
           <label class="mp-etiqueta" for="buscar">Buscar producto</label>
-          <button class="actualizar" :disabled="cargando" @click="cargar">{{ cargando ? 'Actualizando…' : 'Actualizar catálogo' }}</button>
+          <button class="actualizar" :disabled="actualizando" @click="cargar">{{ actualizando ? 'Actualizando…' : 'Actualizar catálogo' }}</button>
         </div>
         <div class="busqueda-fila">
           <div class="busqueda">
@@ -180,7 +182,11 @@ onUnmounted(() => {
             F2 enfoca la búsqueda. Enter agrega el primer resultado al carrito.
           </p>
         </div>
-        <p v-if="errorCatalogo" role="alert" class="mp-aviso mp-aviso--error">
+        <p v-if="errorCatalogo && hayCatalogo" role="status" class="mp-aviso mp-aviso--pendiente">
+          No se pudo actualizar el catálogo. Se conserva la última lectura; las existencias pueden haber cambiado.
+          {{ errorCatalogo }} Puede reintentar con «Actualizar catálogo».
+        </p>
+        <p v-if="errorCatalogo && !hayCatalogo" role="alert" class="mp-aviso mp-aviso--error">
           {{ errorCatalogo }}
         </p>
         <p v-else-if="cargando" role="status">Cargando productos…</p>
