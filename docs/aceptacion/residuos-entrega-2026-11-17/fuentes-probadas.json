@@ -1,0 +1,9 @@
+{
+  "base": "4568a17",
+  "hashBlobGit": {
+    "monpoint-ms/cliente-web/nginx.conf": "5ff7e94b6d1ff916b5ae387c3b01ca682b451c5e",
+    "monpoint-ms/cliente-web/test/nginx-estaticos.mjs": "5dbe2e17c4b79ce6de9d4322c313c5edd2472ad3",
+    "monpoint-ms/scripts/semilla-autotachi.mjs": "91bf5a43e6df69c910b1c605be15bec793861e56",
+    "monpoint-ms/scripts/semilla-autotachi.test.mjs": "d22d706aaf498a1c9b814dc7cc9a77ddad59e001"
+  }
+}

@@ -1,5 +1,13 @@
 # Evidencia de aceptación
 
+## Residuos previos al borrador 6.4
+
+[Comprobación del 17 de noviembre](residuos-entrega-2026-11-17/RESULTADOS.md):
+licencias servidas por nginx 1.28.3, archivos inexistentes con 404, enlaces
+profundos y 54 pruebas de guiones con empresa opcional. Separa el banco runtime
+de una reconstrucción multietapa y deja explícitas las operaciones pendientes
+en Windows. No acredita rotación de claves ni un segundo anfitrión.
+
 ## Cliente — Caja visual y F12 físico en Windows
 
 [Revisión de Caja del 12 de noviembre](cliente-caja-visual-2026-11-12/RESULTADOS.md):

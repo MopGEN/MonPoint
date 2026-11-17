@@ -16,21 +16,46 @@ export const productos = catalogo.filter(p => p.activo).map(p => ({
   existencia: p.existencia, umbralStock: p.umbralStock,
 }))
 const camposCatalogo = ['descripcion', 'precio', 'umbralStock', 'activo']
+const EMPRESA_AUSENTE = Symbol('configuracion 404')
+
+function empresaDelEntorno(env) {
+  const habilitada = env.SEMILLA_EMPRESA_HABILITADA ?? 'false'
+  exigir(['true', 'false'].includes(habilitada), 'SEMILLA_EMPRESA_HABILITADA debe ser true o false.')
+  if (habilitada === 'false') return null
+  for (const variable of ['AUTOTACHI_EMPRESA_NOMBRE', 'AUTOTACHI_EMPRESA_RFC']) {
+    exigir(typeof env[variable] === 'string' && env[variable].trim().length > 0,
+      `Configurar ${variable} antes de importar la empresa.`)
+  }
+  return {
+    nombreEmpresa: env.AUTOTACHI_EMPRESA_NOMBRE.trim(),
+    rfc: env.AUTOTACHI_EMPRESA_RFC.trim().toUpperCase(),
+    direccion: env.AUTOTACHI_EMPRESA_DIRECCION?.trim() || null,
+    telefono: env.AUTOTACHI_EMPRESA_TELEFONO?.trim() || null,
+  }
+}
+
+function comprobarEmpresa(actual, esperada) {
+  for (const campo of Object.keys(esperada)) {
+    exigir(actual?.[campo] === esperada[campo],
+      `La configuración de empresa difiere en ${campo}. No se sobrescribió una configuración existente; revisar en Reportes y alinear el entorno antes de repetir.`)
+  }
+}
 
 export async function sembrarAutotachi({ env = process.env, fetchImpl = fetch, timeoutMs = 10000 } = {}) {
   const resumen = { estado: 'EN_PROCESO', usuarios: [], productos: [], ventasCreadas: 0,
-    referenciasExcluidas: catalogo.filter(p => !p.activo).map(p => p.referencia) }
+    empresa: { accion: 'OMITIDA' }, referenciasExcluidas: catalogo.filter(p => !p.activo).map(p => p.referencia) }
   let operacion = 'configuración'
   try {
     const gateway = origenGateway(env)
+    const empresa = empresaDelEntorno(env)
     for (const cuenta of cuentas) {
       exigir(typeof env[cuenta.variable] === 'string' && env[cuenta.variable].length > 0,
         `Configurar ${cuenta.variable}; no hay contraseña por omisión.`)
     }
     async function api(metodo, ruta, cuerpo, esperado, token) {
       operacion = `${metodo} ${ruta}`
-      const alta = metodo === 'POST' && ruta !== '/auth/login'
-      const incierto = alta ? ' El alta puede haberse guardado; no se reintentó. Revisar el listado antes de repetir.' : ''
+      const escritura = (metodo === 'POST' && ruta !== '/auth/login') || metodo === 'PUT'
+      const incierto = escritura ? ' La escritura puede haberse guardado; no se reintentó. Consultar el recurso antes de repetir.' : ''
       let respuesta
       try {
         respuesta = await fetchImpl(new URL(ruta, gateway), {
@@ -42,9 +67,13 @@ export async function sembrarAutotachi({ env = process.env, fetchImpl = fetch, t
       } catch {
         throw new Error(`${operacion}: falló la conexión o venció el plazo.${incierto}`)
       }
-      if (respuesta.status !== esperado) {
+      if (!(Array.isArray(esperado) ? esperado : [esperado]).includes(respuesta.status)) {
         try { await respuesta.body?.cancel() } catch { /* No imprimir errores del transporte. */ }
-        throw new Error(`${operacion}: HTTP ${respuesta.status}.${alta && respuesta.status >= 500 ? incierto : ''}`)
+        throw new Error(`${operacion}: HTTP ${respuesta.status}.${escritura && respuesta.status >= 500 ? incierto : ''}`)
+      }
+      if (respuesta.status === 404) {
+        await respuesta.body?.cancel()
+        return EMPRESA_AUSENTE
       }
       try { return await respuesta.json() }
       catch { throw new Error(`${operacion}: respuesta JSON incompleta.${incierto}`) }
@@ -66,6 +95,18 @@ export async function sembrarAutotachi({ env = process.env, fetchImpl = fetch, t
     const lista = await api('GET', '/inventario/productos', null, 200, adminToken)
     // Comprobar todo antes de escribir. Stock excluido: nunca reponer consumo ni ajustes.
     const existentes = productos.map(p => coincidencia(lista, 'nombre', { ...p, activo: true }, camposCatalogo))
+    if (empresa) {
+      resumen.empresa = { accion: 'VERIFICANDO' }
+      const anterior = await api('GET', '/reportes/configuracion', null, [200, 404], adminToken)
+      // PUT tiene id fijo en el servidor, pero actualizar en cada arranque
+      // desharia ediciones legitimas. Solo crear ante un 404 confirmado.
+      if (anterior !== EMPRESA_AUSENTE) comprobarEmpresa(anterior, empresa)
+      else resumen.empresa = { accion: 'SIN_CONFIRMAR' }
+      const actual = anterior === EMPRESA_AUSENTE
+        ? await api('PUT', '/reportes/configuracion', empresa, 200, adminToken) : anterior
+      comprobarEmpresa(actual, empresa)
+      resumen.empresa = { accion: anterior === EMPRESA_AUSENTE ? 'CREADA' : 'REUTILIZADA', nombreEmpresa: actual.nombreEmpresa }
+    }
     for (const [i, producto] of productos.entries()) {
       const existente = existentes[i]
       const actual = existente ?? await api('POST', '/inventario/productos', producto, 201, adminToken)

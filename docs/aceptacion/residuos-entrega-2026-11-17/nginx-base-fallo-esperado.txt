@@ -1,0 +1,19 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: /fuentes/no-existe.txt no debe resolver a la SPA
+
+200 !== 404
+
+    at file:///workspace/MonPoint/monpoint-ms/cliente-web/test/nginx-estaticos.mjs:32:12
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 200,
+  expected: 404,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

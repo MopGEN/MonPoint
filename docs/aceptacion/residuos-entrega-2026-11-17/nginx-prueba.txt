@@ -1,0 +1,1 @@
+PASS: licencias intactas, estaticos inexistentes 404 y siete enlaces profundos de la SPA
