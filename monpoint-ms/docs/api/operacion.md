@@ -68,10 +68,11 @@ el nombre mongodb. No introducir credenciales reales en ejemplos versionados.
 
 ## Arranque en Windows
 
-Desde PowerShell, con `.env` ya configurado y Docker disponible:
+Desde PowerShell, partiendo de la raíz del clon, con `.env` ya configurado y
+Docker disponible:
 
 ```powershell
-Set-Location C:\Users\osber\MonPoint\monpoint-ms
+Set-Location .\monpoint-ms
 if (!(Test-Path -LiteralPath infra/.env)) { throw 'Crear y configurar infra/.env antes de arrancar.' }
 docker compose --project-directory infra config --quiet
 if ($LASTEXITCODE -ne 0) { throw 'Compose no es valido; revisar la configuracion sin imprimir secretos.' }

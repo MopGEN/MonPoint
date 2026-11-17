@@ -170,6 +170,11 @@ acción que corta JWT anteriores es la rotación en cada instalación, no borrar
 un literal de un README. No se infiere que una cuenta histórica siga activa o
 que ya esté desactivada en todos los equipos.
 
+La guía operativa de 6.2 también publicó una ruta de usuario del anfitrión.
+Se sustituyó por una ruta relativa a la raíz del clon en el archivo vigente.
+No se reescribe el historial de main ni se afirma haber retirado esa cadena
+de versiones o copias anteriores; los expedientes históricos se conservan.
+
 ## 4. Alcance recortado, ampliado y no construido
 
 El Documento 01 §7.4 registra el recorte de 234 a 144 puntos y 35 actividades.
