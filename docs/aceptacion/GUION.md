@@ -5,7 +5,7 @@ inventario; conservar los folios y restaurar el servicio al terminar.
 
 ## Preparación en Windows
 
-1. Desde `C:\Users\osber\MonPoint`, actualizar la revisión que se desea probar.
+1. Desde la raíz de tu clon, actualizar la revisión que se desea probar.
 2. En `monpoint-ms\infra`, verificar `.env` y ejecutar `docker compose up -d --build`.
    Esperar a que los servicios estén saludables y registrados en Eureka.
 3. Para la revisión original de 5.5, desde `monpoint-ms\cliente-web` ejecutar
