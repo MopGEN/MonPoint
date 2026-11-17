@@ -55,7 +55,7 @@ const rutas = [
       // `nav` es lo unico que hace aparecer una entrada en la barra lateral.
       // Una ruta sin `nav` existe pero no se anuncia: asi las rutas tecnicas y
       // las que aun no estan listas no se ofrecen por descuido.
-      nav: { orden: 10, icono: '▤' },
+      nav: { orden: 10, icono: 'caja' },
     },
   },
   {
@@ -68,7 +68,7 @@ const rutas = [
     meta: {
       titulo: 'Productos',
       roles: ['ADMIN', 'VENDEDOR'],
-      nav: { orden: 20, icono: '▦' },
+      nav: { orden: 20, icono: 'productos' },
     },
   },
   {
@@ -80,7 +80,7 @@ const rutas = [
     meta: {
       titulo: 'Clientes',
       roles: ['ADMIN', 'VENDEDOR'],
-      nav: { orden: 30, icono: '◍' },
+      nav: { orden: 30, icono: 'clientes' },
     },
   },
   {
@@ -93,7 +93,7 @@ const rutas = [
     meta: {
       titulo: 'Reportes',
       roles: ['ADMIN'],
-      nav: { orden: 50, icono: '▮' },
+      nav: { orden: 50, icono: 'reportes' },
     },
   },
   {
@@ -105,7 +105,7 @@ const rutas = [
     meta: {
       titulo: 'Usuarios',
       roles: ['ADMIN'],
-      nav: { orden: 70, icono: '◈' },
+      nav: { orden: 70, icono: 'usuarios' },
     },
   },
   {
@@ -115,7 +115,7 @@ const rutas = [
     meta: {
       titulo: 'Notificaciones',
       roles: ['ADMIN'],
-      nav: { orden: 60, icono: '◔' },
+      nav: { orden: 60, icono: 'notificaciones' },
     },
   },
   {

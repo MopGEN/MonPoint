@@ -78,7 +78,7 @@ try {
       assert.equal(await boton.count(), 0)
       confirmar = true
       await pagina.getByRole('button', { name: 'Consultar de nuevo', exact: true }).click()
-      await pagina.getByText('✓ Venta confirmada · Total cobrado: $41.15', { exact: true }).waitFor()
+      await pagina.getByText('Venta confirmada · Total cobrado: $41.15', { exact: true }).waitFor()
     } else {
       confirmar = true
       await pagina.clock.runFor(801)
