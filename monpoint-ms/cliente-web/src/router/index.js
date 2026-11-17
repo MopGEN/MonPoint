@@ -172,7 +172,8 @@ router.beforeEach((destino) => {
   return true
 })
 
-router.afterEach((destino) => {
+router.afterEach((destino, origen, fallo) => {
+  if (fallo) return
   const t = destino.meta.titulo
   document.title = t ? `MonPoint · ${t}` : 'MonPoint'
 })
