@@ -1,4 +1,5 @@
 <script setup>
+import IconoSvg from '@/componentes/IconoSvg.vue'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSesion } from '@/stores/sesion'
@@ -33,7 +34,7 @@ const entradas = computed(() =>
     .map((r) => ({
       nombre: r.name,
       titulo: r.meta.titulo ?? String(r.name),
-      icono: r.meta.nav.icono ?? '·',
+      icono: r.meta.nav.icono ?? 'punto',
     })),
 )
 </script>
@@ -45,7 +46,7 @@ const entradas = computed(() =>
         <RouterLink :to="{ name: e.nombre }" class="enlace" active-class="activo" :aria-label="e.titulo" :title="colapsada ? e.titulo : undefined">
           <!-- El icono es decorativo: el nombre de la seccion ya esta en el
                texto, asi que anunciarlo seria ruido para un lector. -->
-          <span class="icono" aria-hidden="true">{{ e.icono }}</span>
+          <IconoSvg class="icono" :nombre="e.icono" />
           <span class="texto">{{ e.titulo }}</span>
         </RouterLink>
       </li>
@@ -92,10 +93,12 @@ ul {
 
 }
 
+/* El CSS con alcance del padre alcanza la raiz del componente hijo, que aqui
+   es el propio <svg>, asi que esta regla lo dimensiona sin necesidad de
+   pasarle la medida por propiedad. */
 .icono {
   width: 1.25rem;
-  text-align: center;
-  font-size: 1.05rem;
+  height: 1.25rem;
 }
 
 .compacta .texto { display: none; }

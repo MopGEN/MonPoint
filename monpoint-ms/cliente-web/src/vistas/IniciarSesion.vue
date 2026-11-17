@@ -1,4 +1,5 @@
 <script setup>
+import IconoSvg from '@/componentes/IconoSvg.vue'
 /** Inicio de sesion real, marca local y preferencia visual compartida.
  * La autenticacion conserva el token en memoria; no se precargan credenciales.
  */
@@ -36,7 +37,7 @@ async function enviar () {
 
 <template>
   <div class="envoltura">
-    <button type="button" class="icono-cabecera tema-login" :aria-label="preferencias.tema === 'claro' ? 'Cambiar a tema oscuro' : 'Cambiar a tema claro'" @click="preferencias.alternarTema"><span aria-hidden="true">{{ preferencias.tema === 'claro' ? '◐' : '◑' }}</span></button>
+    <button type="button" class="icono-cabecera tema-login" :aria-label="preferencias.tema === 'claro' ? 'Cambiar a tema oscuro' : 'Cambiar a tema claro'" @click="preferencias.alternarTema"><IconoSvg :nombre="preferencias.tema === 'claro' ? 'luna' : 'sol'" /></button>
     <form class="mp-tarjeta tarjeta" @submit.prevent="enviar">
       <MarcaMonPoint completa />
       <h1>Iniciar sesión</h1>

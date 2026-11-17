@@ -134,7 +134,7 @@ try {
       assert.equal(await page.locator('.operacion').count(), 1)
       assert.equal(await page.locator('.operacion strong').textContent(), 'Folio 1042')
       await page.getByRole('button', { name: 'Consultar de nuevo' }).click()
-      await page.getByText('✓ Venta confirmada · Total cobrado: $123.45', { exact: true }).waitFor()
+      await page.getByText('Venta confirmada · Total cobrado: $123.45', { exact: true }).waitFor()
     } else if (escenario === 'SIN_RESPUESTA') {
       await page.getByRole('heading', { name: 'Venta en proceso' }).waitFor()
       await page.clock.fastForward(10001)
@@ -142,7 +142,7 @@ try {
       assert.equal(await page.locator('.lineas .linea').count(), 0)
       resolver = true
       await page.getByRole('button', { name: 'Consultar de nuevo' }).click()
-      await page.getByText('✓ Venta confirmada · Total cobrado: $123.45', { exact: true }).waitFor()
+      await page.getByText('Venta confirmada · Total cobrado: $123.45', { exact: true }).waitFor()
     } else if (escenario.startsWith('CANCELADA')) {
       await page.getByRole('heading', { name: 'Venta cancelada' }).waitFor()
       assert.equal(await page.getByLabel('Cantidad', { exact: true }).inputValue(), '3')

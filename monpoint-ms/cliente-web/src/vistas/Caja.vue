@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { gateway } from '@/api/gateway'
 import TicketVenta from '@/componentes/TicketVenta.vue'
+import IconoSvg from '@/componentes/IconoSvg.vue'
 import { useCaja } from '@/stores/caja'
 import { crearCobro, editable, cantidadValida, precioValido, dinero, estimado } from '@/caja/cobro'
 import { filtrarPor } from '@/comun/filtro'
@@ -50,10 +51,10 @@ const rechazado = computed(() => (s.estado === 'cancelada' ? s.venta?.productoId
  * servidor no ha dado.
  */
 function existencia (p) {
-  if (!(p.existencia > 0)) return { clase: 'mp-insignia--error', glifo: '✕', texto: 'Sin existencia' }
+  if (!(p.existencia > 0)) return { clase: 'mp-insignia--error', icono: 'equis', texto: 'Sin existencia' }
   if (p.existencia <= p.umbralStock)
-    return { clase: 'mp-insignia--aviso', glifo: '▲', texto: `Existencia ${p.existencia}` }
-  return { clase: 'mp-insignia--apagada', glifo: '●', texto: `Existencia ${p.existencia}` }
+    return { clase: 'mp-insignia--aviso', icono: 'triangulo', texto: `Existencia ${p.existencia}` }
+  return { clase: 'mp-insignia--apagada', icono: 'punto', texto: `Existencia ${p.existencia}` }
 }
 
 // Los tres pasos del prototipo sobre los seis estados de la maquina de cobro.
@@ -196,7 +197,7 @@ onUnmounted(() => {
               <span class="nombre">{{ p.nombre }}</span>
               <span class="precio">{{ dinero(p.precio) }}</span>
               <span class="mp-insignia existencia" :class="existencia(p).clase">
-                <span class="glifo" aria-hidden="true">{{ existencia(p).glifo }}</span>
+                <IconoSvg class="glifo" :nombre="existencia(p).icono" :tamano="12" />
                 {{ existencia(p).texto }}
               </span>
             </button>
@@ -216,7 +217,7 @@ onUnmounted(() => {
             :aria-current="i + 1 === pasoActual ? 'step' : undefined"
           >
             <span class="numero" aria-hidden="true">{{ i + 1 }}</span>{{ nombre }}
-            <span v-if="i < PASOS.length - 1" class="separador" aria-hidden="true">→</span>
+            <IconoSvg v-if="i < PASOS.length - 1" class="separador" nombre="flecha-derecha" :tamano="14" />
           </li>
         </ol>
         <h2 id="titulo-carrito">
@@ -231,7 +232,7 @@ onUnmounted(() => {
           {{ errorClientes }} Puede registrar una venta sin cliente.
         </p>
         <div v-if="!s.lineas.length && s.estado !== 'confirmada'" class="carrito-vacio">
-          <span aria-hidden="true">▤</span><h3>Carrito vacío</h3>
+          <IconoSvg nombre="carrito" :tamano="28" /><h3>Carrito vacío</h3>
           <p>Busca un producto o toca una tarjeta del catálogo para agregar la primera línea.</p>
         </div>
         <ul class="lineas">
@@ -252,7 +253,7 @@ onUnmounted(() => {
               </button>
             </div>
             <p v-if="rechazado === l.productoId" class="marca-rechazo">
-              ⚠ Producto señalado en el rechazo
+              <IconoSvg nombre="aviso" :tamano="14" />Producto señalado en el rechazo
             </p>
             <div class="linea-cantidad">
               <label :for="`cantidad-${l.productoId}`">Cantidad</label
@@ -277,17 +278,17 @@ onUnmounted(() => {
         </p>
         <p v-if="s.error" role="alert" class="mp-aviso mp-aviso--error">{{ s.error }}</p>
         <div v-if="s.estado === 'enviando'" class="resultado proceso" role="status">
-          <span class="icono">◷</span>
+          <IconoSvg class="icono" nombre="reloj" :tamano="30" />
           <h3>Enviando el cobro…</h3>
           <p>Espera la respuesta antes de iniciar otra operación.</p>
         </div>
         <div v-if="s.estado === 'enProceso'" class="resultado proceso" role="status">
-          <span class="icono">◷</span>
+          <IconoSvg class="icono" nombre="reloj" :tamano="30" />
           <h3>Venta en proceso</h3>
           <p>Folio {{ s.venta.folio }} · Estamos confirmando la operación.</p>
         </div>
         <div v-if="s.estado === 'confirmada'" class="resultado confirmada" role="status">
-          <span class="icono">✓</span>
+          <IconoSvg class="icono" nombre="visto" :tamano="30" />
           <h3>Venta confirmada</h3>
           <p>Folio {{ s.venta.folio }}</p>
           <p>
@@ -302,7 +303,7 @@ onUnmounted(() => {
           <button class="mp-boton mp-boton--secundario" @click="cobro.nueva">Nueva venta</button>
         </div>
         <div v-if="s.estado === 'cancelada'" class="resultado cancelada" role="alert">
-          <span class="icono">✕</span>
+          <IconoSvg class="icono" nombre="equis" :tamano="30" />
           <h3>Venta cancelada</h3>
           <p>Folio {{ s.venta.folio }}</p>
           <p>{{ s.venta.motivo }}</p>
@@ -341,13 +342,13 @@ onUnmounted(() => {
       <article v-for="(p, i) in s.pendientes" :key="i" class="operacion" aria-live="polite">
         <strong>{{ p.folio != null ? `Folio ${p.folio}` : 'Operación sin folio recibido' }}</strong
         ><template v-if="p.detalle?.estado === 'CONFIRMADA'"
-          ><p>✓ Venta confirmada · Total cobrado: {{ dinero(p.detalle.total) }}</p>
+          ><p><IconoSvg class="en-linea" nombre="visto" :tamano="14" />Venta confirmada · Total cobrado: {{ dinero(p.detalle.total) }}</p>
           <TicketVenta :venta="p.detalle" /></template
         ><template v-else-if="p.detalle?.estado === 'CANCELADA'"
-          ><p>✕ Venta cancelada</p>
+          ><p><IconoSvg class="en-linea" nombre="equis" :tamano="14" />Venta cancelada</p>
           <p>{{ p.detalle.motivo }}</p></template
         ><template v-else
-          ><p>◷ Resultado sin confirmar</p>
+          ><p><IconoSvg class="en-linea" nombre="reloj" :tamano="14" />Resultado sin confirmar</p>
           <p>{{ p.mensaje }}</p>
           <button
             v-if="p.id"
@@ -417,7 +418,7 @@ onUnmounted(() => {
   gap: 12px;
 }
 .carrito-vacio { margin: 16px 0; padding: 32px 20px; text-align: center; border: 1px dashed var(--mp-borde); border-radius: var(--mp-radio-tarjeta); }
-.carrito-vacio > span { display: block; margin-bottom: 8px; color: var(--mp-texto-auxiliar); }
+.carrito-vacio > svg { margin: 0 auto 8px; color: var(--mp-texto-auxiliar); }
 .carrito-vacio h3 { font-size: 16px; }
 .carrito-vacio p { margin: 0; color: var(--mp-texto-suave); }
 .tarjeta {
@@ -454,11 +455,16 @@ onUnmounted(() => {
 /* `margin-top: auto` empuja la insignia al borde inferior: en una fila de la
    rejilla las tarjetas se estiran a la mas alta, y sin esto las insignias
    quedarian a distintas alturas segun lo largo del nombre. */
+
+/* `.mp-insignia` es `inline-block`: con un dibujo dentro, que se pinta como
+   bloque, el icono se quedaba con una linea para el solo y el texto caia
+   debajo. Se cambia aqui y no en la clase global, que usan otras pantallas
+   cuyo contenido es solo texto. */
 .existencia {
+  display: inline-flex;
+  gap: 0.3rem;
+  align-items: center;
   margin-top: auto;
-}
-.glifo {
-  font-family: var(--mp-tipografia-cifras);
 }
 /* El prototipo pone el dinero en la familia del texto y reserva la
    monoespaciada para los identificadores y los rotulos de tecla. Se conserva
@@ -536,6 +542,14 @@ onUnmounted(() => {
   margin-left: 6px;
   color: var(--mp-texto-auxiliar);
 }
+
+/* Iconos que viven dentro de una frase: sin esto se apoyarian en la linea
+   base y quedarian descolgados respecto al texto que acompanan. */
+.en-linea {
+  display: inline-block;
+  vertical-align: -0.18em;
+  margin-right: 0.3rem;
+}
 .numero {
   display: grid;
   place-items: center;
@@ -597,6 +611,9 @@ onUnmounted(() => {
   background: var(--mp-error-fondo);
 }
 .marca-rechazo {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
   font-size: 0.875rem;
   font-weight: 600;
 }
@@ -626,9 +643,10 @@ onUnmounted(() => {
   padding: 1.25rem;
   border-radius: var(--mp-radio-tarjeta);
 }
+/* El tamano del dibujo lo fija el propio componente; aqui solo se centra
+   respecto al bloque de resultado. */
 .icono {
-  font-size: 2rem;
-  display: block;
+  margin-bottom: 0.25rem;
 }
 .proceso {
   border: 1px solid var(--mp-proceso-borde);

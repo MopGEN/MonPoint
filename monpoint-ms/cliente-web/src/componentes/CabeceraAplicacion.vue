@@ -1,4 +1,5 @@
 <script setup>
+import IconoSvg from '@/componentes/IconoSvg.vue'
 import { computed, useId, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { gateway } from '@/api/gateway'
@@ -29,12 +30,12 @@ function salir () { cerrar(); sesion.cerrar(); router.replace({ name: 'login' })
     </div>
     <div class="acciones-cabecera">
       <CampanaNotificaciones v-if="sesion.esAdmin" />
-      <button type="button" class="icono-cabecera" :aria-label="preferencias.tema === 'claro' ? 'Cambiar a tema oscuro' : 'Cambiar a tema claro'" @click="preferencias.alternarTema"><span aria-hidden="true">{{ preferencias.tema === 'claro' ? '◐' : '◑' }}</span></button>
+      <button type="button" class="icono-cabecera" :aria-label="preferencias.tema === 'claro' ? 'Cambiar a tema oscuro' : 'Cambiar a tema claro'" @click="preferencias.alternarTema"><IconoSvg :nombre="preferencias.tema === 'claro' ? 'luna' : 'sol'" /></button>
       <div ref="zona" class="cuenta-usuario">
         <button ref="boton" type="button" class="usuario" :aria-label="`Menú de usuario: ${sesion.nombre}`" :aria-expanded="abierto" :aria-controls="id" @click="abierto = !abierto">
           <span class="avatar" aria-hidden="true">{{ iniciales }}</span>
           <span class="datos-usuario"><span class="nombre-usuario">{{ sesion.nombre }}</span><span class="rol">{{ sesion.esAdmin ? 'Administrador' : 'Vendedor' }}</span></span>
-          <span class="flecha" aria-hidden="true">▾</span>
+          <IconoSvg class="flecha" nombre="cheuron-abajo" :tamano="16" />
         </button>
         <section v-if="abierto" :id="id" class="desplegable cuenta" aria-label="Cuenta de usuario">
           <strong>{{ sesion.nombre }}</strong><p>{{ sesion.usuario?.correo }}</p><p class="mp-insignia mp-insignia--apagada">{{ sesion.rol }}</p>
