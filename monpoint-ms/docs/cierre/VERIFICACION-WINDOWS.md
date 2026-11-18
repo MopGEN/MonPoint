@@ -36,6 +36,17 @@ PowerShell actualiza únicamente una línea JWT_SECRET existente. Leerlo antes d
 ejecutarlo. Rechaza un override exportado en la consola, que prevalecería sobre
 el archivo. Ejecutar desde `monpoint-ms`:
 
+Antes de reintentar, listar solo nombres y tamaños con
+`Get-ChildItem infra -Force -Filter '.env*' | Select-Object Name,Length` y
+comprobar que `(Select-String -Path infra\.env -Pattern '^\s*JWT_SECRET\s*=').Count`
+devuelve 1. Si quedó un temporal `.env.jwt-...` del intento fallido, identificarlo
+y eliminar solo ese temporal. Conservar `.env`, `.env.example` y cualquier
+archivo privado ajeno a ese intento. No mostrar el contenido del secreto.
+
+Pegar el bloque completo como una sola operación. La sustitución y los comandos
+Docker están dentro del mismo `& { ... }`: un fallo detiene la secuencia antes
+de recrear los servicios.
+
 ```powershell
 & {
     $ErrorActionPreference = 'Stop'
@@ -52,28 +63,56 @@ el archivo. Ejecutar desde `monpoint-ms`:
     $claveNueva = [Convert]::ToBase64String($bytesClave)
     $textoNuevo = [regex]::Replace($textoEntorno, $patronClave, ('JWT_SECRET=' + $claveNueva))
     $rutaTemporal = Join-Path ([IO.Path]::GetDirectoryName($rutaEntorno)) ('.env.jwt-' + [guid]::NewGuid().ToString('N'))
+    $rutaRespaldo = $rutaEntorno + '.bak-' + [guid]::NewGuid().ToString('N')
+    $reemplazoVerificado = $false
     try {
         [IO.File]::WriteAllText($rutaTemporal, $textoNuevo, (New-Object Text.UTF8Encoding($false)))
         if ([IO.File]::ReadAllText($rutaTemporal) -cne $textoNuevo) { throw 'No se pudo verificar el archivo temporal.' }
-        [IO.File]::Replace($rutaTemporal, $rutaEntorno, $null)
+        [IO.File]::Replace($rutaTemporal, $rutaEntorno, $rutaRespaldo)
+        if ([IO.File]::ReadAllText($rutaEntorno) -cne $textoNuevo) { throw 'Reemplazo sin verificar; conservar el respaldo y revisar antes de recrear servicios.' }
+        $reemplazoVerificado = $true
     } finally {
-        if (Test-Path -LiteralPath $rutaTemporal) { Remove-Item -LiteralPath $rutaTemporal }
+        if (Test-Path -LiteralPath $rutaTemporal) { Remove-Item -LiteralPath $rutaTemporal -Force }
+        if ($reemplazoVerificado -and (Test-Path -LiteralPath $rutaRespaldo)) { Remove-Item -LiteralPath $rutaRespaldo -Force }
     }
     Write-Host 'JWT_SECRET actualizado en el archivo privado; falta recrear ambos validadores.'
+    docker compose --project-directory infra config --quiet
+    if ($LASTEXITCODE -ne 0) { throw 'Compose invalido; el archivo ya cambio, pero no se recrearon los validadores.' }
+    docker compose --project-directory infra up -d --no-deps --force-recreate ms-auth api-gateway
+    if ($LASTEXITCODE -ne 0) { throw 'No se pudo completar la recreacion; revisar ambos servicios.' }
+    docker compose --project-directory infra ps
+    if ($LASTEXITCODE -ne 0) { throw 'No se pudo consultar el estado; verificar ambos servicios antes de los controles.' }
 }
-docker compose --project-directory infra config --quiet
-if ($LASTEXITCODE -ne 0) { throw 'Compose invalido; no continuar.' }
-docker compose --project-directory infra up -d --no-deps --force-recreate ms-auth api-gateway
-if ($LASTEXITCODE -ne 0) { throw 'No se pudo completar la recreacion; revisar ambos servicios.' }
-docker compose --project-directory infra ps
 ```
 
 La clave queda en el `.env` privado y temporalmente en la memoria de PowerShell;
 esto evita imprimirla, **no** es un sistema de custodia cifrada ni garantiza
 borrado seguro de memoria. El bloque escribe y comprueba un temporal junto al
 original antes de reemplazarlo, para no truncar el `.env` si falla la escritura.
+File.Replace recibe una ruta de respaldo real: se evita pasar `$null` al
+parámetro String, que Windows PowerShell puede enlazar como cadena vacía.
+El respaldo se elimina solo después de comprobar el nuevo archivo. Si no se
+puede confirmar el reemplazo, se conserva para revisión; si falla la limpieza,
+la secuencia también se detiene antes de Docker. Temporales y respaldos están
+cubiertos por `.env.*` en .gitignore, pero siguen siendo archivos privados.
+`Remove-Item -Force` se limita a las rutas generadas del temporal y del respaldo;
+no elimina otros `.env.*` ni modifica los atributos del `.env` real.
 Conserva el contenido de las otras líneas, pero usa UTF-8 sin BOM. Requiere un
 sistema de archivos Windows que admita File.Replace. No ejecutar `down -v`.
+
+El bloque anterior fallaba al reemplazar y aun permitía ejecutar Docker por
+separado. Ese reinicio no acredita una rotación. Si el nuevo intento cambia el
+archivo pero falla después en Compose, tampoco acredita que los validadores
+usen la clave nueva: resolver ese fallo antes de repetir los controles.
+Conservar `$tokenPrevio` en la misma terminal para comprobar su rechazo; no
+imprimirlo ni asumir que sigue vigente sin revisar su expiración.
+
+La [prueba aislada del bloque](../../../docs/aceptacion/pruebas/rotacion-jwt.test.ps1)
+se ejecuta desde la raíz con
+`powershell -NoProfile -File docs/aceptacion/pruebas/rotacion-jwt.test.ps1`.
+Usa archivos ficticios, simula Docker y comprueba que no queden comandos fuera
+del bloque. Ejecutarla en otro runtime no sustituye su comprobación en Windows
+PowerShell 5.1 ni los controles de tokens de la instalación real.
 
 ReadAllText detecta un BOM y, si no existe, interpreta UTF-8. Un `.env` en
 UTF-16 sin BOM puede contener caracteres NUL que impidan reconocer la línea;
